@@ -1,1 +1,1 @@
-# perception-v1.0
+# Perception study
