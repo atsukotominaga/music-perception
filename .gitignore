@@ -1,3 +1,5 @@
 # general
 *.DS_Store
-*.R_history
+
+# script
+script/psychopy/data
