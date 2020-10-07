@@ -1,9 +1,9 @@
 # general
 *.DS_Store
 
-
 # script
 script/psychopy/data
 
 # material
 material/stimuli/R/filtered
+material/stimuli/python/mid
