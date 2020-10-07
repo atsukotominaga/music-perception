@@ -4,25 +4,24 @@
 # This script converts txt files to mid files.
 
 #%% import packages
-import os, csv, time, mido
-import pandas as pd
-import numpy as np
+import os, csv, mido
 
 #%% create mid folder if not existed
 if not os.path.exists("mid"):
     os.mkdir("mid")
 
 #%% folder names
-folder_low = "./averaging/low/1596207520-310720/"
-folder_art = "./averaging/art/1596379937-020820/"
-folder_dyn = "./averaging/dyn/1596379899-020820/"
-folder_high = "./averaging/high/1596380946-020820/"
-folders = [folder_low, folder_art, folder_dyn, folder_high]
+folder_a_t = "../R/filtered/art_teaching/"
+folder_d_t = "../R/filtered/dyn_teaching/"
+folder_a_p = "../R/filtered/art_performing/"
+folder_d_p = "../R/filtered/dyn_performing/"
+folders = [folder_a_t, folder_d_t, folder_a_p, folder_d_p]
 
 #%% mid export
 for folder in folders:
-    for instance in range(1, 17):
-        filename = folder + str(instance) + "_instance.txt"
+    files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+    for instance in range(0, len(files)):
+        filename = folder + files[instance]
         with open(filename) as csvfile:
             # create mid file
             mid = mido.MidiFile()
@@ -30,14 +29,14 @@ for folder in folders:
             mid.tracks.append(track)
             track.append(mido.Message('program_change', program=0, time=0)) # program 0 = Acoustic Grand Piano
             # name for mid file
-            if folder == "./averaging/low/1596207520-310720/":
-                midname = "./mid/low_" + str(instance) + ".mid"
-            elif folder == "./averaging/art/1596379937-020820/":
-                midname = "./mid/art_" + str(instance) + ".mid"
-            elif folder == "/averaging/dyn/1596379899-020820/":
-                midname = "./mid/dyn_" + str(instance) + ".mid"
-            elif folder == "./averaging/high/1596380946-020820/":
-                midname = "./mid/high_" + str(instance) + ".mid"
+            if folder == "../R/filtered/art_teaching/":
+                midname = "./mid/a_t_" + str(instance+1) + ".mid"
+            elif folder == "../R/filtered/dyn_teaching/":
+                midname = "./mid/d_t_" + str(instance+1) + ".mid"
+            elif folder == "../R/filtered/art_performing/":
+                midname = "./mid/a_p_" + str(instance+1) + ".mid"
+            elif folder == "../R/filtered/dyn_performing/":
+                midname = "./mid/d_p_" + str(instance+1) + ".mid"
             # read current track data (txt file)   
             current = csv.reader(csvfile, delimiter = ",")
             next(current) # skip first row
