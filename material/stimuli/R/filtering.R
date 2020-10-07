@@ -8,9 +8,25 @@
 # This script organises raw data and select performances which do not contain any pitch errors.
 # GitHub repo (private): https://github.com/atsukotominaga/perception-v1.0/tree/master/material/stimuli
 
-# create a folder if not exists
-if (!file.exists("filtered")){
+# create folders if not exists
+if (!file.exists("filtered/")){
   dir.create("filtered")
+}
+
+if (!file.exists("filtered/art_teaching")){
+  dir.create("filtered/art_teaching")
+}
+
+if (!file.exists("filtered/dyn_teaching")){
+  dir.create("filtered/dyn_teaching")
+}
+
+if (!file.exists("filtered/art_performing")){
+  dir.create("filtered/art_performing")
+}
+
+if (!file.exists("filtered/dyn_performing")){
+  dir.create("filtered/dyn_performing")
 }
 
 # read functions
@@ -70,16 +86,38 @@ dt_include <- dt_all[Error == 0]
 # exclude SubNr 16 due to a deviated tempo
 dt_include <- dt_include[SubNr != 16]
 
-# export as a separate txt for each performance
-for (subject in unique(dt_include$SubNr)){
-  for (block in unique(dt_include[SubNr == subject]$BlockNr)){
-    for (trial in unique(dt_include[SubNr == subject & BlockNr == block]$TrialNr)){
-      current <- dt_include[SubNr == subject & BlockNr == block & TrialNr == trial]
-      firstTimestamp = current$TimeStamp[1]
-      current$TimeStamp <- current$TimeStamp - firstTimestamp # start with time 0
-      # export as txt
-      filename = paste("./filtered/", subject, block, trial, ".txt", sep = "")
-      fwrite(current, file = filename)
-    }
+# create a list for included performances
+list_include <- dt_include[, .N, by = .(SubNr, BlockNr, TrialNr, Condition, Skill)]
+list_overall <- list_include[, .N, by = .(Condition, Skill)]
+
+# assign random nubmers for performances in each category
+list_include$RandNr <- 0
+for (cond in c("teaching", "performing")){
+  for (skill in c("articulation", "dynamics")){
+    list_include[Condition == cond & Skill == skill]$RandNr <- sample(nrow(list_include[Condition == cond & Skill == skill]), replace = FALSE)
   }
+}
+list_include <- list_include[order(RandNr),]
+
+# export as a separate txt for each performance
+for (i in 1:120){
+  subject = list_include$SubNr[i]
+  block = list_include$BlockNr[i]
+  trial = list_include$TrialNr[i]
+  cond = list_include$Condition[i]
+  skill = list_include$Skill[i]
+  current <- dt_include[SubNr == subject & BlockNr == block & TrialNr == trial]
+  firstTimestamp = current$TimeStamp[1]
+  current$TimeStamp <- current$TimeStamp - firstTimestamp # start with time 0
+  
+  if (cond == "teaching" & skill == "articulation"){
+    filename = paste("./filtered/art_teaching/", subject, block, trial, ".txt", sep = "")
+  } else if (cond == "teaching" & skill == "dynamics"){
+    filename = paste("./filtered/dyn_teaching/", subject, block, trial, ".txt", sep = "")
+  } else if (cond == "performing" & skill == "articulation"){
+    filename = paste("./filtered/art_performing/", subject, block, trial, ".txt", sep = "")
+  } else if (cond == "performing" & skill == "dynamics"){
+    filename = paste("./filtered/dyn_performing/", subject, block, trial, ".txt", sep = "")
+  }
+  fwrite(current, file = filename)
 }
