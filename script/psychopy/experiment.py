@@ -6,7 +6,6 @@ This is an experimental programme for Music Perception 2020
 
 # import libraries
 from psychopy import core, visual, gui, data, event
-from psychopy.tools.filetools import fromFile, toFile
 import os, random, mido
 
 ### function ###
@@ -45,7 +44,7 @@ def trial(expMode, imageFile, midFile, resultsList):
     ratingScale = visual.RatingScale(win, choices = ["Yes", "No"], markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = False, skipKeys = None)
     question = visual.TextStim(win, pos=[0, 0], font = "Avenir", height = 60, wrapWidth = 1400,
     text = "Teaching?")
-    trialClock = core.clock()
+    trialClock = core.Clock()
     while ratingScale.noResponse:
         question.draw()
         ratingScale.draw()
@@ -143,7 +142,7 @@ win.flip()
 next() # proceed/force quit
 
 ## instruction 3
-inst3 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, text = "Something")
+inst3 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, text = "Something\n\n\n\n\n\n\n\n\nPress <Space> to continue")
 imageSheet.draw()
 inst3.draw()
 win.flip()
