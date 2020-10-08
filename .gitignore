@@ -3,7 +3,9 @@
 
 # script
 script/psychopy/data
+script/psychopy/mid
 
 # material
 material/stimuli/R/filtered
 material/stimuli/python/mid
+material/stimuli/python/data
