@@ -47,10 +47,10 @@ for folder in folders:
                     counter += 1
                 else:
                     previousTime = currentTime
-                currentTime = int(mido.second2tick(int(row[3])*0.001+3, 480, 500000))
-                currentPitch = int(row[5])
-                currentVelocity = int(row[4])
-                currentOnOff = int(row[2])
+                currentTime = int(mido.second2tick(int(row[1])*0.001+3, 480, 500000))
+                currentPitch = int(row[2])
+                currentVelocity = int(row[3])
+                currentOnOff = int(row[4])
                 # assign midi values
                 if currentOnOff == 1:
                     track.append(mido.Message('note_on', note=currentPitch, velocity=currentVelocity, time=currentTime-previousTime))
