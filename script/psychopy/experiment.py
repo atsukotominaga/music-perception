@@ -90,7 +90,7 @@ def trial(expMode, imageFile, midFile, resultsList):
 os.system("open " + "./midiplayer.maxpat") # open max file
 port = mido.open_output("to Max 1")
 
-# participants’s info
+# participants's info
 expInfo = {"Number": "", "Today": data.getDateStr(), "Expression": ["Articulation", "Dynamics"]}
 dlg = gui.DlgFromDict(expInfo, fixed = ["Today"], title = "Music Perception 2020")
 if dlg.OK == False:
