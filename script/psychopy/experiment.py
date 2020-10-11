@@ -26,7 +26,7 @@ def next():
 def trial(expMode, imageFile, midFile, resultsList):
     # stimuli presentation
     ## 1. sheet music
-    stimuli = visual.ImageStim(win, image = imageFile, size = [1500, 535])
+    stimuli = visual.ImageStim(win, image = imageFile, size = [1500, 300])
     stimuli.draw()
 
     ## 2. midi play
@@ -101,11 +101,14 @@ if dlg.OK == False:
 if expInfo["Expression"] == "Articulation":
     # sheet music
     imageFile = "./image/stim_a.png"
-    print(expInfo["Expression"])
+    text_3 = "Musical Technique: [ Articulation ]\nthe smoothness of sound\nslurs: legato, dots: staccato\n\n\n\n\n\n\nPress <Space> to continue"
+    eFileList = [f for f in os.listdir("mid/") if f.startswith("a_")]
+    
 elif expInfo["Expression"] == "Dynamics":
     # sheet music
     imageFile = "./image/stim_d.png"
-    print(expInfo["Expression"])
+    text_3 = "Musical Technique: [ Dynamics ]\nthe smoothness of sound\nf: forte, p: piano\n\n\n\n\n\n\nPress <Space> to continue"
+    eFileList = [f for f in os.listdir("mid/") if f.startswith("d_")]
 
 # create csv to save data
 if not os.path.exists("data"): # make a folder if not exists
@@ -127,7 +130,7 @@ globalClock = core.Clock()
 ### Instruction ###
 # display instructions and wait
 inst1 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "Thank you very much for participating in the pilot study!\n\nIn this experiment, you are going to listen to a number of piano performances and will be asked to judge whether each performance was produced in order to teach a musical technique or not.\n\nPress <Space> to continue")
+    text = "Thank you very much for participating in our study!\n\nIn this experiment, you are going to listen to a number of piano performances and will be asked to judge whether each performance was produced in order to teach a musical technique or not.\n\nPress <Space> to continue")
 inst1.draw()
 win.flip()
 next() # proceed/force quit
@@ -135,16 +138,37 @@ next() # proceed/force quit
 ## instruction 2
 imageSheet = visual.ImageStim(win, image = imageFile, pos = [0, -50], size = [1500, 300])
 inst2 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400,
-    text = "You will listen to one piece with one notated musical technique.\n\n\n\n\n\n\n\n\nPress <Space> to continue")
+    text = "You will listen to one piece with one notated musical technique.\n\n\n\n\n\n\nPress <Space> to continue")
 imageSheet.draw()
 inst2.draw()
 win.flip()
 next() # proceed/force quit
 
 ## instruction 3
-inst3 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, text = "Something\n\n\n\n\n\n\n\n\nPress <Space> to continue")
+inst3 = visual.TextStim(win, pos = [-50, 0], font = "Avenir", height = 60, wrapWidth = 1400, text = text_3)
 imageSheet.draw()
 inst3.draw()
+win.flip()
+next() # proceed/force quit
+
+## instruction 4
+inst4 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
+    text = "Each performer is either\n\n1) teaching the musical technique (as a teacher) \n\nor\n\n2) performing their best (as a performer)\n\nPress <Space> to continue")
+inst4.draw()
+win.flip()
+next() # proceed/force quit
+
+## instruction 5
+inst5 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
+    text = "You will be asked to judge whether each performer has the teaching intention or not by pressing the 'yes' <Left> or 'no' <Right> key.\n\nPress <Space> to continue")
+inst5.draw()
+win.flip()
+next() # proceed/force quit
+
+## instruction 6
+inst6 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
+    text = "Any questions? If not, we will start practice trials to make sure you understand the procedure.\n\nPress <Space> to start practice trials")
+inst6.draw()
 win.flip()
 next() # proceed/force quit
 
@@ -178,14 +202,13 @@ while practice:
                 practice = True
 
 inst8 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "In total, there are ?? performance recordings.\n\nAny questions? If not,\n\nPress <Space> to start experimental trials")
+    text = "You will listen to 64 performances and judge for each performance. You can take a break between each trial whenever you want.\n\nAny questions? If not,\n\nPress <Space> to start experimental trials")
 inst8.draw()
 win.flip()
 next() # proceed/force quit
 
 ### Experiment ###
 expMode = "experiment"
-eFileList = os.listdir("mid")
 random.shuffle(eFileList) # stimuli randomisation
 
 trialCounter = 1
