@@ -1,12 +1,10 @@
 ---
-title: 'Tempo Analysis: The Sound of Teaching Music 1'
+title: 'Music Perception 2020: Stimuli profiles'
 output:
   html_notebook: default
 editor_options: 
   chunk_output_type: inline
 ---
-
-Description: This is a summary of all analyses for a tempo.
 
 - Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
 
