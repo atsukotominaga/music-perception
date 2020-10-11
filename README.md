@@ -10,10 +10,11 @@ This repo contains scripts and materials for a musical perception study with mus
 ## Environment
 All of the programme scripts were written and tested in the following environment.
 
-<!-- - ProductName: Mac OS X  
-- ProductVersion: 10.14.3 -->
+- ProductName:	Mac OS X
+- ProductVersion:	10.15.6
 
 ## Psychopy3
+- [experiment.py]()
 
 ### Others
 - image: contains sheet music
@@ -30,9 +31,9 @@ All of the programme scripts were written and tested in the following environmen
 
 ## Stimuli
 ### 1. Get performances without pitch error (R)
-- filtering.R
-- function.R
-- ideal.txt
+- filtering.R: to get correct performances and export each as an individual txt file >> output: filtered folder
+- function.R: to detect pitch errors in a performance
+- ideal.txt: the ideal sequence of the piece. used for filtering
 
 ### 2. Export 1. as mid files (python)
-- mid_export.py
+- mid_export.py: to export txt files in the filtered folder as mid files
