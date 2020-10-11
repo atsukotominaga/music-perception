@@ -100,7 +100,7 @@ for (cond in c("teaching", "performing")){
 list_include <- list_include[order(RandNr),]
 
 # export as a separate txt for each performance
-for (i in 1:120){
+for (i in 1:128){ # 32 stimuli for each category
   subject = list_include$SubNr[i]
   block = list_include$BlockNr[i]
   trial = list_include$TrialNr[i]
@@ -121,3 +121,5 @@ for (i in 1:120){
   }
   fwrite(current, file = filename)
 }
+
+print("Done! :)")
