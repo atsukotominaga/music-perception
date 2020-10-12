@@ -111,13 +111,13 @@ for (i in 1:128){ # 32 stimuli for each category
   current$TimeStamp <- current$TimeStamp - firstTimestamp # start with time 0
   
   if (cond == "teaching" & skill == "articulation"){
-    filename = paste("./filtered/art_teaching/", subject, block, trial, ".txt", sep = "")
+    filename = paste("./random/art_teaching/", subject, block, trial, ".txt", sep = "")
   } else if (cond == "teaching" & skill == "dynamics"){
-    filename = paste("./filtered/dyn_teaching/", subject, block, trial, ".txt", sep = "")
+    filename = paste("./random/dyn_teaching/", subject, block, trial, ".txt", sep = "")
   } else if (cond == "performing" & skill == "articulation"){
-    filename = paste("./filtered/art_performing/", subject, block, trial, ".txt", sep = "")
+    filename = paste("./random/art_performing/", subject, block, trial, ".txt", sep = "")
   } else if (cond == "performing" & skill == "dynamics"){
-    filename = paste("./filtered/dyn_performing/", subject, block, trial, ".txt", sep = "")
+    filename = paste("./random/dyn_performing/", subject, block, trial, ".txt", sep = "")
   }
   fwrite(current, file = filename)
 }
