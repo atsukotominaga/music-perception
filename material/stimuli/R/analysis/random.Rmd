@@ -33,22 +33,22 @@ lf_d_p <- list.files("../random/dyn_performing", pattern = "txt")
 # merge all data files into one
 data <- data.table()
 for (i in 1:length(lf_a_t)){
-  data_i <- fread(file.path("../filtered/art_teaching", lf_a_t[i]), header = T, sep = ",", dec = ".")
+  data_i <- fread(file.path("../random/art_teaching", lf_a_t[i]), header = T, sep = ",", dec = ".")
   data_i$Instance <- i
   data <- rbind(data, data_i)
 }
 for (i in 1:length(lf_a_p)){
-  data_i <- fread(file.path("../filtered/art_performing", lf_a_p[i]), header = T, sep = ",", dec = ".")
+  data_i <- fread(file.path("../random/art_performing", lf_a_p[i]), header = T, sep = ",", dec = ".")
   data_i$Instance <- i
   data <- rbind(data, data_i)
 }
 for (i in 1:length(lf_d_t)){
-  data_i <- fread(file.path("../filtered/dyn_teaching", lf_d_t[i]), header = T, sep = ",", dec = ".")
+  data_i <- fread(file.path("../random/dyn_teaching", lf_d_t[i]), header = T, sep = ",", dec = ".")
   data_i$Instance <- i
   data <- rbind(data, data_i)
 }
 for (i in 1:length(lf_d_p)){
-  data_i <- fread(file.path("../filtered/dyn_performing", lf_d_p[i]), header = T, sep = ",", dec = ".")
+  data_i <- fread(file.path("../random/dyn_performing", lf_d_p[i]), header = T, sep = ",", dec = ".")
   data_i$Instance <- i
   data <- rbind(data, data_i)
 }
