@@ -25,10 +25,10 @@ theme_update(text = element_text(size = 20, family = "Helvetica Neue LT Std 57 C
 
 ```{r file, include = FALSE}
 # create a list of data file names
-lf_a_t <- list.files("../filtered/art_teaching", pattern = "txt")
-lf_a_p <- list.files("../filtered/art_performing", pattern = "txt")
-lf_d_t <- list.files("../filtered/dyn_teaching", pattern = "txt")
-lf_d_p <- list.files("../filtered/dyn_performing", pattern = "txt")
+lf_a_t <- list.files("../random/art_teaching", pattern = "txt")
+lf_a_p <- list.files("../random/art_performing", pattern = "txt")
+lf_d_t <- list.files("../random/dyn_teaching", pattern = "txt")
+lf_d_p <- list.files("../random/dyn_performing", pattern = "txt")
 
 # merge all data files into one
 data <- data.table()

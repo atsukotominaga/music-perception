@@ -5,28 +5,28 @@
 #  Documentation
 ####################################
 # Created: 06/10/2020
-# This script organises raw data and select performances which do not contain any pitch errors.
+# This script organises raw data and randomly select performances which do not contain any pitch errors.
 # GitHub repo (private): https://github.com/atsukotominaga/perception-v1.0/tree/master/material/stimuli
 
 # create folders if not exists
-if (!file.exists("filtered/")){
-  dir.create("filtered")
+if (!file.exists("random/")){
+  dir.create("random")
 }
 
-if (!file.exists("filtered/art_teaching")){
-  dir.create("filtered/art_teaching")
+if (!file.exists("random/art_teaching")){
+  dir.create("random/art_teaching")
 }
 
-if (!file.exists("filtered/dyn_teaching")){
-  dir.create("filtered/dyn_teaching")
+if (!file.exists("random/dyn_teaching")){
+  dir.create("random/dyn_teaching")
 }
 
-if (!file.exists("filtered/art_performing")){
-  dir.create("filtered/art_performing")
+if (!file.exists("random/art_performing")){
+  dir.create("random/art_performing")
 }
 
-if (!file.exists("filtered/dyn_performing")){
-  dir.create("filtered/dyn_performing")
+if (!file.exists("random/dyn_performing")){
+  dir.create("random/dyn_performing")
 }
 
 # read functions
