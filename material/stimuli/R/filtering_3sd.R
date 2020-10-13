@@ -4,8 +4,8 @@
 ####################################
 #  Documentation
 ####################################
-# Created: 06/10/2020
-# This script organises raw data and randomly select performances which do not contain any pitch errors.
+# Created: 12/10/2020
+# This script organises raw data and randomly select performances which do not contain any pitch errors (IOIs within 3SD).
 # GitHub repo (private): https://github.com/atsukotominaga/perception-v1.0/tree/master/material/stimuli
 
 # create folders if not exists
