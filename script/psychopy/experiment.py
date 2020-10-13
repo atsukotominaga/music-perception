@@ -18,7 +18,7 @@ def next():
                 break
             elif resp == "escape": # force quit
                 for item in resultsList: # save data so far
-                    dataFile.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}\n'.format(*item))
+                    dataFile.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}\n'.format(*item))
                 dataFile.close()
                 core.quit()
     return
@@ -41,15 +41,19 @@ def trial(expMode, imageFile, midFile, resultsList):
         playing = False
     
     # get response (yes/no answer)
-    ratingScale = visual.RatingScale(win, choices = ["Yes", "No"], markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = False, skipKeys = None)
-    question = visual.TextStim(win, pos=[0, 0], font = "Avenir", height = 60, wrapWidth = 1400,
-    text = "Teaching?")
+    ratingScale = visual.RatingScale(win, pos = (0.0, -0.4), choices = ["Yes", "No"], markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = True, acceptPreText =  "Select your response", acceptSize = 1.8, skipKeys = None)
+    question = visual.TextStim(win, pos=[0, 200], font = "Avenir", height = 60, wrapWidth = 1400,
+    text = "Teaching\nYes: <Left>    No: <Right>?\n\nPress <Return> to confirm")
     trialClock = core.Clock()
     while ratingScale.noResponse:
         question.draw()
         ratingScale.draw()
         win.flip()
-    
+        if len(ratingScale.getHistory()) == 2: # if accidentally hit return, ignore
+            ratingScale.noResponse = True
+        elif len(ratingScale.getHistory()) > 2 and ratingScale.getHistory()[-1] == ratingScale.getHistory()[-2]: # if there is no response (i.e., keep on pressing return, ignore)
+            ratingScale.noResponse = True
+
     # store responses1
     resultsList.append([
         expMode, # practice/experiment
@@ -58,6 +62,7 @@ def trial(expMode, imageFile, midFile, resultsList):
         ratingScale.getRating(), # final answer
         trialClock.getTime(), # RT1
         ratingScale.getRT(), # RT2
+        ratingScale.getHistory(), # history
         expInfo["Number"], # subject number
         expInfo["Today"], # date
         globalClock.getTime()
@@ -219,7 +224,7 @@ for file in eFileList:
 
 # write results
 for item in resultsList:
-    dataFile.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}\n'.format(*item))
+    dataFile.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}\n'.format(*item))
 dataFile.close()
 
 ### Thank you ###
