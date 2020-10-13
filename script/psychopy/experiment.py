@@ -41,9 +41,9 @@ def trial(expMode, imageFile, midFile, resultsList):
         playing = False
     
     # get response (yes/no answer)
-    ratingScale = visual.RatingScale(win, pos = (0.0, -0.4), choices = ["Yes", "No"], markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = True, acceptPreText =  "Select your response", acceptSize = 1.8, skipKeys = None)
-    question = visual.TextStim(win, pos=[0, 200], font = "Avenir", height = 60, wrapWidth = 1400,
-    text = "Teaching\nYes: <Left>    No: <Right>?\n\nPress <Return> to confirm")
+    ratingScale = visual.RatingScale(win, pos = (0, -200), choices = ["Yes", "No"], markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = True, acceptPreText =  "Select your response", acceptSize = 1.8, skipKeys = None)
+    question = visual.TextStim(win, pos=[0, 0], font = "Avenir", height = 60, wrapWidth = 1400,
+    text = "Teaching?\nYes: <Left>    No: <Right>\n\nPress <Return> to confirm\n\n\n\n")
     trialClock = core.Clock()
     while ratingScale.noResponse:
         question.draw()
@@ -51,7 +51,7 @@ def trial(expMode, imageFile, midFile, resultsList):
         win.flip()
         if len(ratingScale.getHistory()) == 2: # if accidentally hit return, ignore
             ratingScale.noResponse = True
-        elif len(ratingScale.getHistory()) > 2 and ratingScale.getHistory()[-1] == ratingScale.getHistory()[-2]: # if there is no response (i.e., keep on pressing return, ignore)
+        elif len(ratingScale.getHistory()) > 2 and ratingScale.getHistory()[-1] == ratingScale.getHistory()[-2]: # if there is no response, ignore (i.e., keep on pressing return)
             ratingScale.noResponse = True
 
     # store responses1
@@ -207,7 +207,7 @@ while practice:
                 practice = True
 
 inst8 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "You will listen to 64 performances and judge for each performance. You can take a break between each trial whenever you want.\n\nAny questions? If not,\n\nPress <Space> to start experimental trials")
+    text = "You will listen to 48 performances and judge for each performance. You can take a break between each trial whenever you want.\n\nAny questions? If not,\n\nPress <Space> to start experimental trials")
 inst8.draw()
 win.flip()
 next() # proceed/force quit
@@ -229,7 +229,7 @@ dataFile.close()
 
 ### Thank you ###
 thanks = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 100, wrapWidth = 1400,
-    text = "Thank you!")
+    text = "This is the end of the experiment.\n\nThank you!")
 thanks.draw()
 win.flip()
 core.wait(3)
