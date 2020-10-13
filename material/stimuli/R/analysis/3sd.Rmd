@@ -140,7 +140,7 @@ p_ioi <- ggplot(ioi, aes(x = Instance, y = Mean, fill = Condition)) +
   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
                 width = .2, position = position_dodge(.9)) +
   geom_hline(yintercept = 188, linetype = "dashed") +
-  facet_grid(Skill ~ .) +
+  facet_grid(Skill ~ .) + scale_x_continuous(breaks = seq(1:32)) +
   labs(y = "IOI (ms)", subtitle = "IOI: Each instance (All)")
 p_ioi
 
@@ -207,13 +207,23 @@ kot <- dt_kot[Subcomponent == "Legato" | Subcomponent == "Staccato", .(N = .N, M
 kot_all <- kot[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), by = .(Condition, Skill, Subcomponent)]
 ```
 
+## Each instance
+```{r kot_stats_ind, echo = FALSE}
+kot
+```
+
+## Averaged
+```{r kot_stats_all, echo = FALSE}
+kot_all
+```
+
 ## Plots
 ```{r kot_plot, echo = FALSE}
 p_kot <- ggplot(kot, aes(x = Instance, y = Mean, fill = Condition)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
                 width = .2, position = position_dodge(.9)) +
-  facet_grid(Subcomponent ~ .) +
+  facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:32)) +
   labs(y = "KOT (ms)", subtitle = "KOT: Each instance (Articulation)")
 p_kot
 
@@ -223,16 +233,6 @@ p_kot_all <- ggplot(kot_all, aes(x = Subcomponent, y = Mean, fill = Condition)) 
                 width = .2, position = position_dodge(.9)) +
   labs(y = "KOT (ms)", subtitle = "KOT: Averaged (Articulation)")
 p_kot_all
-```
-
-## Each instance
-```{r kot_stats_ind, echo = FALSE}
-kot
-```
-
-## Averaged
-```{r kot_stats_all, echo = FALSE}
-kot_all
 ```
 
 # KV
@@ -290,7 +290,7 @@ p_vel <- ggplot(vel, aes(x = Instance, y = Mean, fill = Condition)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
                 width = .2, position = position_dodge(.9)) +
-  facet_grid(Subcomponent ~ .) +
+  facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:32)) +
   labs(y = "Key Velocity", subtitle = "KV: Each instance (Dynamics)")
 p_vel
 
@@ -371,7 +371,7 @@ p_vel_diff <- ggplot(vel_diff, aes(x = Instance, y = Mean, fill = Condition)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
                 width = .2, position = position_dodge(.9)) +
-  facet_grid(Subcomponent ~ .) +
+  facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:32)) +
   labs(y = "KV difference", subtitle = "KV-Diff: Each instance (Dynamics)")
 p_vel_diff
 
