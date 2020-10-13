@@ -58,8 +58,22 @@ raw_data$Image <- gsub(";", "", raw_data$Image)
 # sort by SubNr, BlockNr, TrialNr
 raw_data <- raw_data[order(raw_data$SubNr, raw_data$BlockNr, raw_data$TrialNr),]
 
+# correct labelling (due to a labelling error of the original study)
+# articulation
+dt_a <- raw_data[grepl("stim_a", Image)]
+# correct wrong labelling
+dt_a$Skill <- "articulation"
+
+# dynamics
+dt_d <- raw_data[grepl("stim_d", Image)]
+# correct wrong labelling
+dt_d$Skill <- "dynamics"
+
+# bind data frames for articulation and dynamics
+dt_all <- rbind(dt_a, dt_d)
+
 # raw_data without metronome
-dt_all <- raw_data[Pitch != 31 & Pitch != 34]
+dt_all <- dt_all[Pitch != 31 & Pitch != 34]
 
 # onset and offset
 dt_onset <- dt_all[Key_OnOff == 1]
