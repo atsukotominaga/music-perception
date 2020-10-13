@@ -1,12 +1,11 @@
 # general
 *.DS_Store
 *html
+*mid
 
 # script
 script/psychopy/data
-script/psychopy/mid
 
 # material
 material/stimuli/R/filtered
-material/stimuli/python/mid
 material/stimuli/python/data
