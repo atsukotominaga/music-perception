@@ -11,10 +11,10 @@ if not os.path.exists("mid"):
     os.mkdir("mid")
 
 #%% folder names
-folder_a_t = "../R/filtered/art_teaching/"
-folder_d_t = "../R/filtered/dyn_teaching/"
-folder_a_p = "../R/filtered/art_performing/"
-folder_d_p = "../R/filtered/dyn_performing/"
+folder_a_t = "../R/3sd/art_teaching/"
+folder_d_t = "../R/3sd/dyn_teaching/"
+folder_a_p = "../R/3sd/art_performing/"
+folder_d_p = "../R/3sd/dyn_performing/"
 folders = [folder_a_t, folder_d_t, folder_a_p, folder_d_p]
 
 #%% mid export
@@ -29,13 +29,13 @@ for folder in folders:
             mid.tracks.append(track)
             track.append(mido.Message('program_change', program=0, time=0)) # program 0 = Acoustic Grand Piano
             # name for mid file
-            if folder == "../R/filtered/art_teaching/":
+            if folder == "../R/3sd/art_teaching/":
                 midname = "./mid/a_t_" + str(instance+1) + ".mid"
-            elif folder == "../R/filtered/dyn_teaching/":
+            elif folder == "../R/3sd/dyn_teaching/":
                 midname = "./mid/d_t_" + str(instance+1) + ".mid"
-            elif folder == "../R/filtered/art_performing/":
+            elif folder == "../R/3sd/art_performing/":
                 midname = "./mid/a_p_" + str(instance+1) + ".mid"
-            elif folder == "../R/filtered/dyn_performing/":
+            elif folder == "../R/3sd/dyn_performing/":
                 midname = "./mid/d_p_" + str(instance+1) + ".mid"
             # read current track data (txt file)   
             current = csv.reader(csvfile, delimiter = ",")
