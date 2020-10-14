@@ -7,5 +7,6 @@
 script/psychopy/data
 
 # material
-material/stimuli/R/filtered
+material/stimuli/R/random
+material/stimuli/R/2sd
 material/stimuli/python/data
