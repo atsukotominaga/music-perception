@@ -41,7 +41,7 @@ def trial(expMode, imageFile, midFile, resultsList):
         playing = False
     
     # get response (yes/no answer)
-    ratingScale = visual.RatingScale(win, pos = (0, -200), choices = ["Yes", "No"], markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = False, acceptPreText =  "Select your response", acceptSize = 1.8, skipKeys = None)
+    ratingScale = visual.RatingScale(win, pos = (0, -300), choices = ["Yes", "No"], lineColor = (-.7, -.7, -.7), tickHeight = 0.0, markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = False, acceptPreText =  "Select your response", acceptSize = 1.8, skipKeys = None)
     question = visual.TextStim(win, pos=[0, 0], font = "Avenir", height = 60, wrapWidth = 1400,
     text = "Teaching?\nYes: <Left>    No: <Right>\n\nPress <Return> to confirm\n\n\n\n")
     trialClock = core.Clock()
@@ -181,7 +181,6 @@ next() # proceed/force quit
 
 ### Practice ###
 expMode = "practice"
-pFileList = os.listdir("practice")
 random.shuffle(pFileList) # stimuli randomisation
 practice = True
 while practice:
