@@ -7,6 +7,7 @@
 script/psychopy/data
 
 # material
+material/stimuli/R/raw_data
 material/stimuli/R/random
 material/stimuli/R/2sd
 material/stimuli/python/data
