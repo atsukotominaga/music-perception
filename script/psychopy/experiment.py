@@ -41,7 +41,7 @@ def trial(expMode, imageFile, midFile, resultsList):
         playing = False
     
     # get response (yes/no answer)
-    ratingScale = visual.RatingScale(win, pos = (0, -200), choices = ["Yes", "No"], markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = True, acceptPreText =  "Select your response", acceptSize = 1.8, skipKeys = None)
+    ratingScale = visual.RatingScale(win, pos = (0, -200), choices = ["Yes", "No"], markerStart = 0.5, markerColor = "Orange", textFont = "Avenir", size = 1.5, noMouse = True, acceptKeys = "return", showAccept = False, acceptPreText =  "Select your response", acceptSize = 1.8, skipKeys = None)
     question = visual.TextStim(win, pos=[0, 0], font = "Avenir", height = 60, wrapWidth = 1400,
     text = "Teaching?\nYes: <Left>    No: <Right>\n\nPress <Return> to confirm\n\n\n\n")
     trialClock = core.Clock()
@@ -135,7 +135,7 @@ globalClock = core.Clock()
 ### Instruction ###
 # display instructions and wait
 inst1 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "Thank you very much for participating in our study!\n\nIn this experiment, you are going to listen to a number of piano performances and will be asked to judge whether each performance was produced in order to teach a musical technique or not.\n\nPress <Space> to continue")
+    text = "Thank you very much for participating in our study!\n\nIn this experiment, you are going to listen to a number of piano performances and be asked to judge whether each performance was produced in order to teach a musical technique or not.\n\nPress <Space> to continue")
 inst1.draw()
 win.flip()
 next() # proceed/force quit
@@ -150,7 +150,7 @@ win.flip()
 next() # proceed/force quit
 
 ## instruction 3
-inst3 = visual.TextStim(win, pos = [-50, 0], font = "Avenir", height = 60, wrapWidth = 1400, text = text_3)
+inst3 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, text = text_3)
 imageSheet.draw()
 inst3.draw()
 win.flip()
@@ -158,14 +158,14 @@ next() # proceed/force quit
 
 ## instruction 4
 inst4 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "Each performer is either\n\n1) teaching the musical technique (as a teacher) \n\nor\n\n2) performing their best (as a performer)\n\nPress <Space> to continue")
+    text = "Each performance was produced in order to either\n\n1) teach the musical technique (as a teacher) \n\nor\n\n2) perform their best (as a performer)\n\nPress <Space> to continue")
 inst4.draw()
 win.flip()
 next() # proceed/force quit
 
 ## instruction 5
 inst5 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "You will be asked to judge whether each performer has the teaching intention or not by pressing the 'yes' <Left> or 'no' <Right> key.\n\nPress <Space> to continue")
+    text = "You will be asked to judge whether each performer had the teaching intention or not by pressing the 'Yes' <Left> or 'No' <Right> key.\n\nPress <Space> to continue")
 inst5.draw()
 win.flip()
 next() # proceed/force quit
@@ -186,8 +186,7 @@ while practice:
     trialCounter = 1
     for file in pFileList:
         midFile = "./practice/" + file
-        ratingOrder = random.choice(["articulation", "dynamics"])
-        trial(expMode, imageFile, midFile, ratingOrder, resultsList)
+        trial(expMode, imageFile, midFile, resultsList)
         trialCounter += 1
         
     ## instruction practice
@@ -207,7 +206,7 @@ while practice:
                 practice = True
 
 inst8 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "You will listen to 48 performances and judge for each performance. You can take a break between each trial whenever you want.\n\nAny questions? If not,\n\nPress <Space> to start experimental trials")
+    text = "You will listen to 64 performances (trials). You can take a break between each trial whenever you want.\n\nAny questions? If not,\n\nPress <Space> to start experimental trials")
 inst8.draw()
 win.flip()
 next() # proceed/force quit
