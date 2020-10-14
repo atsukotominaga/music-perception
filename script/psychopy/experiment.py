@@ -107,12 +107,14 @@ if expInfo["Expression"] == "Articulation":
     # sheet music
     imageFile = "./image/stim_a.png"
     text_3 = "Musical Technique: [ Articulation ]\nthe smoothness of sound\nslurs: legato, dots: staccato\n\n\n\n\n\n\nPress <Space> to continue"
+    pFileList = [f for f in os.listdir("practice/") if f.startswith("a_")]
     eFileList = [f for f in os.listdir("mid/") if f.startswith("a_")]
     
 elif expInfo["Expression"] == "Dynamics":
     # sheet music
     imageFile = "./image/stim_d.png"
-    text_3 = "Musical Technique: [ Dynamics ]\nthe smoothness of sound\nf: forte, p: piano\n\n\n\n\n\n\nPress <Space> to continue"
+    text_3 = "Musical Technique: [ Dynamics ]\nthe loudness of sound\nf: forte, p: piano\n\n\n\n\n\n\nPress <Space> to continue"
+    pFileList = [f for f in os.listdir("practice/") if f.startswith("d_")]
     eFileList = [f for f in os.listdir("mid/") if f.startswith("d_")]
 
 # create csv to save data
