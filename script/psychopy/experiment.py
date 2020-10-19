@@ -106,14 +106,14 @@ if dlg.OK == False:
 if expInfo["Expression"] == "Articulation":
     # sheet music
     imageFile = "./image/stim_a.png"
-    text_3 = "Musical Technique: [ Articulation ]\nthe smoothness of sound\nslurs: legato, dots: staccato\n\n\n\n\n\n\nPress <Space> to continue"
+    text_3 = "Expressive Technique: [ Articulation ]\nthe smoothness of sound\nslurs: legato, dots: staccato\n\n\n\n\n\n\nPress <Space> to continue"
     pFileList = [f for f in os.listdir("practice/") if f.startswith("a_")]
     eFileList = [f for f in os.listdir("mid/") if f.startswith("a_")]
     
 elif expInfo["Expression"] == "Dynamics":
     # sheet music
     imageFile = "./image/stim_d.png"
-    text_3 = "Musical Technique: [ Dynamics ]\nthe loudness of sound\nf: forte, p: piano\n\n\n\n\n\n\nPress <Space> to continue"
+    text_3 = "Expressive Technique: [ Dynamics ]\nthe loudness of sound\nf: forte, p: piano\n\n\n\n\n\n\nPress <Space> to continue"
     pFileList = [f for f in os.listdir("practice/") if f.startswith("d_")]
     eFileList = [f for f in os.listdir("mid/") if f.startswith("d_")]
 
@@ -137,7 +137,7 @@ globalClock = core.Clock()
 ### Instruction ###
 # display instructions and wait
 inst1 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "Thank you very much for participating in our study!\n\nIn this experiment, you are going to listen to a number of piano performances and be asked to judge whether each performance was produced in order to teach a musical technique or not.\n\nPress <Space> to continue")
+    text = "Thank you very much for participating in our study!\n\nIn this experiment, you are going to listen to a number of piano performances and be asked to judge whether each performance was produced in order to teach a musical expressive technique or not.\n\nPress <Space> to continue")
 inst1.draw()
 win.flip()
 next() # proceed/force quit
@@ -145,7 +145,7 @@ next() # proceed/force quit
 ## instruction 2
 imageSheet = visual.ImageStim(win, image = imageFile, pos = [0, -50], size = [1500, 300])
 inst2 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400,
-    text = "You will listen to one piece with one notated musical technique.\n\n\n\n\n\n\nPress <Space> to continue")
+    text = "You will listen to one piece with one notated musical expressive technique.\n\n\n\n\n\n\nPress <Space> to continue")
 imageSheet.draw()
 inst2.draw()
 win.flip()
@@ -160,7 +160,7 @@ next() # proceed/force quit
 
 ## instruction 4
 inst4 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "Each performance was produced in order to either\n\n1) teach the musical technique (as a teacher) \n\nor\n\n2) perform their best (as a performer)\n\nPress <Space> to continue")
+    text = "Each performance was produced in order to either\n\n1) teach the musical expressive technique (as a teacher) \n\nor\n\n2) perform their best (as a performer)\n\nPress <Space> to continue")
 inst4.draw()
 win.flip()
 next() # proceed/force quit
