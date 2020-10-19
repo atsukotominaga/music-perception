@@ -1,6 +1,7 @@
 # general
 *.DS_Store
 *html
+*sh
 
 # script
 script/psychopy/data
