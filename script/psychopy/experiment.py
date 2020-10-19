@@ -18,7 +18,7 @@ def next():
                 break
             elif resp == "escape": # force quit
                 for item in resultsList: # save data so far
-                    dataFile.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}\n'.format(*item))
+                    dataFile.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}\n'.format(*item))
                 dataFile.close()
                 core.quit()
     return
@@ -62,7 +62,7 @@ def trial(expMode, imageFile, midFile, resultsList):
         ratingScale.getRating(), # final answer
         trialClock.getTime(), # RT1
         ratingScale.getRT(), # RT2
-        ratingScale.getHistory(), # history
+        #ratingScale.getHistory(), # history
         expInfo["Number"], # subject number
         expInfo["Today"], # date
         globalClock.getTime()
@@ -167,7 +167,7 @@ next() # proceed/force quit
 
 ## instruction 5
 inst5 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "You will be asked to judge whether each performer had the teaching intention or not by pressing the 'Yes' <Left> or 'No' <Right> key.\n\nPress <Space> to continue")
+    text = "You will be asked to judge whether each performer had the intention to teach or not by pressing the 'Yes' <Left> or 'No' <Right> key.\n\nPress <Space> to continue")
 inst5.draw()
 win.flip()
 next() # proceed/force quit
@@ -207,7 +207,7 @@ while practice:
                 practice = True
 
 inst8 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "You will listen to 64 performances (trials). You can take a break between each trial whenever you want.\n\nAny questions? If not,\n\nPress <Space> to start experimental trials")
+    text = "You will listen to 48 performances (trials). You can take a break between each trial whenever you want.\n\nAny questions? If not,\n\nPress <Space> to start experimental trials")
 inst8.draw()
 win.flip()
 next() # proceed/force quit
@@ -224,11 +224,11 @@ for file in eFileList:
 
 # write results
 for item in resultsList:
-    dataFile.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}\n'.format(*item))
+    dataFile.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}\n'.format(*item))
 dataFile.close()
 
 ### Thank you ###
-thanks = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 100, wrapWidth = 1400,
+thanks = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 70, wrapWidth = 1400,
     text = "This is the end of the experiment.\n\nThank you!")
 thanks.draw()
 win.flip()
