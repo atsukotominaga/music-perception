@@ -160,7 +160,7 @@ next() # proceed/force quit
 
 ## instruction 4
 inst4 = visual.TextStim(win, pos = [0, 0], font = "Avenir", height = 60, wrapWidth = 1400, alignText = "left",
-    text = "Each performance was produced in order to either\n\n1) teach the musical expressive technique (as a teacher) \n\nor\n\n2) perform their best (as a performer)\n\nPress <Space> to continue")
+    text = "Each performance was produced in order to either\n\n1) teach the musical expressive technique (as a teacher) \n\nor\n\n2) perform their best (as a performer).\n\nPress <Space> to continue")
 inst4.draw()
 win.flip()
 next() # proceed/force quit
