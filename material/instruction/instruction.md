@@ -1,7 +1,7 @@
 ---
 geometry: margin=3cm
 ---
-# Instruction (19/10/2020)
+# Instruction (21/10/2020)
 # PARTICIPANT RECRUITMENT:
 
 - More than 6 years experience of musical training in any instruments
@@ -58,6 +58,10 @@ geometry: margin=3cm
 > Each performance was produced in order to either 1) teach the musical expressive technique (as a teacher) or 2) perform their best (as a performer). You will be asked to judge whether each performer had the intention to teach or not by pressing the 'Yes' < Left > or 'No' < Right > key.
 
 ...continue (follow the instruction in the experimental programme)...
+
+![](start.png){ width=50% }
+
+After this screen, you can ask participants to let you know when they finish and you can leave the room. It will take roughly 20-25 min.
 
 #### Potential questions from participants
 - What is articulation/dynamics? >> read the explanation above (but they should know this)
