@@ -5,6 +5,7 @@
 
 # script
 script/psychopy/data
+script/RNotebook/data
 
 # material
 material/stimuli/R/raw_data
