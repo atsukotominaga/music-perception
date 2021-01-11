@@ -1,3 +1,12 @@
+# Can musicians recognise teaching intentions from performance?
+
+<p align="center">
+  <img width="1024" height="300" src="https://media.giphy.com/media/VJxNm7zrm3K4E/giphy.gif">
+</p>
+
+Open Science Framework: [https://osf.io/f6nr2/](https://osf.io/f6nr2/)  
+Preregistration: [https://osf.io/z3j69](https://osf.io/z3j69)
+
 This repo contains scripts and materials for a musical perception study with musicians.
 
 # experiment
