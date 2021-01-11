@@ -1,39 +1,40 @@
 This repo contains scripts and materials for a musical perception study with musicians.
 
-<!-- Open Science Framework: [https://osf.io/8nbjh/](https://osf.io/8nbjh/) (Raw data are available here) -->
+# experiment
+- Environment: Mac OS X 10.15.6, Max MSP 8
 
-# Overview
-- [Script](#script)
-- [Material](#material)
+## psychopy3
+- `experiment.py`: for the experiment
+- `midiplayer.maxpat`: to make midi sound from `experiment.py`
 
-# Script
-## Environment
-All of the programme scripts were written and tested in the following environment.
+## others
+- `image`: experimental stimuli (sheet music)
+- `mid`: experimental stimuli (performance data)
+- `practice`: stimuli for practice trials
 
-- ProductName:	Mac OS X
-- ProductVersion:	10.15.6
+# analysis
+TBC
 
-## Psychopy3
-- [experiment.py]()
+# material
+## instruction
+- `instruction.md`: instruction sheet for an experimenter >> output: pdf file
+- `png files`: figures used in the instruction sheet
 
-### Others
-- image: contains sheet music
-- mid: contains mid files (performance data)
+## sheetmusic
+- `ly files`: sheet music compiled by lilypond >> output: pdf files
 
-# Material
-<!-- ## Instruction
-- instruction.Rmd: a instruction sheet for an experimenter >> output: html file.
-- image: figures used in the instruction sheet
-- psd files: images used in the instruction >> output: png files
- -->
-## Lilypond
-- ly files: sheet music compiled by lilypond >> output: pdf files
+## expstimuli
+### selection
 
-## Stimuli
-### 1. Get performances without pitch error (R)
-- filtering.R: to get correct performances and export each as an individual txt file >> output: filtered folder
-- function.R: to detect pitch errors in a performance
-- ideal.txt: the ideal sequence of the piece. used for filtering
+1. get performances without pitch error
+    - *Excluded SubNr 16 due to a deviated tempo and used 2sd options*
+- `filtering.R`: to get correct performances and export each as an individual txt file >> output: filtered folder
+- `function.R:` to detect pitch errors in a performance
+- `ideal.txt`: the ideal sequence of the piece. used for filtering
 
-### 2. Export 1. as mid files (python)
-- mid_export.py: to export txt files in the filtered folder as mid files
+### export
+2. export above as mid files
+- `mid_export.py`: to export txt files in the filtered folder as mid files >> output: mid files
+
+## etc
+- `checklist.xlsx`: a list to check each procedure during testing (for an experimenter)
