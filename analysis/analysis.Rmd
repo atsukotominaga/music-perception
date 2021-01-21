@@ -22,6 +22,7 @@ combined <- lapply(data_ls, function(f){
 data <- do.call(rbind.data.frame, combined)
 ```
 
+# Accuracy
 ## Individual data
 ```{r summary, echo = FALSE}
 # remove irrelevant strings
@@ -36,6 +37,11 @@ data[grepl("_t_", midFile)]$condition <- "teaching"
 data[grepl("_p_", midFile)]$condition <- "performing"
 data[grepl("a_", midFile)]$technique <- "articulation"
 data[grepl("d_", midFile)]$technique <- "dynamics"
+data$item <- gsub("a_t_", "", data$midFile)
+data$item <- gsub("d_t_", "", data$item)
+data$item <- gsub("a_p_", "", data$item)
+data$item <- gsub("d_p_", "", data$item)
+
 # check correct or incorrect
 data$correct <- 0
 data[condition == "teaching" & rating == "Yes"]$correct <- 1
@@ -45,8 +51,8 @@ all <- data[expMode == "experiment", .(N = .N, Sum = sum(correct), Percent = (su
 all[order(subjectNumber, condition, technique)]
 ```
 
-## Accuracy
-### All
+## Summary
+### all
 ```{r acc, echo = FALSE}
 # individual
 ind_data <- data[expMode == "experiment" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber)]
@@ -56,27 +62,7 @@ ind_data <- ind_data[order(subjectNumber)]
 subset <- ind_data[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/96)*100, SD_Percent = (sd(Sum)/96)*100)]
 subset
 ```
-### articulation
-```{r acc-a, echo = FALSE}
-# individual
-ind_data_a <- data[expMode == "experiment" & technique == "articulation" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber)]
-ind_data_a <- ind_data_a[order(subjectNumber)]
-
-# all
-subset_a <- ind_data_a[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100)]
-subset_a
-```
-
-### dynamics
-```{r acc-d, echo = FALSE}
-# individual
-ind_data_d <- data[expMode == "experiment" & technique == "dynamics" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber)]
-ind_data_d <- ind_data_d[order(subjectNumber)]
-
-# all
-subset_d <- ind_data_d[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100)]
-subset_d
-```
+### articulation vs. dynamics
 
 ```{r plot, echo = FALSE}
 ind_data_t <- data[expMode == "experiment" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, technique)]
@@ -123,15 +109,12 @@ box2
 ## 3. teaching (each item)
 ```{r item1, echo = FALSE}
 # individual
-ind_data3 <- data[expMode == "experiment" & subjectNumber != 9 & condition == "teaching", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique, midFile)]
-ind_data3 <- ind_data3[order(subjectNumber, condition, technique, midFile)]
+ind_data3 <- data[expMode == "experiment" & subjectNumber != 9 & condition == "teaching", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique, item)]
+ind_data3 <- ind_data3[order(subjectNumber, condition, technique, item)]
 
 # all
-subset3 <- ind_data3[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(condition, technique, midFile)]
+subset3 <- ind_data3[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(condition, technique, item)]
 subset3[order(-Mean_Percent)]
-
-bar <- ggplot(subset3, aes(x = reorder(midFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity")
-bar
 ```
 
 ### articulation
@@ -139,31 +122,28 @@ bar
 subset3_a <- subset3[technique == "articulation"]
 subset3_a[order(-Mean_Percent)]
 
-bar_a <- ggplot(subset3[technique == "articulation"], aes(x = reorder(midFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity")
+bar_a <- ggplot(subset3[technique == "articulation"], aes(x = reorder(item, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
 bar_a
 ```
 
 ### dynamics
 ```{r item1-d, echo = FALSE}
-subset3_b <- subset3[order(-Mean_Percent) & technique == "dynamics"]
-subset3_b[order(-Mean_Percent)]
+subset3_d <- subset3[order(-Mean_Percent) & technique == "dynamics"]
+subset3_d[order(-Mean_Percent)]
 
-bar_d <- ggplot(subset3[technique == "dynamics"], aes(x = reorder(midFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity")
+bar_d <- ggplot(subset3[technique == "dynamics"], aes(x = reorder(item, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
 bar_d
 ```
 
 ## 3. performing (each item)
 ```{r item2, echo = FALSE}
 # individual
-ind_data4 <- data[expMode == "experiment" & subjectNumber != 9 & condition == "performing", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique, midFile)]
-ind_data4 <- ind_data4[order(subjectNumber, condition, technique, midFile)]
+ind_data4 <- data[expMode == "experiment" & subjectNumber != 9 & condition == "performing", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique, item)]
+ind_data4 <- ind_data4[order(subjectNumber, condition, technique, item)]
 
 # all
-subset4 <- ind_data4[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(condition, technique, midFile)]
+subset4 <- ind_data4[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(condition, technique, item)]
 subset4[order(-Mean_Percent)]
-
-bar2 <- ggplot(subset4, aes(x = reorder(midFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity")
-bar2
 ```
 
 ### articulation
@@ -171,7 +151,7 @@ bar2
 subset4_a <- subset4[technique == "articulation"]
 subset4_a[order(-Mean_Percent)]
 
-bar2_a <- ggplot(subset4[technique == "articulation"], aes(x = reorder(midFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity")
+bar2_a <- ggplot(subset4[technique == "articulation"], aes(x = reorder(item, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
 bar2_a
 ```
 
@@ -180,6 +160,20 @@ bar2_a
 subset4_d <- subset4[technique == "dynamics"]
 subset4_d[order(-Mean_Percent)]
 
-bar2_d <- ggplot(subset4[technique == "dynamics"], aes(x = reorder(midFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity")
+bar2_d <- ggplot(subset4[technique == "dynamics"], aes(x = reorder(item, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
 bar2_d
 ```
+
+```{r export, include = FALSE}
+order_data <- rbind(
+  data.table(subset3_a$condition, subset3_a$technique, subset3_a$item, subset3_a$Mean_Percent),
+  data.table(subset3_d$condition, subset3_d$technique, subset3_d$item, subset3_d$Mean_Percent),
+  data.table(subset4_a$condition, subset4_a$technique, subset4_a$item, subset4_a$Mean_Percent),
+  data.table(subset4_d$condition, subset4_d$technique, subset4_d$item, subset4_d$Mean_Percent))
+
+colnames(order_data) <- c("condition", "technique", "item", "mean_percent")
+
+# export
+fwrite(order_data, file = "order_data.txt")
+```
+
