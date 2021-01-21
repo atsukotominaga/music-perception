@@ -7,7 +7,7 @@ output: html_notebook
 
 I chose stimuli with the IOIs within 2sd randomly.
 
-Note: SubNr 8 was excluded due to an experimental error, SubNr 16 was excluded due to a deviated tempo (see analysis for [teaching-v1.0](https://github.com/atsukotominaga/teaching-v1.0))
+Note: SubNr 8 was excluded due to an experimental error, SubNr 16 was excluded due to a deviated tempo (see analysis for [music-teaching: experiment-1](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-1))
 
 ```{r setup, include = FALSE}
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
@@ -131,14 +131,23 @@ ioi_dyn
 ## Plots
 ### Articulation
 ```{r ioi_art_plot, echo = FALSE}
-p_ioi_art <- ggplot(ioi[Skill == "articulation"], aes(x = Instance, y = Mean, fill = Condition)) +
+p_ioi_art_t <- ggplot(ioi[Skill == "articulation" & Condition == "teaching"], aes(x = Instance, y = Mean)) +
  geom_bar(stat = "identity", position = position_dodge()) +
  geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
                width = .2, position = position_dodge(.9)) +
  geom_hline(yintercept = 188, linetype = "dashed") +
  scale_x_continuous(breaks = seq(1:24)) +
- labs(y = "IOI (ms)", subtitle = "IOI: Each instance (Articulation)")
-p_ioi_art
+ labs(y = "IOI (ms)", subtitle = "IOI: Each instance (Articulation-Teaching)")
+p_ioi_art_t
+
+p_ioi_art_p <- ggplot(ioi[Skill == "articulation" & Condition == "performing"], aes(x = Instance, y = Mean)) +
+ geom_bar(stat = "identity", position = position_dodge()) +
+ geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
+               width = .2, position = position_dodge(.9)) +
+ geom_hline(yintercept = 188, linetype = "dashed") +
+ scale_x_continuous(breaks = seq(1:24)) +
+ labs(y = "IOI (ms)", subtitle = "IOI: Each instance (Articulation-Performing)")
+p_ioi_art_p
 
 p_ioi_art_all <- ggplot(ioi_art, aes(x = Skill, y = Mean, fill = Condition)) +
    geom_bar(stat = "identity", position = position_dodge()) +
@@ -150,14 +159,23 @@ p_ioi_art_all
 ```
 ### Dynamics
 ```{r ioi_dyn_plot, echo = FALSE}
-p_ioi_dyn <- ggplot(ioi[Skill == "dynamics"], aes(x = Instance, y = Mean, fill = Condition)) +
+p_ioi_dyn_t <- ggplot(ioi[Skill == "dynamics" & Condition == "teaching"], aes(x = Instance, y = Mean)) +
  geom_bar(stat = "identity", position = position_dodge()) +
  geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
                width = .2, position = position_dodge(.9)) +
  geom_hline(yintercept = 188, linetype = "dashed") +
  scale_x_continuous(breaks = seq(1:24)) +
  labs(y = "IOI (ms)", subtitle = "IOI: Each instance (Dynamics)")
-p_ioi_dyn
+p_ioi_dyn_t
+
+p_ioi_dyn_p <- ggplot(ioi[Skill == "dynamics" & Condition == "performing"], aes(x = Instance, y = Mean)) +
+ geom_bar(stat = "identity", position = position_dodge()) +
+ geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
+               width = .2, position = position_dodge(.9)) +
+ geom_hline(yintercept = 188, linetype = "dashed") +
+ scale_x_continuous(breaks = seq(1:24)) +
+ labs(y = "IOI (ms)", subtitle = "IOI: Each instance (Dynamics)")
+p_ioi_dyn_p
 
 p_ioi_dyn_all <- ggplot(ioi_dyn, aes(x = Skill, y = Mean, fill = Condition)) +
    geom_bar(stat = "identity", position = position_dodge()) +
@@ -222,24 +240,6 @@ kot <- dt_kot[Subcomponent == "Legato" | Subcomponent == "Staccato", .(N = .N, M
 kot_all <- kot[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), by = .(Condition, Skill, Subcomponent)]
 ```
 
-## Plots
-```{r kot_plot, echo = FALSE}
-p_kot <- ggplot(kot, aes(x = Instance, y = Mean, fill = Condition)) +
-   geom_bar(stat = "identity", position = position_dodge()) +
-   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
-                 width = .2, position = position_dodge(.9)) +
-   facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:24)) +
-   labs(y = "KOT (ms)", subtitle = "KOT: Each instance (Articulation)")
-p_kot
-
-p_kot_all <- ggplot(kot_all, aes(x = Subcomponent, y = Mean, fill = Condition)) +
-   geom_bar(stat = "identity", position = position_dodge()) +
-   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
-                 width = .2, position = position_dodge(.9)) +
-   labs(y = "KOT (ms)", subtitle = "KOT: Averaged (Articulation)")
-p_kot_all
-```
-
 ## Each instance
 ```{r kot_stats_ind, echo = FALSE}
 kot
@@ -248,6 +248,32 @@ kot
 ## Averaged
 ```{r kot_stats_all, echo = FALSE}
 kot_all
+```
+
+## Plots
+```{r kot_plot, echo = FALSE}
+p_kot_a <- ggplot(kot[Condition == "teaching"], aes(x = Instance, y = Mean)) +
+   geom_bar(stat = "identity", position = position_dodge()) +
+   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
+                 width = .2, position = position_dodge(.9)) +
+   facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:24)) +
+   labs(y = "KOT (ms)", subtitle = "KOT: Each instance (Articulation-Teaching)")
+p_kot_a
+
+p_kot_d <- ggplot(kot[Condition == "performing"], aes(x = Instance, y = Mean)) +
+   geom_bar(stat = "identity", position = position_dodge()) +
+   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
+                 width = .2, position = position_dodge(.9)) +
+   facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:24)) +
+   labs(y = "KOT (ms)", subtitle = "KOT: Each instance (Articulation-Performing)")
+p_kot_d
+
+p_kot_all <- ggplot(kot_all, aes(x = Subcomponent, y = Mean, fill = Condition)) +
+   geom_bar(stat = "identity", position = position_dodge()) +
+   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
+                 width = .2, position = position_dodge(.9)) +
+   labs(y = "KOT (ms)", subtitle = "KOT: Averaged (Articulation)")
+p_kot_all
 ```
 
 # KV
@@ -301,13 +327,21 @@ vel_all
 
 ## Plots
 ```{r vel_plot, echo = FALSE}
-p_vel <- ggplot(vel, aes(x = Instance, y = Mean, fill = Condition)) +
+p_vel_t <- ggplot(vel[Condition == "teaching"], aes(x = Instance, y = Mean)) +
    geom_bar(stat = "identity", position = position_dodge()) +
    geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
                  width = .2, position = position_dodge(.9)) +
    facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:24)) +
-   labs(y = "Key Velocity", subtitle = "KV: Each instance (Dynamics)")
-p_vel
+   labs(y = "Key Velocity", subtitle = "KV: Each instance (Dynamics-Teaching)")
+p_vel_t
+
+p_vel_p <- ggplot(vel[Condition == "performing"], aes(x = Instance, y = Mean)) +
+   geom_bar(stat = "identity", position = position_dodge()) +
+   geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
+                 width = .2, position = position_dodge(.9)) +
+   facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:24)) +
+   labs(y = "Key Velocity", subtitle = "KV: Each instance (Dynamics-Performing)")
+p_vel_p
 
 p_vel_all <- ggplot(vel_all, aes(x = Subcomponent, y = Mean, fill = Condition)) +
    geom_bar(stat = "identity", position = position_dodge()) +
@@ -382,13 +416,21 @@ vel_diff_all
 
 ## Plots
 ```{r vel_diff_plot, echo = FALSE}
-p_vel_diff <- ggplot(vel_diff, aes(x = Instance, y = Mean, fill = Condition)) +
+p_vel_diff_t <- ggplot(vel_diff[Condition == "teaching"], aes(x = Instance, y = Mean)) +
 geom_bar(stat = "identity", position = position_dodge()) +
 geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
               width = .2, position = position_dodge(.9)) +
 facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:24)) +
 labs(y = "KV difference", subtitle = "KV-Diff: Each instance (Dynamics)")
-p_vel_diff
+p_vel_diff_t
+
+p_vel_diff_p <- ggplot(vel_diff[Condition == "performing"], aes(x = Instance, y = Mean)) +
+geom_bar(stat = "identity", position = position_dodge()) +
+geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
+              width = .2, position = position_dodge(.9)) +
+facet_grid(Subcomponent ~ .) + scale_x_continuous(breaks = seq(1:24)) +
+labs(y = "KV difference", subtitle = "KV-Diff: Each instance (Dynamics)")
+p_vel_diff_p
 
 p_vel_diff_all <- ggplot(vel_diff_all, aes(x = Subcomponent, y = Mean, fill = Condition)) +
 geom_bar(stat = "identity", position = position_dodge()) +
@@ -396,4 +438,126 @@ geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD),
               width = .2, position = position_dodge(.9)) +
 labs(y = "KV difference", subtitle = "KV-Diff: Averaged (Dynamics)")
 p_vel_diff_all
+```
+
+# Pilot data (with 9 participants)
+```{r read-2, include = FALSE}
+order_data <- fread("../../../analysis/order_data.txt")
+```
+
+order stimuli by participants' performance (left: low accuracy - high: high accuracy)
+
+## Legato
+```{r kot-legato, echo = FALSE}
+# kot-legato
+kot_legato <- kot[Subcomponent == "Legato"]
+order_art <- order_data[technique == "articulation"]
+order_art <- order_art[order(condition, item)]
+
+kot_legato$Correct <- 0
+kot_legato[Condition == "teaching"]$Correct <- order_art[condition == "teaching"]$mean_percent
+kot_legato[Condition == "performing"]$Correct <- order_art[condition == "performing"]$mean_percent
+
+ggplot(kot_legato[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KOT (ms)", subtitle = "Teaching-Legato (Correct Answer = YES)")
+
+ggplot(kot_legato[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KOT (ms)", subtitle = "Performing-Legato (Correct Answer = NO)")
+```
+
+## Staccato
+```{r kot-staccato, echo = FALSE}
+# kot-staccato
+kot_staccato <- kot[Subcomponent == "Staccato"]
+
+kot_staccato$Correct <- 0
+kot_staccato[Condition == "teaching"]$Correct <- order_art[condition == "teaching"]$mean_percent
+kot_staccato[Condition == "performing"]$Correct <- order_art[condition == "performing"]$mean_percent
+
+ggplot(kot_staccato[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KOT (ms)", subtitle = "Teaching-Staccato (Correct Answer = YES)")
+
+ggplot(kot_staccato[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KOT (ms)", subtitle = "Performing-Staccato (Correct Answer = NO)")
+```
+
+## Legato vs. Staccato
+```{r leg-sta, echo = FALSE}
+leg_sta <- rbind(kot_legato, kot_staccato)
+
+ggplot(leg_sta[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct, color = Subcomponent)) + geom_bar(stat = "identity", position = position_dodge()) + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KOT (ms)", subtitle = "Teaching (Correct Answer = YES)")
+
+ggplot(leg_sta[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct, color = Subcomponent)) + geom_bar(stat = "identity", position = position_dodge()) + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KOT (ms)", subtitle = "Performing (Correct Answer = NO)")
+```
+
+## Forte
+```{r vel-forte, echo = FALSE}
+# vel-forte
+vel_forte <- vel[Subcomponent == "Forte"]
+order_dyn <- order_data[technique == "dynamics"]
+order_dyn <- order_dyn[order(condition, item)]
+
+vel_forte$Correct <- 0
+vel_forte[Condition == "teaching"]$Correct <- order_dyn[condition == "teaching"]$mean_percent
+vel_forte[Condition == "performing"]$Correct <- order_dyn[condition == "performing"]$mean_percent
+
+ggplot(vel_forte[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Teaching-Forte (Correct Answer = YES)")
+
+ggplot(vel_forte[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Performing-Forte (Correct Answer = NO)")
+```
+
+## Piano
+```{r vel-piano, echo = FALSE}
+# vel-piano
+vel_piano <- vel[Subcomponent == "Piano"]
+
+vel_piano$Correct <- 0
+vel_piano[Condition == "teaching"]$Correct <- order_dyn[condition == "teaching"]$mean_percent
+vel_piano[Condition == "performing"]$Correct <- order_dyn[condition == "performing"]$mean_percent
+
+ggplot(vel_piano[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Teaching-Piano (Correct Answer = YES)")
+
+ggplot(vel_piano[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Performing-Piano (Correct Answer = NO)")
+```
+
+## Forte vs. Piano
+```{r for-pia, echo = FALSE}
+for_pia <- rbind(vel_forte, vel_piano)
+
+ggplot(for_pia[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct, color = Subcomponent)) + geom_bar(stat = "identity", position = position_dodge()) + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Teaching (Correct Answer = YES)")
+
+ggplot(for_pia[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct, color = Subcomponent)) + geom_bar(stat = "identity", position = position_dodge()) + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Performing (Correct Answer = NO)")
+```
+
+## Forte to Piano
+```{r vel-diff-ftop, echo = FALSE}
+# vel_diff-ftop
+vel_diff_ftop <- vel_diff[Subcomponent == "FtoP"]
+
+vel_diff_ftop$Correct <- 0
+vel_diff_ftop[Condition == "teaching"]$Correct <- order_dyn[condition == "teaching"]$mean_percent
+vel_diff_ftop[Condition == "performing"]$Correct <- order_dyn[condition == "performing"]$mean_percent
+
+ggplot(vel_diff_ftop[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Teaching-FtoP (Correct Answer = YES)")
+
+ggplot(vel_diff_ftop[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Performing-FtoP (Correct Answer = NO)")
+```
+
+## Piano to Forte
+```{r vel-diff-ptof, echo = FALSE}
+# vel_diff-ptof
+vel_diff_ptof <- vel_diff[Subcomponent == "PtoF"]
+
+vel_diff_ptof$Correct <- 0
+vel_diff_ptof[Condition == "teaching"]$Correct <- order_dyn[condition == "teaching"]$mean_percent
+vel_diff_ptof[Condition == "performing"]$Correct <- order_dyn[condition == "performing"]$mean_percent
+
+ggplot(vel_diff_ptof[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Teaching-PtoF (Correct Answer = YES)")
+
+ggplot(vel_diff_ptof[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Performing-PtoF (Correct Answer = NO)")
+```
+
+## FtoP vs. PtoF
+```{r ftop-ptof, echo = FALSE}
+ftop_ptof <- rbind(vel_diff_ftop, vel_diff_ptof)
+
+ggplot(ftop_ptof[Condition == "teaching"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct, color = Subcomponent)) + geom_bar(stat = "identity", position = position_dodge()) + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Teaching (Correct Answer = YES)")
+
+ggplot(ftop_ptof[Condition == "performing"], aes(x = reorder(Instance, Correct), y = Mean, fill = Correct, color = Subcomponent)) + geom_bar(stat = "identity", position = position_dodge()) + geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD), width = .2, position = position_dodge(.9)) + labs(x = "Stimuli", y = "KV", subtitle = "Performing (Correct Answer = NO)")
 ```
