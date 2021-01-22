@@ -1,16 +1,48 @@
 ---
-title: "Pilot Analysis (music perception study)"
+title: "Music Perception: Pilot Analysis"
 author: "Atsuko Tominaga"
 output: html_notebook
 ---
 
 - Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
 
-- 10 participants (experimental error = 1)
+- 10 participants (experimental error = 1) >> 9 participants were included for analysis.
+
+# Experiment
+
+## Stimuli
+- Stimuli were selected from the previous study ([the sound of teaching music/experiment-1](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-1)).
+- 48 stimuli were randomly chosen from each technique (either articulation or dynamics - therefore in total 96 stimuli). The half of them were selected from the teaching condition and the other half were from the performing condition.
+  + 24 for teaching-articulation performances
+  + 24 for performing-articulation performances
+  + 24 for teaching-dynamics performances
+  + 24 for performing-dynamics performances
+
+## Design
+
+- 2 blocks (articulation / dynamics): participants were asked to do the same task for two expressions separately. The order of the blocks was counterbalanced across participants.
+- 48 trials for each block (each stimulus was presented only once) and the stimuli were randomised across participants.
+
+## Procedure
+1. Musicians (> 6yo experience) were asked to listen to a number of recordings and judge whether each performance was produced for teaching purposes or not.
+
+Actual instruction:
+```
+Each performance was produced in order to either1) teach the musical expressive technique (as a teacher) 2) perform their best (as a performer).
+
+You will be asked to judge whether each performer had the intention to teach or not by pressing the 'Yes' <Left> or 'No' <Right> key.
+```
+
+2. Participants pressed "YES" if they think the recording was produced for teaching (as a teacher) whereas they pressed "NO" if they thought the recording was produced for performing (as a performer).
+
+3. Correct answers would be 1) participants pressed "YES" when they listened to teaching performances or 2) participants pressed "NO" when they listened to performing performances.
+
+I hope these make sense...
 
 ```{r packages, include = FALSE}
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
 if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
+if (!require("afex")) {install.packages("afex"); require("afex")}
 ```
 
 ```{r read, include = FALSE}
@@ -22,7 +54,7 @@ combined <- lapply(data_ls, function(f){
 data <- do.call(rbind.data.frame, combined)
 ```
 
-# Accuracy
+# Results
 ## Individual data
 ```{r summary, echo = FALSE}
 # remove irrelevant strings
@@ -51,7 +83,7 @@ all <- data[expMode == "experiment", .(N = .N, Sum = sum(correct), Percent = (su
 all[order(subjectNumber, condition, technique)]
 ```
 
-## Summary
+## 1. Summary
 ### all
 ```{r acc, echo = FALSE}
 # individual
@@ -62,51 +94,67 @@ ind_data <- ind_data[order(subjectNumber)]
 subset <- ind_data[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/96)*100, SD_Percent = (sd(Sum)/96)*100)]
 subset
 ```
-### articulation vs. dynamics
 
 ```{r plot, echo = FALSE}
-ind_data_t <- data[expMode == "experiment" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, technique)]
-ind_data_t <- ind_data_t[order(subjectNumber, technique)]
+ggboxplot(ind_data, x = "N", y = "Percent", add = "dotplot", xlab = FALSE) + ylab("Correct %") + theme(axis.text.x = element_blank())
+```
 
-subset_t <- ind_data_t[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100), by = .(technique)]
-subset_t
+### One-sample *t*-test
+```{r t-test, echo = FALSE}
+# normality check
+shapiro.test(ind_data$Percent)
 
-data_box <- data.table(subjectNumber = ind_data_t$subjectNumber, articulation = ind_data_t[technique == "articulation"]$Percent, dynamics = ind_data_t[technique == "dynamics"]$Percent)
+t.test(ind_data$Percent, mu = 50, alternative = "two.sided")
+```
+
+- Surprisingly, it showed a trend ( p = .06) but the 95% confidence interval overlaps with 50 %.
+
+### articulation vs. dynamics
+
+```{r plot2, echo = FALSE}
+ind_data_ad <- data[expMode == "experiment" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, technique)]
+ind_data_ad <- ind_data_ad[order(subjectNumber, technique)]
+
+subset_ad <- ind_data_ad[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100), by = .(technique)]
+subset_ad
+
+data_box <- data.table(subjectNumber = ind_data_ad$subjectNumber, articulation = ind_data_ad[technique == "articulation"]$Percent, dynamics = ind_data_ad[technique == "dynamics"]$Percent)
 box <- ggpaired(data_box, cond1 = "articulation", cond2 = "dynamics", line.color = "gray", line.size = 0.4, ylab = "Correct %")
 box
 ```
 
-## 1. teaching vs. performing (altogether)
-```{r plot1, echo = FALSE}
-# individual
-ind_data1 <- data[expMode == "experiment" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition)]
-ind_data1 <- ind_data1[order(subjectNumber, condition)]
+## One-sample *t*-test
+### articulation
+```{r t-test-a, echo = FALSE}
+# normality check
+shapiro.test(ind_data_ad[technique == "articulation"]$Percent)
 
-# all
-subset1 <- ind_data1[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100), by = .(condition)]
-subset1
+t.test(ind_data_ad[technique == "articulation"]$Percent, mu = 50, alternative = "two.sided")
+```
+- Not significantly different from chance (p > .2).
 
-data_box1 <- data.table(subjectNumber = ind_data1$subjectNumber, teaching = ind_data1[condition == "teaching"]$Percent, performing = ind_data1[condition == "performing"]$Percent)
-box1 <- ggpaired(data_box1, cond1 = "teaching", cond2 = "performing", line.color = "gray", line.size = 0.4, ylab = "Correct %")
-box1
+### dynamics
+```{r t-test-d, echo = FALSE}
+# normality check
+shapiro.test(ind_data_ad[technique == "dynamics"]$Percent)
+
+t.test(ind_data_ad[technique == "dynamics"]$Percent, mu = 50, alternative = "two.sided")
 ```
 
-## 2. teaching vs. performing (each technique)
-```{r plot2, echo = FALSE}
-# individual
-ind_data2 <- data[expMode == "experiment" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique)]
-ind_data2 <- ind_data2[order(subjectNumber, condition, technique)]
+- The performance was significantly better than chance (p < .01).
 
-# all
-subset2 <- ind_data2[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/24)*100, SD_Percent = (sd(Sum)/24)*100), by = .(condition, technique)]
-subset2
+## Paired *t*-test between articulation and dynamics
+```{r p-t-test, echo = FALSE}
+# normality check
+shapiro.test(ind_data_ad[technique == "dynamics"]$Percent-ind_data_ad[technique == "articulation"]$Percent)
 
-data_box2 <- data.table(subjectNumber = ind_data2$subjectNumber, teaching = ind_data2[condition == "teaching"]$Percent, performing = ind_data2[condition == "performing"]$Percent, technique = ind_data2$technique)
-box2 <- ggpaired(data_box2, cond1 = "teaching", cond2 = "performing", facet.by = "technique", line.color = "gray", line.size = 0.4, ylab = "Correct %")
-box2
+t.test(ind_data_ad[technique == "articulation"]$Percent, ind_data_ad[technique == "dynamics"]$Percent, paired = TRUE)
 ```
 
-## 3. teaching (each item)
+- There was a difference between articulation and dynamics in terms of accuracy.
+
+## 2. teaching (each item)
+### all
 ```{r item1, echo = FALSE}
 # individual
 ind_data3 <- data[expMode == "experiment" & subjectNumber != 9 & condition == "teaching", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique, item)]
@@ -136,6 +184,7 @@ bar_d
 ```
 
 ## 3. performing (each item)
+### all
 ```{r item2, echo = FALSE}
 # individual
 ind_data4 <- data[expMode == "experiment" & subjectNumber != 9 & condition == "performing", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique, item)]
@@ -176,4 +225,3 @@ colnames(order_data) <- c("condition", "technique", "item", "mean_percent")
 # export
 fwrite(order_data, file = "order_data.txt")
 ```
-
