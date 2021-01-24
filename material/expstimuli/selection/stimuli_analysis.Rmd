@@ -1,5 +1,5 @@
 ---
-title: "Music Perception: Stimuli profiles (2sd)"
+title: "Music Perception: Stimuli Analysis)"
 output: html_notebook
 ---
 
