@@ -6,3 +6,7 @@
 # analysis
 analysis/data
 analysis/test
+analysis/questionnaire.csv
+
+# material
+material/expstimuli/selection/3sd
