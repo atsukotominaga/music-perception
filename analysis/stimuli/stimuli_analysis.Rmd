@@ -1,0 +1,142 @@
+---
+title: "Music Perception: Stimuli Analysis)"
+output: html_notebook
+---
+
+- Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
+
+I chose stimuli with the IOIs within 2sd randomly from each condition (teaching, performing), each technique (articulation, dynamics).
+
+Note: SubNr 8 was excluded due to an experimental error, SubNr 16 was excluded due to a deviated tempo (see analysis for [music-teaching: experiment-1](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-1))
+
+# DVs
+- IOIs (average tempo)
+- Transition points
+- CV (tempo variability)
+- KOT (articulation)
+- KV (dynamics)
+- KV-diff (dynamics)
+
+```{r setup, include = FALSE}
+if (!require("data.table")) {install.packages("data.table"); require("data.table")}
+if (!require("tuneR")) {install.packages("tuneR"); require("tuneR")}
+if (!require("ggplot2")) {install.packages("ggplot2"); require("ggplot2")}
+```
+
+```{r file, include = FALSE}
+# create a list of data file names
+lf <- list.files("../../experiment/mid/", pattern = "mid")
+
+# combine data
+all_data <- data.table()
+for (file in lf){
+   current <- readMidi(paste("../../experiment/mid/", file, sep = ""))
+   current$midfile <- file
+   all_data <- rbind(all_data, current)
+}
+
+data <- all_data[event == "Note On" | event == "Note Off"]
+data$NoteNr <- rep(1:134, nrow(data)/134)
+data$channel <- NULL
+data$parameterMetaSystem <- NULL
+data$track <- NULL
+data$type <- NULL
+
+# labelling
+colnames(data)[c(3,4)] <- c("Pitch", "Velocity")
+data$Condition <- "NA"
+data$Skill <- "NA"
+data[midfile %like% "_t_"]$Condition <- "teaching"
+data[midfile %like% "_p_"]$Condition <- "performing"
+data[startsWith(midfile, "a_")]$Skill <- "articulation"
+data[startsWith(midfile, "d_")]$Skill <- "dynamics"
+
+# numbering
+instance = 1
+data$Instance <- 0
+for (file in unique(data$midfile)){
+   data[midfile == file]$Instance <- instance
+   instance = instance + 1
+}
+
+# define subcomponents
+# For intervals
+ls_legato <- list(c(1:7), c(17:23), c(42:48), c(58:64))
+ls_staccato <- list(c(9:15), c(25:31), c(34:40), c(50:56))
+ls_forte <- list(c(1:7), c(17:23), c(42:48), c(58:64))
+ls_piano <- list(c(9:15), c(25:31), c(34:40), c(50:56))
+
+# For each note (velocity only)
+ls_legato_2 <- list(c(1:8), c(17:24), c(42:49), c(58:65))
+ls_staccato_2 <- list(c(9:16), c(25:32), c(34:41), c(50:57))
+ls_forte_2 <- list(c(1:8), c(17:24), c(42:49), c(58:65))
+ls_piano_2 <- list(c(9:16), c(25:32), c(34:41), c(50:57))
+
+# Define Skill Change (LtoS, FtoP)
+change_1 <- c(8, 24, 49)
+# Define Skill Change (StoL, PtoF)
+change_2 <- c(16, 41, 57)
+```
+
+# IOIs
+```{r ioi, include = FALSE}
+data_onset <- data[event == "Note On"]
+data_offset <- data[event == "Note Off"]
+
+data_onset$IOI <- diff(c(0, data_onset$time))
+dt_ioi <- data_onset[NoteNr != 1]
+dt_ioi$Interval <- rep(1:66, nrow(dt_ioi)/66)
+
+# assign Subcomponents
+dt_ioi$Subcomponent <- "NA"
+# Legato
+for (phrase in 1:length(ls_legato)){
+ for (note in 1:length(ls_legato[[phrase]])){
+   dt_ioi[Skill == "articulation" & Interval == ls_legato[[phrase]][note]]$Subcomponent <- "Legato"
+ }
+}
+# Staccato
+for (phrase in 1:length(ls_staccato)){
+ for (note in 1:length(ls_staccato[[phrase]])){
+   dt_ioi[Skill == "articulation" & Interval == ls_staccato[[phrase]][note]]$Subcomponent <- "Staccato"
+ }
+}
+
+# Forte
+for (phrase in 1:length(ls_forte)){
+ for (note in 1:length(ls_forte[[phrase]])){
+   dt_ioi[Skill == "dynamics" & Interval == ls_forte[[phrase]][note]]$Subcomponent <- "Forte"
+ }
+}
+# Piano
+for (phrase in 1:length(ls_piano)){
+ for (note in 1:length(ls_piano[[phrase]])){
+   dt_ioi[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
+ }
+}
+
+# assign Subcomponent Change
+for (number in change_1){
+ dt_ioi[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
+ dt_ioi[Skill == "dynamics" & Interval == number]$Subcomponent <- "FtoP"
+}
+for (number in change_2){
+ dt_ioi[Skill == "articulation" & Interval == number]$Subcomponent <- "StoL"
+ dt_ioi[Skill == "dynamics" & Interval == number]$Subcomponent <- "PtoF"
+}
+```
+
+# All
+## Articulation
+```{r ioi-all-art, echo = FALSE}
+ioi_art <- dt_ioi[Skill == "articulation"]
+
+
+```
+
+## Dynamics
+```{r ioi-all-dyn, echo = FALSE}
+ioi_dyn <- dt_ioi[Skill == "dynamics"]
+
+
+```
