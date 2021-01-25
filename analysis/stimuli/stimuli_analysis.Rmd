@@ -283,7 +283,7 @@ for (row in 1:nrow(data_onset)){
    }
 }
 
-dt_kot <- data_onset[NoteNr != 17]
+dt_kot <- data_onset[NoteNr != 1]
 dt_kot$Interval <- rep(1:66, nrow(dt_kot)/66)
 
 # assign Subcomponents
@@ -338,7 +338,7 @@ ggscatter(kot_legato, x = "Mean", y = "Teaching", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
 ```
 ## Staccato
-```{r kot-legato, echo = FALSE}
+```{r kot-staccato, echo = FALSE}
 kot_staccato <- dt_kot[Subcomponent == "Staccato", .(N = .N, Mean = mean(KOT), SD = sd(KOT)), by = .(MidFile)]
 
 # sorted
