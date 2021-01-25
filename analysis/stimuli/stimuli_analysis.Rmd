@@ -17,7 +17,7 @@ output: html_notebook
   
 *Note: SubNr 8 was excluded due to an experimental error, SubNr 16 was excluded due to a deviated tempo (see analysis for [music-teaching: experiment-1](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-1))*
 
-# DVs
+## DVs
 - IOIs (average tempo)
 - Transition points
 - CV (tempo variability)
@@ -25,11 +25,14 @@ output: html_notebook
 - KV (dynamics)
 - KV-diff (dynamics)
 
-# Results
+## Results
 - 1. [Accuracy](https://github.com/atsukotominaga/perception-v1.0/blob/master/analysis/analysis.Rmd)
+
+The accuracy results showed that it was not clear whether participants could detect teaching performances because the stimuli selection was not appropriate.
+
 - 2. Exploratory analysis
 
-In order to see which stimulus was recognised as teaching performances, we decided to run exploratory analysis. We plotted correlations between each DV and the percentage of judgement as "teaching".
+In order to see which stimulus was recognised as teaching performances, we decided to run exploratory analysis. We plotted correlations between each DV and the percentage of judgement as "teaching" regardless of their original conditions (i.e., teaching vs. performing).
 
 ```{r setup, include = FALSE}
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
@@ -84,7 +87,9 @@ change_1 <- c(8, 24, 49)
 change_2 <- c(16, 41, 57)
 ```
 
-# IOIs (average tempo)
+# IOIs
+- average tempo and teaching judgement
+
 ```{r ioi, include = FALSE}
 data_onset <- data[event == "Note On"]
 data_offset <- data[event == "Note Off"]
@@ -150,7 +155,8 @@ ioi$Teaching <- rating$Mean_Percent
 ioi$TeachingSD <- rating$SD_Percent
 
 ggscatter(ioi, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ## Articulation
@@ -165,7 +171,8 @@ ioi_art$Teaching <- rating[Skill == "articulation"]$Mean_Percent
 ioi_art$TeachingSD <- rating[Skill == "articulation"]$SD_Percent
 
 ggscatter(ioi_art, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ## Dynamics
@@ -180,10 +187,13 @@ ioi_dyn$Teaching <- rating[Skill == "dynamics"]$Mean_Percent
 ioi_dyn$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(ioi_dyn, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 # Transition points
+- tempo at transition points (e.g., legato to staccato / forte to piano) and teaching judgement
+
 ## All
 ```{r ioi-tra-all, echo = FALSE}
 ioi_tra <- dt_ioi[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile)]
@@ -196,7 +206,8 @@ ioi_tra$Teaching <- rating$Mean_Percent
 ioi_tra$TeachingSD <- rating$SD_Percent
 
 ggscatter(ioi_tra, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ## Articulation
@@ -211,7 +222,8 @@ ioi_tra_art$Teaching <- rating[Skill == "articulation"]$Mean_Percent
 ioi_tra_art$TeachingSD <- rating[Skill == "articulation"]$SD_Percent
 
 ggscatter(ioi_tra_art, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ## Dynamics
@@ -226,10 +238,13 @@ ioi_tra_dyn$Teaching <- rating[Skill == "dynamics"]$Mean_Percent
 ioi_tra_dyn$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(ioi_tra_dyn, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 # CV (tempo variability)
+- tempo variability and teaching judgement
+
 ## All
 ```{r cv, echo = FALSE}
 cv <- dt_ioi[, .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile)]
@@ -242,7 +257,8 @@ cv$Teaching <- rating$Mean_Percent
 cv$TeachingSD <- rating$SD_Percent
 
 ggscatter(cv, x = "CV", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 ## Articulation
 ```{r cv-art, echo = FALSE}
@@ -256,7 +272,8 @@ cv_art$Teaching <- rating[Skill == "articulation"]$Mean_Percent
 cv_art$TeachingSD <- rating[Skill == "articulation"]$SD_Percent
 
 ggscatter(cv_art, x = "CV", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ## Dynamics
@@ -271,10 +288,13 @@ cv_dyn$Teaching <- rating[Skill == "dynamics"]$Mean_Percent
 cv_dyn$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(cv_dyn, x = "CV", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 # KOT (only articulation stimuli)
+- articulation and teaching judgement
+
 ```{r kot, include = FALSE}
 data_onset$KOT <- NA
 for (row in 1:nrow(data_onset)){
@@ -335,7 +355,8 @@ kot_legato$Teaching <- rating[Skill == "articulation"]$Mean_Percent
 kot_legato$TeachingSD <- rating[Skill == "articulation"]$SD_Percent
 
 ggscatter(kot_legato, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 ## Staccato
 ```{r kot-staccato, echo = FALSE}
@@ -349,9 +370,12 @@ kot_staccato$Teaching <- rating[Skill == "articulation"]$Mean_Percent
 kot_staccato$TeachingSD <- rating[Skill == "articulation"]$SD_Percent
 
 ggscatter(kot_staccato, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 # KV (only dynamics stimuli)
+- dynamics and teaching judgement
+
 ## Forte
 ```{r vel-forte, echo = FALSE}
 dt_vel <- data_onset
@@ -394,7 +418,8 @@ vel_forte$Teaching <- rating[Skill == "dynamics"]$Mean_Percent
 vel_forte$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(vel_forte, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ## Piano
@@ -409,10 +434,13 @@ vel_piano$Teaching <- rating[Skill == "dynamics"]$Mean_Percent
 vel_piano$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(vel_piano, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 # KV-diff (dynamics)
+- dynamics changes at transition points (between forte and piano) and teaching judgement
+
 ## Forte to Piano
 ```{r vel-diff-forte, echo = FALSE}
 data_onset$Diff <- diff(c(0, data_onset$Velocity))
@@ -466,7 +494,8 @@ vel_diff_ftop$Teaching <- rating[Skill == "dynamics"]$Mean_Percent
 vel_diff_ftop$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(vel_diff_ftop, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "Velocity Difference (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ## Piano to Forte
@@ -481,6 +510,7 @@ vel_diff_ptof$Teaching <- rating[Skill == "dynamics"]$Mean_Percent
 vel_diff_ptof$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(vel_diff_ptof, x = "Mean", y = "Teaching", add = "reg.line",
-          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE)
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
+          xlab = "Velocity Difference (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
