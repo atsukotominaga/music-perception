@@ -77,7 +77,7 @@ all <- data[expMode == "experiment", .(N = .N, Sum = sum(Correct), Percent = (su
 all[order(subjectNumber, Condition, Skill)]
 ```
 
-## 1. Summary
+## 1. Statistics
 ### All
 ```{r acc, echo = FALSE}
 # individual
@@ -142,7 +142,6 @@ t.test(ind_data_ad[Skill == "articulation"]$Percent, ind_data_ad[Skill == "dynam
 ```
 
 ## 2. Teaching stimuli
-### All
 ```{r item1, echo = FALSE}
 # individual
 ind_data2 <- data[subjectNumber != 9 & Condition == "teaching", .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Condition, Skill, MidFile)]
@@ -150,7 +149,6 @@ ind_data2 <- ind_data2[order(subjectNumber, Condition, Skill, MidFile)]
 
 # all
 subset2 <- ind_data2[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
-subset2[order(-Mean_Percent)]
 ```
 
 ### Articulation
@@ -174,7 +172,6 @@ bar_d
 ```
 
 ## 3. Performing stimuli
-### All
 ```{r item2, echo = FALSE}
 # individual
 ind_data3 <- data[subjectNumber != 9 & Condition == "performing", .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Condition, Skill, MidFile)]
@@ -182,7 +179,6 @@ ind_data3 <- ind_data3[order(subjectNumber, Condition, Skill, MidFile)]
 
 # all
 subset3 <- ind_data3[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
-subset3[order(-Mean_Percent)]
 ```
 
 ### Articulation
@@ -205,9 +201,31 @@ bar2_d <- ggplot(subset3_d, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Per
 bar2_d
 ```
 
-```{r export, include = FALSE}
-order_data <- rbind(subset2, subset3)
+# Accuracy for each stimulus
+```{r export, echo = FALSE}
+accuracy_data <- rbind(subset2, subset3)
+accuracy_data <- accuracy_data[order(MidFile)]
+accuracy_data
 
 # export
-fwrite(order_data, file = "order_data.txt")
+fwrite(accuracy_data, file = "accuracy_data.txt")
 ```
+
+# Judged as "teaching" for each stimulus
+```{r teaching, echo = FALSE}
+data$Teaching <- 0
+data[rating == "Yes"]$Teaching <- 1
+
+# individual
+ind_data4 <- data[subjectNumber != 9, .(N = .N, Sum = sum(Teaching)), by = .(subjectNumber, Condition, Skill, MidFile)]
+ind_data4 <- ind_data4[order(subjectNumber)]
+
+# all
+subset4 <- ind_data4[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
+subset4 <- subset4[order(MidFile)]
+subset4
+
+# export
+fwrite(subset4, file = "teaching_data.txt")
+```
+
