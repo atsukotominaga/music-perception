@@ -146,14 +146,14 @@ t.test(ind_data_ad[Skill == "articulation"]$Percent, ind_data_ad[Skill == "dynam
 ```{r item1, echo = FALSE}
 # individual
 ind_data2 <- data[subjectNumber != 9 & Condition == "teaching", .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Condition, Skill, MidFile)]
-ind_data2 <- ind_data3[order(subjectNumber, Condition, Skill, MidFile)]
+ind_data2 <- ind_data2[order(subjectNumber, Condition, Skill, MidFile)]
 
 # all
 subset2 <- ind_data2[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
 subset2[order(-Mean_Percent)]
 ```
 
-### articulation
+### Articulation
 ```{r item1-a, echo = FALSE}
 subset2_a <- subset2[Skill == "articulation"]
 subset2_a$MidFile <- gsub("a_t_", "", subset2_a$MidFile)
@@ -163,7 +163,7 @@ bar_a <- ggplot(subset2_a, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Perc
 bar_a
 ```
 
-### dynamics
+### Dynamics
 ```{r item1-d, echo = FALSE}
 subset2_d <- subset2[Skill == "dynamics"]
 subset2_d$MidFile <- gsub("d_t_", "", subset2_d$MidFile)
@@ -173,8 +173,8 @@ bar_d <- ggplot(subset2_d, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Perc
 bar_d
 ```
 
-## 3. performing (each item)
-### all
+## 3. Performing stimuli
+### All
 ```{r item2, echo = FALSE}
 # individual
 ind_data3 <- data[subjectNumber != 9 & Condition == "performing", .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Condition, Skill, MidFile)]
@@ -185,7 +185,7 @@ subset3 <- ind_data3[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = 
 subset3[order(-Mean_Percent)]
 ```
 
-### articulation
+### Articulation
 ```{r item2-a, echo = FALSE}
 subset3_a <- subset3[Skill == "articulation"]
 subset3_a$MidFile <- gsub("a_p_", "", subset3_a$MidFile)
@@ -195,7 +195,7 @@ bar2_a <- ggplot(subset3_a, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Per
 bar2_a
 ```
 
-### dynamics
+### Dynamics
 ```{r item2-d, echo = FALSE}
 subset3_d <- subset3[Skill == "dynamics"]
 subset3_d$MidFile <- gsub("d_p_", "", subset3_d$MidFile)
