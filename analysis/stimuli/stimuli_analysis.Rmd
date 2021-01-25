@@ -607,7 +607,7 @@ vel_diff_ftop$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(vel_diff_ftop, x = "Mean", y = "Teaching", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
-          xlab = "Velocity Difference (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ### Model
@@ -631,7 +631,7 @@ vel_diff_ptof$TeachingSD <- rating[Skill == "dynamics"]$SD_Percent
 
 ggscatter(vel_diff_ptof, x = "Mean", y = "Teaching", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
-          xlab = "Velocity Difference (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
 ### Model
