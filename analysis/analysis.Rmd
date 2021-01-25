@@ -1,5 +1,5 @@
 ---
-title: "Music Perception: Pilot Analysis"
+title: "Music Perception: Pilot Accuracy Analysis"
 author: "Atsuko Tominaga"
 output: html_notebook
 ---
@@ -37,8 +37,6 @@ You will be asked to judge whether each performer had the intention to teach or 
 
 3. Correct answers would be 1) participants pressed "YES" when they listened to teaching performances or 2) participants pressed "NO" when they listened to performing performances.
 
-I hope these make sense...
-
 ```{r packages, include = FALSE}
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
 if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
@@ -51,43 +49,39 @@ data_ls <- list.files("data")
 combined <- lapply(data_ls, function(f){
   fread(paste("data/", f, sep = ""), sep = ",")
 })
-data <- do.call(rbind.data.frame, combined)
+all_data <- do.call(rbind.data.frame, combined)
 ```
 
 # Results
 ## Individual data
 ```{r summary, echo = FALSE}
 # remove irrelevant strings
-data$midFile <- gsub("./practice/", "", data$midFile)
-data$midFile <- gsub("./mid/", "", data$midFile)
-data$midFile <- gsub(".mid", "", data$midFile)
+data <- all_data[expMode == "experiment"]
+data$MidFile <- gsub("./mid/", "", data$midFile)
+data$MidFile <- gsub(".mid", "", data$MidFile)
 
 # name conditions
-data$condition <- "NA"
-data$technique <- "NA"
-data[grepl("_t_", midFile)]$condition <- "teaching"
-data[grepl("_p_", midFile)]$condition <- "performing"
-data[grepl("a_", midFile)]$technique <- "articulation"
-data[grepl("d_", midFile)]$technique <- "dynamics"
-data$item <- gsub("a_t_", "", data$midFile)
-data$item <- gsub("d_t_", "", data$item)
-data$item <- gsub("a_p_", "", data$item)
-data$item <- gsub("d_p_", "", data$item)
+data$Condition <- "NA"
+data$Skill <- "NA"
+data[grepl("_t_", midFile)]$Condition <- "teaching"
+data[grepl("_p_", midFile)]$Condition <- "performing"
+data[grepl("a_", midFile)]$Skill <- "articulation"
+data[grepl("d_", midFile)]$Skill <- "dynamics"
 
 # check correct or incorrect
-data$correct <- 0
-data[condition == "teaching" & rating == "Yes"]$correct <- 1
-data[condition == "performing" & rating == "No"]$correct <- 1
+data$Correct <- 0
+data[Condition == "teaching" & rating == "Yes"]$Correct <- 1
+data[Condition == "performing" & rating == "No"]$Correct <- 1
 
-all <- data[expMode == "experiment", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique)]
-all[order(subjectNumber, condition, technique)]
+all <- data[expMode == "experiment", .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Condition, Skill)]
+all[order(subjectNumber, Condition, Skill)]
 ```
 
 ## 1. Summary
-### all
+### All
 ```{r acc, echo = FALSE}
 # individual
-ind_data <- data[expMode == "experiment" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber)]
+ind_data <- data[subjectNumber != 9, .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber)]
 ind_data <- ind_data[order(subjectNumber)]
 
 # all
@@ -107,79 +101,75 @@ shapiro.test(ind_data$Percent)
 t.test(ind_data$Percent, mu = 50, alternative = "two.sided")
 ```
 
-- Surprisingly, it showed a trend ( p = .06) but the 95% confidence interval overlaps with 50 %.
-
-### articulation vs. dynamics
+### Articulation vs. Dynamics
 
 ```{r plot2, echo = FALSE}
-ind_data_ad <- data[expMode == "experiment" & subjectNumber != 9, .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, technique)]
-ind_data_ad <- ind_data_ad[order(subjectNumber, technique)]
+ind_data_ad <- data[subjectNumber != 9, .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Skill)]
+ind_data_ad <- ind_data_ad[order(subjectNumber, Skill)]
 
-subset_ad <- ind_data_ad[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100), by = .(technique)]
+subset_ad <- ind_data_ad[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100), by = .(Skill)]
 subset_ad
 
-data_box <- data.table(subjectNumber = ind_data_ad$subjectNumber, articulation = ind_data_ad[technique == "articulation"]$Percent, dynamics = ind_data_ad[technique == "dynamics"]$Percent)
+data_box <- data.table(subjectNumber = ind_data_ad$subjectNumber, articulation = ind_data_ad[Skill == "articulation"]$Percent, dynamics = ind_data_ad[Skill == "dynamics"]$Percent)
 box <- ggpaired(data_box, cond1 = "articulation", cond2 = "dynamics", line.color = "gray", line.size = 0.4, ylab = "Correct %")
 box
 ```
 
 ## One-sample *t*-test
-### articulation
+### Articulation
 ```{r t-test-a, echo = FALSE}
 # normality check
-shapiro.test(ind_data_ad[technique == "articulation"]$Percent)
+shapiro.test(ind_data_ad[Skill == "articulation"]$Percent)
 
-t.test(ind_data_ad[technique == "articulation"]$Percent, mu = 50, alternative = "two.sided")
+t.test(ind_data_ad[Skill == "articulation"]$Percent, mu = 50, alternative = "two.sided")
 ```
 - Not significantly different from chance (p > .2).
 
-### dynamics
+### Dynamics
 ```{r t-test-d, echo = FALSE}
 # normality check
-shapiro.test(ind_data_ad[technique == "dynamics"]$Percent)
+shapiro.test(ind_data_ad[Skill == "dynamics"]$Percent)
 
-t.test(ind_data_ad[technique == "dynamics"]$Percent, mu = 50, alternative = "two.sided")
+t.test(ind_data_ad[Skill == "dynamics"]$Percent, mu = 50, alternative = "two.sided")
 ```
-
-- The performance was significantly better than chance (p < .01).
 
 ## Paired *t*-test between articulation and dynamics
 ```{r p-t-test, echo = FALSE}
 # normality check
-shapiro.test(ind_data_ad[technique == "dynamics"]$Percent-ind_data_ad[technique == "articulation"]$Percent)
+shapiro.test(ind_data_ad[Skill == "dynamics"]$Percent-ind_data_ad[Skill == "articulation"]$Percent)
 
-t.test(ind_data_ad[technique == "articulation"]$Percent, ind_data_ad[technique == "dynamics"]$Percent, paired = TRUE)
+t.test(ind_data_ad[Skill == "articulation"]$Percent, ind_data_ad[Skill == "dynamics"]$Percent, paired = TRUE)
 ```
 
-- There was a difference between articulation and dynamics in terms of accuracy.
-
-## 2. teaching (each item)
-### all
+## 2. Teaching stimuli
+### All
 ```{r item1, echo = FALSE}
 # individual
-ind_data3 <- data[expMode == "experiment" & subjectNumber != 9 & condition == "teaching", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique, item)]
-ind_data3 <- ind_data3[order(subjectNumber, condition, technique, item)]
+ind_data2 <- data[subjectNumber != 9 & Condition == "teaching", .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Condition, Skill, MidFile)]
+ind_data2 <- ind_data3[order(subjectNumber, Condition, Skill, MidFile)]
 
 # all
-subset3 <- ind_data3[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(condition, technique, item)]
-subset3[order(-Mean_Percent)]
+subset2 <- ind_data2[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
+subset2[order(-Mean_Percent)]
 ```
 
 ### articulation
 ```{r item1-a, echo = FALSE}
-subset3_a <- subset3[technique == "articulation"]
-subset3_a[order(-Mean_Percent)]
+subset2_a <- subset2[Skill == "articulation"]
+subset2_a$MidFile <- gsub("a_t_", "", subset2_a$MidFile)
+subset2_a[order(-Mean_Percent)]
 
-bar_a <- ggplot(subset3[technique == "articulation"], aes(x = reorder(item, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
+bar_a <- ggplot(subset2_a, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
 bar_a
 ```
 
 ### dynamics
 ```{r item1-d, echo = FALSE}
-subset3_d <- subset3[order(-Mean_Percent) & technique == "dynamics"]
-subset3_d[order(-Mean_Percent)]
+subset2_d <- subset2[Skill == "dynamics"]
+subset2_d$MidFile <- gsub("d_t_", "", subset2_d$MidFile)
+subset2_d[order(-Mean_Percent)]
 
-bar_d <- ggplot(subset3[technique == "dynamics"], aes(x = reorder(item, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
+bar_d <- ggplot(subset2_d, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
 bar_d
 ```
 
@@ -187,40 +177,36 @@ bar_d
 ### all
 ```{r item2, echo = FALSE}
 # individual
-ind_data4 <- data[expMode == "experiment" & subjectNumber != 9 & condition == "performing", .(N = .N, Sum = sum(correct), Percent = (sum(correct)/.N)*100), by = .(subjectNumber, condition, technique, item)]
-ind_data4 <- ind_data4[order(subjectNumber, condition, technique, item)]
+ind_data3 <- data[subjectNumber != 9 & Condition == "performing", .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Condition, Skill, MidFile)]
+ind_data3 <- ind_data3[order(subjectNumber, Condition, Skill, MidFile)]
 
 # all
-subset4 <- ind_data4[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(condition, technique, item)]
-subset4[order(-Mean_Percent)]
+subset3 <- ind_data3[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
+subset3[order(-Mean_Percent)]
 ```
 
 ### articulation
 ```{r item2-a, echo = FALSE}
-subset4_a <- subset4[technique == "articulation"]
-subset4_a[order(-Mean_Percent)]
+subset3_a <- subset3[Skill == "articulation"]
+subset3_a$MidFile <- gsub("a_p_", "", subset3_a$MidFile)
+subset3_a[order(-Mean_Percent)]
 
-bar2_a <- ggplot(subset4[technique == "articulation"], aes(x = reorder(item, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
+bar2_a <- ggplot(subset3_a, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
 bar2_a
 ```
 
 ### dynamics
 ```{r item2-d, echo = FALSE}
-subset4_d <- subset4[technique == "dynamics"]
-subset4_d[order(-Mean_Percent)]
+subset3_d <- subset3[Skill == "dynamics"]
+subset3_d$MidFile <- gsub("d_p_", "", subset3_d$MidFile)
+subset3_d[order(-Mean_Percent)]
 
-bar2_d <- ggplot(subset4[technique == "dynamics"], aes(x = reorder(item, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
+bar2_d <- ggplot(subset3_d, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Percent)) + geom_bar(stat = "identity") + labs(x = "Stimuli", y = "Correct %")
 bar2_d
 ```
 
 ```{r export, include = FALSE}
-order_data <- rbind(
-  data.table(subset3_a$condition, subset3_a$technique, subset3_a$item, subset3_a$Mean_Percent),
-  data.table(subset3_d$condition, subset3_d$technique, subset3_d$item, subset3_d$Mean_Percent),
-  data.table(subset4_a$condition, subset4_a$technique, subset4_a$item, subset4_a$Mean_Percent),
-  data.table(subset4_d$condition, subset4_d$technique, subset4_d$item, subset4_d$Mean_Percent))
-
-colnames(order_data) <- c("condition", "technique", "item", "mean_percent")
+order_data <- rbind(subset2, subset3)
 
 # export
 fwrite(order_data, file = "order_data.txt")
