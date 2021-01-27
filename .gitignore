@@ -3,6 +3,9 @@
 *html
 *sh
 
+# experiment
+experiment/data
+
 # analysis
 analysis/data
 analysis/test
