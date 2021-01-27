@@ -12,7 +12,7 @@ output: html_notebook
 
 ## Stimuli
 - Stimuli were selected from the previous study ([the sound of teaching music/experiment-1](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-1)).
-- 48 stimuli were randomly chosen from each technique (either articulation or dynamics - therefore in total 96 stimuli). The half of them were selected from the teaching condition and the other half were from the performing condition.
+- 48 stimuli were randomly chosen from each technique (either articulation or dynamics - therefore in total 96 stimuli). The half of them was selected from the teaching condition and the other half was from the performing condition.
   + 24 for teaching-articulation performances
   + 24 for performing-articulation performances
   + 24 for teaching-dynamics performances
@@ -20,15 +20,15 @@ output: html_notebook
 
 ## Design
 
-- 2 blocks (articulation / dynamics): participants were asked to do the same task for two expressions separately. The order of the blocks was counterbalanced across participants.
-- 48 trials for each block (each stimulus was presented only once) and the stimuli were randomised across participants.
+- 2 blocks (articulation / dynamics): participants were asked to do the same task for two techniques (expressions) separately. The order of the blocks was counterbalanced across participants.
+- 48 trials for each block (each stimulus was presented only once) and the stimuli were randomly presented across participants.
 
 ## Procedure
 1. Musicians (> 6yo experience) were asked to listen to a number of recordings and judge whether each performance was produced for teaching purposes or not.
 
 Actual instruction:
 ```
-Each performance was produced in order to either1) teach the musical expressive technique (as a teacher) 2) perform their best (as a performer).
+Each performance was produced in order to either 1) teach the musical expressive technique (as a teacher) or 2) perform their best (as a performer).
 
 You will be asked to judge whether each performer had the intention to teach or not by pressing the 'Yes' <Left> or 'No' <Right> key.
 ```
@@ -40,7 +40,6 @@ You will be asked to judge whether each performer had the intention to teach or 
 ```{r packages, include = FALSE}
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
 if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
-if (!require("afex")) {install.packages("afex"); require("afex")}
 ```
 
 ```{r read, include = FALSE}
@@ -123,7 +122,6 @@ shapiro.test(ind_data_ad[Skill == "articulation"]$Percent)
 
 t.test(ind_data_ad[Skill == "articulation"]$Percent, mu = 50, alternative = "two.sided")
 ```
-- Not significantly different from chance (p > .2).
 
 ### Dynamics
 ```{r t-test-d, echo = FALSE}
@@ -201,7 +199,7 @@ bar2_d <- ggplot(subset3_d, aes(x = reorder(MidFile, Mean_Percent), y = Mean_Per
 bar2_d
 ```
 
-# Accuracy for each stimulus
+# Accuracy (%) for each stimulus
 ```{r export, echo = FALSE}
 accuracy_data <- rbind(subset2, subset3)
 accuracy_data <- accuracy_data[order(MidFile)]
@@ -211,7 +209,7 @@ accuracy_data
 fwrite(accuracy_data, file = "accuracy_data.txt")
 ```
 
-# Judged as "teaching" for each stimulus
+# Judged as "teaching" (%) for each stimulus
 ```{r teaching, echo = FALSE}
 data$Teaching <- 0
 data[rating == "Yes"]$Teaching <- 1

@@ -9,7 +9,7 @@ output: html_notebook
 
 ## Stimuli
 - Stimuli were selected from the previous study ([the sound of teaching music/experiment-1](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-1)).
-- 48 stimuli were randomly chosen from each technique (either articulation or dynamics - therefore in total 96 stimuli). The half of them were selected from the teaching condition and the other half were from the performing condition.
+- 48 stimuli were randomly chosen from each technique (either articulation or dynamics - therefore in total 96 stimuli). The half of them was selected from the teaching condition and the other half was from the performing condition.
   + 24 for teaching-articulation performances
   + 24 for performing-articulation performances
   + 24 for teaching-dynamics performances
@@ -26,13 +26,13 @@ output: html_notebook
 - KV-diff (dynamics)
 
 ## Results
-- 1. [Accuracy](https://github.com/atsukotominaga/perception-v1.0/blob/master/analysis/analysis.Rmd)
+- 1. [Accuracy (private repo)](https://github.com/atsukotominaga/perception-v1.0/blob/master/analysis/analysis.Rmd)
 
 The accuracy results showed that it was not clear whether participants could detect teaching performances because the stimuli selection was not appropriate.
 
 - 2. Exploratory analysis
 
-In order to see which stimulus was recognised as teaching performances, we decided to run exploratory analysis. We plotted correlations between each DV and the percentage of judgement as "teaching" regardless of their original conditions (i.e., teaching vs. performing).
+In order to see which stimulus was recognised as teaching performances, we decided to run exploratory analysis. We plotted relationships between each DV and the percentage of judgement as "teaching" for each stimulus regardless of their original conditions (i.e., whether each stimulus was coming from the teaching or performing condition).
 
 ```{r setup, include = FALSE}
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
