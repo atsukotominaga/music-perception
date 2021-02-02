@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 1,
-			"revision" : 5,
+			"revision" : 8,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 1058.0, 108.0, 227.0, 285.0 ],
+		"rect" : [ 1057.0, 260.0, 227.0, 285.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -68,7 +68,7 @@
 					"presentation" : 1,
 					"presentation_linecount" : 3,
 					"presentation_rect" : [ 24.0, 23.0, 179.0, 47.0 ],
-					"text" : "MIDI player for rating.py\n1. make sound from a mid file\n2. print output"
+					"text" : "MIDI player for experiment.py\n1. make sound from a mid file\n2. print output"
 				}
 
 			}
@@ -207,14 +207,7 @@
 
 			}
  ],
-		"dependency_cache" : [ 			{
-				"name" : "yukari.png",
-				"bootpath" : "~/Google Drive/Project/adaptation-v1.0/script/psychopy",
-				"patcherrelativepath" : ".",
-				"type" : "PNG",
-				"implicit" : 1
-			}
- ],
+		"dependency_cache" : [  ],
 		"autosave" : 0
 	}
 
