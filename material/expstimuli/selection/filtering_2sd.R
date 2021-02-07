@@ -8,6 +8,10 @@
 # This script organises raw data and randomly select performances which do not contain any pitch errors (IOIs within 2SD).
 # GitHub repo (private): https://github.com/atsukotominaga/perception-v1.0/tree/master/material/stimuli
 
+# set working directory
+if (!require("here")) {install.packages("here"); require("here")}
+here::i_am("filtering_2sd.R")
+
 # create folders if not exists
 if (!file.exists("2sd/")){
   dir.create("2sd")
