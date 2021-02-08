@@ -9,6 +9,7 @@ experiment/data
 # analysis
 analysis/data
 analysis/test
+analysis/pilot
 analysis/questionnaire.csv
 
 # material
