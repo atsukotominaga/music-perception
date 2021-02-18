@@ -1,0 +1,7 @@
+# general
+*.DS_Store
+*html
+*sh
+
+# experiment
+experiment/data
