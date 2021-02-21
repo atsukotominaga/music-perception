@@ -550,3 +550,11 @@ ggboxplot(vel_diff[Skill == "dynamics"], x = "Condition", y = "Mean", color = "C
 ```{r plot-vel-diff-art, echo = FALSE}
 ggboxplot(vel_diff[Skill == "articulation"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
 ```
+
+# Export as midi files
+```{bash, echo = TRUE}
+# python
+source /Users/atsukotominaga/Pyenv/bin/activate
+python mid_export.py
+```
+
