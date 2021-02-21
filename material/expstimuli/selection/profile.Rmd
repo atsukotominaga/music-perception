@@ -1,0 +1,375 @@
+---
+title: "Music Perception: Stimuli profiles (2sd)"
+output: html_notebook
+---
+
+- Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
+
+I chose stimuli with the IOIs within 2sd randomly from each condition (teaching, performing), each technique (articulation, dynamics).
+
+Note: SubNr 8 was excluded due to an experimental error, SubNr 16 was excluded due to a deviated tempo (see analysis for [music-teaching: experiment-1](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-1))
+
+# DVs
+- IOIs (average tempo)
+- Transition points
+- CV (tempo variability)
+- KOT (articulation)
+- KV (dynamics)
+- KV-diff (dynamics)
+
+```{r setup, include = FALSE}
+if (!require("data.table")) {install.packages("data.table"); require("data.table")}
+if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
+```
+
+```{r file, include = FALSE}
+# create a list of data file names
+lf_a_t <- list.files("./2sd/art_teaching", pattern = "txt")
+lf_a_p <- list.files("./2sd/art_performing", pattern = "txt")
+lf_d_t <- list.files("./2sd/dyn_teaching", pattern = "txt")
+lf_d_p <- list.files("./2sd/dyn_performing", pattern = "txt")
+
+# merge all data files into one
+data <- data.table()
+for (i in 1:length(lf_a_t)){
+ data_i <- fread(file.path("./2sd/art_teaching", lf_a_t[i]), header = T, sep = ",", dec = ".")
+ data_i$Instance <- i
+ data <- rbind(data, data_i)
+}
+for (i in 1:length(lf_a_p)){
+ data_i <- fread(file.path("./2sd/art_performing", lf_a_p[i]), header = T, sep = ",", dec = ".")
+ data_i$Instance <- i
+ data <- rbind(data, data_i)
+}
+for (i in 1:length(lf_d_t)){
+ data_i <- fread(file.path("./2sd/dyn_teaching", lf_d_t[i]), header = T, sep = ",", dec = ".")
+ data_i$Instance <- i
+ data <- rbind(data, data_i)
+}
+for (i in 1:length(lf_d_p)){
+ data_i <- fread(file.path("./2sd/dyn_performing", lf_d_p[i]), header = T, sep = ",", dec = ".")
+ data_i$Instance <- i
+ data <- rbind(data, data_i)
+}
+
+# define subcomponents
+# For intervals
+ls_legato <- list(c(1:7), c(17:23), c(42:48), c(58:64))
+ls_staccato <- list(c(9:15), c(25:31), c(34:40), c(50:56))
+ls_forte <- list(c(1:7), c(17:23), c(42:48), c(58:64))
+ls_piano <- list(c(9:15), c(25:31), c(34:40), c(50:56))
+
+# For each note (velocity only)
+ls_legato_2 <- list(c(1:8), c(17:24), c(42:49), c(58:65))
+ls_staccato_2 <- list(c(9:16), c(25:32), c(34:41), c(50:57))
+ls_forte_2 <- list(c(1:8), c(17:24), c(42:49), c(58:65))
+ls_piano_2 <- list(c(9:16), c(25:32), c(34:41), c(50:57))
+
+# Define Skill Change (LtoS, FtoP)
+change_1 <- c(8, 24, 49)
+# Define Skill Change (StoL, PtoF)
+change_2 <- c(16, 41, 57)
+```
+
+# IOIs
+## Each instance
+```{r ioi, echo = FALSE}
+data_onset <- data[Key_OnOff == 1]
+data_offset <- data[Key_OnOff == 0]
+
+data_onset$IOI <- diff(c(0, data_onset$TimeStamp))
+dt_ioi <- data_onset[NoteNr != 17]
+dt_ioi$Interval <- rep(1:66, nrow(dt_ioi)/66)
+
+# assign Subcomponents
+dt_ioi$Subcomponent <- "NA"
+# Legato
+for (phrase in 1:length(ls_legato)){
+ for (note in 1:length(ls_legato[[phrase]])){
+   dt_ioi[Skill == "articulation" & Interval == ls_legato[[phrase]][note]]$Subcomponent <- "Legato"
+ }
+}
+# Staccato
+for (phrase in 1:length(ls_staccato)){
+ for (note in 1:length(ls_staccato[[phrase]])){
+   dt_ioi[Skill == "articulation" & Interval == ls_staccato[[phrase]][note]]$Subcomponent <- "Staccato"
+ }
+}
+
+# Forte
+for (phrase in 1:length(ls_forte)){
+ for (note in 1:length(ls_forte[[phrase]])){
+   dt_ioi[Skill == "dynamics" & Interval == ls_forte[[phrase]][note]]$Subcomponent <- "Forte"
+ }
+}
+# Piano
+for (phrase in 1:length(ls_piano)){
+ for (note in 1:length(ls_piano[[phrase]])){
+   dt_ioi[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
+ }
+}
+
+# assign Subcomponent Change
+for (number in change_1){
+ dt_ioi[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
+ dt_ioi[Skill == "dynamics" & Interval == number]$Subcomponent <- "FtoP"
+}
+for (number in change_2){
+ dt_ioi[Skill == "articulation" & Interval == number]$Subcomponent <- "StoL"
+ dt_ioi[Skill == "dynamics" & Interval == number]$Subcomponent <- "PtoF"
+}
+
+ioi <- dt_ioi[Subcomponent != "NA", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(Instance, Condition, Skill)]
+ioi
+```
+
+## Averaged
+```{r ioi-averaged, echo = FALSE}
+ioi[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), .(Condition, Skill)]
+```
+
+## Plots
+### Articulation
+```{r plot-ioi, echo = FALSE}
+ggboxplot(ioi, x = "Condition", y = "Mean", color = "Condition", facet.by = "Skill", add = "jitter")
+```
+
+#Transition points
+## Each instance
+```{r transition, echo = FALSE}
+ioi_tra <- dt_ioi[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(Instance, Condition, Skill)]
+ioi_tra
+```
+
+## Averaged
+```{r transition-tats_all, echo = FALSE}
+ioi_tra[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), .(Condition, Skill)]
+```
+
+## Plots
+```{r plot-ioi-tra, echo = FALSE}
+ggboxplot(ioi_tra, x = "Condition", y = "Mean", color = "Condition", facet.by = "Skill", add = "jitter")
+```
+
+# CV
+## Each instance
+```{r cv, echo = FALSE}
+ioi_cv <- ioi
+ioi_cv$CV <- 0
+for (cond in c("teaching", "performing")){
+   for (skill in c("articulation", "dynamics")){
+      for (i in 1:24){
+         current <- dt_ioi[Condition == cond & Skill == skill & Instance == i]
+         ioi_cv[Condition == cond & Skill == skill & Instance == i]$CV <- sd(current$IOI)/ioi[Condition == cond & Skill == skill & Instance == i]$Mean
+      }
+   }
+}
+ioi_cv
+```
+
+## Averaged
+```{r ioi-cv, echo = FALSE}
+ioi_cv[, .(N = .N, Mean = mean(CV), SD = sd(CV)), .(Condition, Skill)]
+```
+
+## Plots
+```{r plot-ioi-cv, echo = FALSE}
+ggboxplot(ioi_cv, x = "Condition", y = "CV", color = "Condition", facet.by = "Skill", add = "jitter")
+```
+
+# KOT (only for articulation stimuli)
+## Each instance
+```{r kot, include = FALSE}
+data_onset$KOT <- NA
+for (row in 1:nrow(data_onset)){
+   if (row < nrow(data_onset)){
+      data_onset$KOT[row+1] <- data_offset$TimeStamp[row] - data_onset$TimeStamp[row+1] # offset(n) - onset(n+1)
+   }
+}
+
+dt_kot <- data_onset[NoteNr != 17]
+dt_kot$Interval <- rep(1:66, nrow(dt_kot)/66)
+
+# assign Subcomponents
+dt_kot$Subcomponent <- "NA"
+# Legato
+for (phrase in 1:length(ls_legato)){
+   for (note in 1:length(ls_legato[[phrase]])){
+     dt_kot[Skill == "articulation" & Interval == ls_legato[[phrase]][note]]$Subcomponent <- "Legato"
+   }
+}
+# Staccato
+for (phrase in 1:length(ls_staccato)){
+   for (note in 1:length(ls_staccato[[phrase]])){
+     dt_kot[Skill == "articulation" & Interval == ls_staccato[[phrase]][note]]$Subcomponent <- "Staccato"
+   }
+}
+
+# Forte
+for (phrase in 1:length(ls_forte)){
+   for (note in 1:length(ls_forte[[phrase]])){
+     dt_kot[Skill == "dynamics" & Interval == ls_forte[[phrase]][note]]$Subcomponent <- "Forte"
+   }
+}
+# Piano
+for (phrase in 1:length(ls_piano)){
+   for (note in 1:length(ls_piano[[phrase]])){
+     dt_kot[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
+   }
+}
+
+# assign Subcomponent Change
+for (number in change_1){
+   dt_kot[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
+   dt_kot[Skill == "dynamics" & Interval == number]$Subcomponent <- "FtoP"
+}
+for (number in change_2){
+   dt_kot[Skill == "articulation" & Interval == number]$Subcomponent <- "StoL"
+   dt_kot[Skill == "dynamics" & Interval == number]$Subcomponent <- "PtoF"
+}
+
+kot <- dt_kot[Subcomponent != "NA" & Subcomponent != "LtoS" & Subcomponent != "StoL" & Subcomponent != "FtoP" & Subcomponent != "PtoF", .(N = .N, Mean = mean(KOT), SD = sd(KOT)), by = .(Instance, Condition, Skill, Subcomponent)]
+kot
+```
+
+## Averaged
+```{r kot-averaged, echo = FALSE}
+kot[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), by = .(Condition, Skill, Subcomponent)]
+```
+
+## Plots
+### Articulation
+```{r plot-kot-art, echo = FALSE}
+ggboxplot(kot[Skill == "articulation"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
+```
+
+### Dynamics
+```{r plot-kot-dyn, echo = FALSE}
+ggboxplot(kot[Skill == "dynamics"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
+```
+
+# KV (only for dynamics stimuli)
+## Each instance
+```{r vel, include = FALSE}
+dt_vel <- data_onset
+dt_vel$Note <- rep(1:67, nrow(dt_vel)/67)
+
+# assign Subcomponents
+# for each note
+dt_vel$Subcomponent <- "NA"
+# Legato
+for (phrase in 1:length(ls_legato_2)){
+   for (note in 1:length(ls_legato_2[[phrase]])){
+     dt_vel[Skill == "articulation" & Note == ls_legato_2[[phrase]][note]]$Subcomponent <- "Legato"
+   }
+}
+# Staccato
+for (phrase in 1:length(ls_staccato_2)){
+   for (note in 1:length(ls_staccato_2[[phrase]])){
+     dt_vel[Skill == "articulation" & Note == ls_staccato_2[[phrase]][note]]$Subcomponent <- "Staccato"
+   }
+}
+
+# Forte
+for (phrase in 1:length(ls_forte_2)){
+   for (note in 1:length(ls_forte_2[[phrase]])){
+     dt_vel[Skill == "dynamics" & Note == ls_forte_2[[phrase]][note]]$Subcomponent <- "Forte"
+   }
+}
+
+# Piano
+for (phrase in 1:length(ls_piano_2)){
+   for (note in 1:length(ls_piano_2[[phrase]])){
+     dt_vel[Skill == "dynamics" & Note == ls_piano_2[[phrase]][note]]$Subcomponent <- "Piano"
+   }
+}
+
+vel <- dt_vel[Subcomponent != "NA", .(N = .N, Mean = mean(Velocity), SD = sd(Velocity)), by = .(Instance, Condition, Skill, Subcomponent)]
+vel
+```
+
+## Averaged
+```{r vel-averaged, echo = FALSE}
+vel[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), .(Condition, Skill, Subcomponent)]
+```
+
+## Plot
+### Dynamics
+```{r plot-vel-dyn, echo = FALSE}
+ggboxplot(vel[Skill == "dynamics"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
+```
+
+### Articulation
+```{r plot-vel-art, echo = FALSE}
+ggboxplot(vel[Skill == "articulation"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
+```
+
+# KV-Diff (only for dynamics stimuli)
+## Each instance
+```{r vel-diff, include = FALSE}
+# calculate differences and remove the first note
+dt_vel$Diff <- diff(c(0, dt_vel$Velocity))
+dt_vel_diff <- dt_vel[Note != 1]
+dt_vel$Diff <- NULL # remove Diff from dt_vel
+
+# assign Interval
+dt_vel_diff$Interval <- rep(1:66, nrow(dt_vel_diff)/66)
+
+# assign Subcomponents
+# for intervals
+dt_vel_diff$Subcomponent <- "NA"
+# Legato
+for (phrase in 1:length(ls_legato)){
+for (note in 1:length(ls_legato[[phrase]])){
+  dt_vel_diff[Skill == "articulation" & Interval == ls_legato[[phrase]][note]]$Subcomponent <- "Legato"
+}
+}
+# Staccato
+for (phrase in 1:length(ls_staccato)){
+for (note in 1:length(ls_staccato[[phrase]])){
+  dt_vel_diff[Skill == "articulation" & Interval == ls_staccato[[phrase]][note]]$Subcomponent <- "Staccato"
+}
+}
+
+# Forte
+for (phrase in 1:length(ls_forte)){
+for (note in 1:length(ls_forte[[phrase]])){
+  dt_vel_diff[Skill == "dynamics" & Interval == ls_forte[[phrase]][note]]$Subcomponent <- "Forte"
+}
+}
+# Piano
+for (phrase in 1:length(ls_piano)){
+for (note in 1:length(ls_piano[[phrase]])){
+  dt_vel_diff[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
+}
+}
+
+# Assign Skill Change
+for (i in change_1){
+dt_vel_diff[Skill == "articulation" & Interval == i]$Subcomponent <- "LtoS"
+dt_vel_diff[Skill == "dynamics" & Interval == i]$Subcomponent <- "FtoP"
+}
+for (i in change_2){
+dt_vel_diff[Skill == "articulation" & Interval == i]$Subcomponent <- "StoL"
+dt_vel_diff[Skill == "dynamics" & Interval == i]$Subcomponent <- "PtoF"
+}
+
+vel_diff <- dt_vel_diff[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(Diff), SD = sd(Diff)), by = .(Instance, Condition, Skill, Subcomponent)]
+vel_diff
+```
+
+## Averaged
+```{r vel-diff-averaged, echo = FALSE}
+vel_diff[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), by = .(Condition, Skill, Subcomponent)]
+```
+
+## Plots
+### Dynamics
+```{r plot-vel-diff-dyn, echo = FALSE}
+ggboxplot(vel_diff[Skill == "dynamics"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
+```
+
+### Articulation
+```{r plot-vel-diff-art, echo = FALSE}
+ggboxplot(vel_diff[Skill == "articulation"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
+```
