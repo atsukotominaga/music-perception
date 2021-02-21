@@ -96,7 +96,7 @@ dt_error_offset <- checker(dt_offset, dt_ideal)
 dt_error <- rbind(dt_error_onset, dt_error_offset)
 dt_error$Duplicate <- duplicated(dt_error)
 
-# exclude these performances
+# exclude error performances
 dt_exclude <- dt_error[Duplicate == FALSE]
 
 # mark imperfect performances
@@ -133,7 +133,7 @@ for (row in 1:nrow(ioi_include)){
 list_include <- dt_include_updated[, .N, by = .(SubNr, BlockNr, TrialNr, Condition, Skill)]
 list_overall <- list_include[, .N, by = .(Condition, Skill)]
 
-# assign random nubmers for performances in each category
+# assign random numbers for performances in each category
 list_include$RandNr <- 0
 for (cond in c("teaching", "performing")){
   for (skill in c("articulation", "dynamics")){
