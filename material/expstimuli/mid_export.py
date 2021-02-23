@@ -1,6 +1,6 @@
 #!/usr/local/bin/python
 ####################
-# Created: 20/04/2020
+# Created: 23/02/2020
 # This script converts txt files to mid files.
 
 #%% import packages
@@ -13,10 +13,10 @@ if not os.path.exists("practice"):
     os.mkdir("practice")
 
 #%% folder names
-folder_a_t = "./1613936591-210221/art_teaching/"
-folder_d_t = "./1613936591-210221/dyn_teaching/"
-folder_a_p = "./1613936591-210221/art_performing/"
-folder_d_p = "./1613936591-210221/dyn_performing/"
+folder_a_t = "./1614096852-230221/art_teaching/"
+folder_d_t = "./1614096852-230221/dyn_teaching/"
+folder_a_p = "./1614096852-230221/art_performing/"
+folder_d_p = "./1614096852-230221/dyn_performing/"
 folders = [folder_a_t, folder_d_t, folder_a_p, folder_d_p]
 
 #%% mid export
@@ -31,13 +31,13 @@ for folder in folders:
             mid.tracks.append(track)
             track.append(mido.Message('program_change', program=0, time=0)) # program 0 = Acoustic Grand Piano
             # name for mid file
-            if folder == "./1613936591-210221/art_teaching/":
+            if folder == "./1614096852-230221/art_teaching/":
                 midname = "./mid/a_t_" + str(instance+1) + ".mid"
-            elif folder == "./1613936591-210221/dyn_teaching/":
+            elif folder == "./1614096852-230221/dyn_teaching/":
                 midname = "./mid/d_t_" + str(instance+1) + ".mid"
-            elif folder == "./1613936591-210221/art_performing/":
+            elif folder == "./1614096852-230221/art_performing/":
                 midname = "./mid/a_p_" + str(instance+1) + ".mid"
-            elif folder == "./1613936591-210221/dyn_performing/":
+            elif folder == "./1614096852-230221/dyn_performing/":
                 midname = "./mid/d_p_" + str(instance+1) + ".mid"
             # read current track data (txt file)   
             current = csv.reader(csvfile, delimiter = ",")
@@ -49,7 +49,12 @@ for folder in folders:
                     counter += 1
                 else:
                     previousTime = currentTime
-                currentTime = int(mido.second2tick(int(row[1])*0.001+3, 480, 500000))
+                if int(row[6]) == 100:
+                    currentTime = int(mido.second2tick(int(row[1])*0.001+3, 480, 500000))
+                elif int(row[6]) == 110:
+                    currentTime = int(mido.second2tick(int(row[1])*0.001+3, 480, 462000))
+                elif int(row[6]) == 120:
+                    currentTime = int(mido.second2tick(int(row[1])*0.001+3, 480, 429000))
                 currentPitch = int(row[2])
                 currentVelocity = int(row[3])
                 currentOnOff = int(row[4])
@@ -63,10 +68,10 @@ for folder in folders:
 print("Experimental stimuli - Done :D")
 
 #%%
-folder_a_t_p = "./1613936591-210221/practice/art_teaching/"
-folder_d_t_p = "./1613936591-210221/practice/dyn_teaching/"
-folder_a_p_p = "./1613936591-210221/practice/art_performing/"
-folder_d_p_p = "./1613936591-210221/practice/dyn_performing/"
+folder_a_t_p = "./1614096852-230221/practice/art_teaching/"
+folder_d_t_p = "./1614096852-230221/practice/dyn_teaching/"
+folder_a_p_p = "./1614096852-230221/practice/art_performing/"
+folder_d_p_p = "./1614096852-230221/practice/dyn_performing/"
 folders_p = [folder_a_t_p, folder_d_t_p, folder_a_p_p, folder_d_p_p]
 
 #%% mid export
@@ -81,13 +86,13 @@ for folder in folders_p:
             mid.tracks.append(track)
             track.append(mido.Message('program_change', program=0, time=0)) # program 0 = Acoustic Grand Piano
             # name for mid file
-            if folder == "./1613936591-210221/practice/art_teaching/":
+            if folder == "./1614096852-230221/practice/art_teaching/":
                 midname = "./practice/a_t_" + str(instance+1) + ".mid"
-            elif folder == "./1613936591-210221/practice/dyn_teaching/":
+            elif folder == "./1614096852-230221/practice/dyn_teaching/":
                 midname = "./practice/d_t_" + str(instance+1) + ".mid"
-            elif folder == "./1613936591-210221/practice/art_performing/":
+            elif folder == "./1614096852-230221/practice/art_performing/":
                 midname = "./practice/a_p_" + str(instance+1) + ".mid"
-            elif folder == "./1613936591-210221/practice/dyn_performing/":
+            elif folder == "./1614096852-230221/practice/dyn_performing/":
                 midname = "./practice/d_p_" + str(instance+1) + ".mid"
             # read current track data (txt file)   
             current = csv.reader(csvfile, delimiter = ",")

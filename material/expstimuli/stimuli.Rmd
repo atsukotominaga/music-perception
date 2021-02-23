@@ -7,45 +7,31 @@ output: html_notebook
 
 I chose stimuli with the IOIs within 2sd randomly from each condition (teaching, performing), each technique (articulation, dynamics).
 
+  + 18 stimuli for teaching-articulation
+  + 18 stimuli for teaching-dynamics
+  + 18 stimuli for performing-articulation
+  + 18 stimuli for performing-dynamics
+
 Note: SubNr 3 was excluded due to insufficient motor skills (see analysis for [music-teaching: experiment-2](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-2))
 
 # DVs
 - IOIs (average tempo)
-- Transition points
-- CV (tempo variability)
-- KOR (articulation)
+- KOT (articulation)
 - KV (dynamics)
 - KV-diff (dynamics)
 
+```{r setup, include = FALSE}
+# packages
+# data manipulation
+if (!require("data.table")) {install.packages("data.table"); require("data.table")}
+# plot
+if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
+# midi
+if (!require("tuneR")) {install.packages("tuneR"); require("tuneR")}
+```
+
+# Filtering
 ```{r filtering, include = FALSE}
-foldername = paste(format(Sys.time(), "%s-%d%m%y"), "/", sep = "") # current time
-
-# create folders if not exists
-if (!file.exists(foldername)){
-  dir.create(foldername)
-  dir.create(paste(foldername, "practice", sep = ""))
-}
-
-if (!file.exists(paste(foldername, "art_teaching", sep = ""))){
-  dir.create(paste(foldername, "art_teaching", sep = ""))
-  dir.create(paste(foldername, "practice/art_teaching", sep = ""))
-}
-
-if (!file.exists(paste(foldername, "dyn_teaching", sep = ""))){
-  dir.create(paste(foldername, "dyn_teaching", sep = ""))
-  dir.create(paste(foldername, "practice/dyn_teaching", sep = ""))
-}
-
-if (!file.exists(paste(foldername, "art_performing"))){
-  dir.create(paste(foldername, "art_performing", sep = ""))
-  dir.create(paste(foldername, "practice/art_performing", sep = ""))
-}
-
-if (!file.exists(paste(foldername, "dyn_performing"))){
-  dir.create(paste(foldername, "dyn_performing", sep = ""))
-  dir.create(paste(foldername, "practice/dyn_performing", sep = ""))
-}
-
 # read functions
 source("./function.R")
 
@@ -65,7 +51,7 @@ for (i in 1:length(lf)){
   raw_data <- rbind(raw_data, data_i)
 }
 
-# add column namesls
+# add column names
 colnames(raw_data) <- c("NoteNr", "TimeStamp", "Pitch", "Velocity", "Key_OnOff", "Device", "Tempo", "SubNr", "BlockNr", "TrialNr", "Skill", "Condition", "Image")
 
 # clean raw_data
@@ -75,22 +61,8 @@ raw_data$Image <- gsub(";", "", raw_data$Image)
 # sort by SubNr, BlockNr, TrialNr
 raw_data <- raw_data[order(raw_data$SubNr, raw_data$BlockNr, raw_data$TrialNr),]
 
-# correct labelling (due to a labelling error of the original study)
-# articulation
-dt_a <- raw_data[grepl("stim_a", Image)]
-# correct wrong labelling
-dt_a$Skill <- "articulation"
-
-# dynamics
-dt_d <- raw_data[grepl("stim_d", Image)]
-# correct wrong labelling
-dt_d$Skill <- "dynamics"
-
-# bind data frames for articulation and dynamics
-dt_all <- rbind(dt_a, dt_d)
-
 # raw_data without metronome
-dt_all <- dt_all[Pitch != 31 & Pitch != 34]
+dt_all <- raw_data[Pitch != 31 & Pitch != 34]
 
 # onset and offset
 dt_onset <- dt_all[Key_OnOff == 1]
@@ -120,15 +92,7 @@ dt_ioi$IOI <- diff(c(0, dt_ioi$TimeStamp))
 dt_ioi <- dt_ioi[NoteNr != 17] # remove irrelevant notes
 dt_ioi$Interval <- rep(1:71, nrow(dt_ioi)/71)
 
-# convert bpm to ms
-dt_ioi[Tempo == 120]$Tempo <- 250
-dt_ioi[Tempo == 110]$Tempo <- 273
-dt_ioi[Tempo == 100]$Tempo <- 300
-
-# normalise IOIs
-dt_ioi$normIOI <- dt_ioi$IOI/dt_ioi$Tempo
-
-ioi <- dt_ioi[Interval != 25 & Interval != 26 & Interval != 27 & Interval != 28 & Interval != 32 & Interval != 33 & Interval != 34 & Interval != 35 & Interval != 51 & Interval != 52 & Interval != 56 & Interval != 57 & Interval != 65 & Interval != 66 & Interval != 67 & Interval != 68 & Interval != 69 & Interval != 70 & Interval != 71, .(N = .N, Mean = mean(normIOI), SD = sd(normIOI)), by = .(SubNr, BlockNr, TrialNr)]
+ioi <- dt_ioi[Interval != 25 & Interval != 26 & Interval != 27 & Interval != 28 & Interval != 32 & Interval != 33 & Interval != 34 & Interval != 35 & Interval != 51 & Interval != 52 & Interval != 56 & Interval != 57 & Interval != 65 & Interval != 66 & Interval != 67 & Interval != 68 & Interval != 69 & Interval != 70 & Interval != 71, .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(SubNr, BlockNr, TrialNr, Tempo)]
 mean_ioi <- mean(ioi$Mean)
 sd_ioi <- sd(ioi$Mean)
 ioi_include <- ioi[Mean < mean_ioi+2*sd_ioi & Mean > mean_ioi-2*sd_ioi]
@@ -144,7 +108,53 @@ for (row in 1:nrow(ioi_include)){
 }
 ```
 
-```{r selection, include = FALSE}
+## Histogram
+- Exclude performances outside 2sd
+- Gray vertical lines indicate ideal tempi (300ms for 100bpm, 273ms for 110bpm, 250ms for 120bpm)
+
+1. Before exclusion
+```{r plot-hist, echo = FALSE}
+ioi$Tempo <- factor(ioi$Tempo)
+gghistogram(ioi, x = "Mean", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
+gghistogram(ioi, x = "Mean", fill = "Tempo", color = "Tempo", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
+```
+
+2. After exclusion
+```{r plot-hist2, echo = FALSE}
+ioi_include$Tempo <- factor(ioi_include$Tempo)
+gghistogram(ioi_include, x = "Mean", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
+gghistogram(ioi_include, x = "Mean", fill = "Tempo", color = "Tempo", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
+```
+
+```{r selection, eval = FALSE, include = FALSE}
+foldername = paste(format(Sys.time(), "%s-%d%m%y"), "/", sep = "") # current time
+
+# create folders if not exists
+if (!file.exists(foldername)){
+  dir.create(foldername)
+  dir.create(paste(foldername, "practice", sep = ""))
+}
+
+if (!file.exists(paste(foldername, "art_teaching", sep = ""))){
+  dir.create(paste(foldername, "art_teaching", sep = ""))
+  dir.create(paste(foldername, "practice/art_teaching", sep = ""))
+}
+
+if (!file.exists(paste(foldername, "dyn_teaching", sep = ""))){
+  dir.create(paste(foldername, "dyn_teaching", sep = ""))
+  dir.create(paste(foldername, "practice/dyn_teaching", sep = ""))
+}
+
+if (!file.exists(paste(foldername, "art_performing"))){
+  dir.create(paste(foldername, "art_performing", sep = ""))
+  dir.create(paste(foldername, "practice/art_performing", sep = ""))
+}
+
+if (!file.exists(paste(foldername, "dyn_performing"))){
+  dir.create(paste(foldername, "dyn_performing", sep = ""))
+  dir.create(paste(foldername, "practice/dyn_performing", sep = ""))
+}
+
 # create a list for included performances
 list_include <- dt_include_updated[, .N, by = .(SubNr, BlockNr, TrialNr, Condition, Skill)]
 list_overall <- list_include[, .N, by = .(Condition, Skill)]
@@ -157,8 +167,9 @@ for (cond in c("teaching", "performing")){
   }
 }
 list_include <- list_include[order(RandNr),]
+
 # stimuli for experimental trials
-for (i in 1:96){ # 24 stimuli for each category
+for (i in 1:72){ # 18 stimuli for each category
   subject = list_include$SubNr[i]
   block = list_include$BlockNr[i]
   trial = list_include$TrialNr[i]
@@ -208,41 +219,44 @@ for (i in 97:104){ # 4 stimuli for each category
 print("Practice stimuli - Done! :)")
 ```
 
+# Export as midi files
+```{bash, echo = TRUE}
+# python
+source /Users/atsukotominaga/Pyenv/bin/activate
+python mid_export.py
+```
+
 ```{r stimuli, include = FALSE}
 rm(list = ls()) # clear all
 
-# packages
-if (!require("data.table")) {install.packages("data.table"); require("data.table")}
-if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
-
+# read midi data with tuneR
 # create a list of data file names
-lf_a_t <- list.files("./1613936591-210221/art_teaching", pattern = "txt")
-lf_a_p <- list.files("./1613936591-210221/art_performing", pattern = "txt")
-lf_d_t <- list.files("./1613936591-210221/dyn_teaching", pattern = "txt")
-lf_d_p <- list.files("./1613936591-210221/dyn_performing", pattern = "txt")
+lf <- list.files("./mid/", pattern = "mid")
 
-# merge all data files into one
-data <- data.table()
-for (i in 1:length(lf_a_t)){
- data_i <- fread(file.path("./1613936591-210221/art_teaching", lf_a_t[i]), header = T, sep = ",", dec = ".")
- data_i$Instance <- i
- data <- rbind(data, data_i)
+# combine data
+all_data <- data.table()
+for (file in lf){
+   current <- readMidi(paste("./mid/", file, sep = ""))
+   current$MidFile <- gsub(".mid", "", file)
+   all_data <- rbind(all_data, current)
 }
-for (i in 1:length(lf_a_p)){
- data_i <- fread(file.path("./1613936591-210221/art_performing", lf_a_p[i]), header = T, sep = ",", dec = ".")
- data_i$Instance <- i
- data <- rbind(data, data_i)
-}
-for (i in 1:length(lf_d_t)){
- data_i <- fread(file.path("./1613936591-210221/dyn_teaching", lf_d_t[i]), header = T, sep = ",", dec = ".")
- data_i$Instance <- i
- data <- rbind(data, data_i)
-}
-for (i in 1:length(lf_d_p)){
- data_i <- fread(file.path("./1613936591-210221/dyn_performing", lf_d_p[i]), header = T, sep = ",", dec = ".")
- data_i$Instance <- i
- data <- rbind(data, data_i)
-}
+
+data <- all_data[event == "Note On" | event == "Note Off"]
+data$NoteNr <- rep(1:144, nrow(data)/144)
+data$channel <- NULL
+data$parameterMetaSystem <- NULL
+data$track <- NULL
+data$type <- NULL
+data$time2 <- (data$time/960)*1000 # deltatime to time (ms)
+
+# labelling
+colnames(data)[c(3,4)] <- c("Pitch", "Velocity") # time event also change
+data$Condition <- "NA"
+data$Skill <- "NA"
+data[grepl("_t_", MidFile)]$Condition <- "teaching"
+data[grepl("_p_", MidFile)]$Condition <- "performing"
+data[grepl("a_", MidFile)]$Skill <- "articulation"
+data[grepl("d_", MidFile)]$Skill <- "dynamics"
 
 # define subcomponents
 # for intervals
@@ -265,20 +279,12 @@ change_2 <- c(8, 20, 39)
 
 # IOIs
 ```{r ioi, include = FALSE}
-data_onset <- data[Key_OnOff == 1]
-data_offset <- data[Key_OnOff == 0]
+data_onset <- data[event == "Note On"]
+data_offset <- data[event == "Note Off"]
 
-data_onset$IOI <- diff(c(0, data_onset$TimeStamp))
-dt_ioi <- data_onset[NoteNr != 17]
+data_onset$IOI <- diff(c(0, data_onset$time2))
+dt_ioi <- data_onset[NoteNr != 1]
 dt_ioi$Interval <- rep(1:71, nrow(dt_ioi)/71)
-
-# convert bpm to ms
-dt_ioi[Tempo == 120]$Tempo <- 250
-dt_ioi[Tempo == 110]$Tempo <- 273
-dt_ioi[Tempo == 100]$Tempo <- 300
-
-# normalise IOIs
-dt_ioi$normIOI <- dt_ioi$IOI/dt_ioi$Tempo
 
 # assign Subcomponents
 dt_ioi$Subcomponent <- "NA"
@@ -318,7 +324,7 @@ for (number in change_2){
  dt_ioi[Skill == "dynamics" & Interval == number]$Subcomponent <- "PtoF"
 }
 
-ioi <- dt_ioi[Subcomponent != "NA", .(N = .N, Mean = mean(normIOI), SD = sd(normIOI)), by = .(Instance, Condition, Skill)]
+ioi <- dt_ioi[Subcomponent != "NA", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Condition, Skill)]
 ```
 
 ## Each instance
@@ -336,89 +342,78 @@ ioi[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), .(Condition, Skill)]
 ggboxplot(ioi, x = "Condition", y = "Mean", color = "Condition", facet.by = "Skill", add = "jitter")
 ```
 
-# KOR
-```{r kor, include = FALSE}
+# KOT
+```{r kot, include = FALSE}
 data_onset$KOT <- NA
 for (row in 1:nrow(data_onset)){
    if (row < nrow(data_onset)){
-      data_onset$KOT[row+1] <- data_offset$TimeStamp[row] - data_onset$TimeStamp[row+1] # offset(n) - onset(n+1)
+      data_onset$KOT[row+1] <- data_offset$time2[row] - data_onset$time2[row+1] # offset(n) - onset(n+1)
    }
 }
 
-ioi_forKOT <- dt_ioi[Subcomponent != "NA", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(Instance, Condition, Skill)]
-
-data_onset$KOR <- 0
-for (cond in c("teaching", "performing")){
-  for (skill in c("articulation", "dynamics")){
-    for (i in c(1:24)){
-      data_onset[Condition == cond & Skill == skill & Instance == i]$KOR <- data_onset[Condition == cond & Skill == skill & Instance == i]$KOT/ioi_forKOT[Condition == cond & Skill == skill & Instance == i]$Mean
-    }
-  }
-}
-
-dt_kor <- data_onset[NoteNr != 17]
-dt_kor$Interval <- rep(1:71, nrow(dt_kor)/71)
+dt_kot <- data_onset[NoteNr != 1]
+dt_kot$Interval <- rep(1:71, nrow(dt_kot)/71)
 
 # assign Subcomponents
-dt_kor$Subcomponent <- "NA"
+dt_kot$Subcomponent <- "NA"
 # Legato
 for (phrase in 1:length(ls_legato)){
    for (note in 1:length(ls_legato[[phrase]])){
-     dt_kor[Skill == "articulation" & Interval == ls_legato[[phrase]][note]]$Subcomponent <- "Legato"
+     dt_kot[Skill == "articulation" & Interval == ls_legato[[phrase]][note]]$Subcomponent <- "Legato"
    }
 }
 # Staccato
 for (phrase in 1:length(ls_staccato)){
    for (note in 1:length(ls_staccato[[phrase]])){
-     dt_kor[Skill == "articulation" & Interval == ls_staccato[[phrase]][note]]$Subcomponent <- "Staccato"
+     dt_kot[Skill == "articulation" & Interval == ls_staccato[[phrase]][note]]$Subcomponent <- "Staccato"
    }
 }
 
 # Forte
 for (phrase in 1:length(ls_forte)){
    for (note in 1:length(ls_forte[[phrase]])){
-     dt_kor[Skill == "dynamics" & Interval == ls_forte[[phrase]][note]]$Subcomponent <- "Forte"
+     dt_kot[Skill == "dynamics" & Interval == ls_forte[[phrase]][note]]$Subcomponent <- "Forte"
    }
 }
 # Piano
 for (phrase in 1:length(ls_piano)){
    for (note in 1:length(ls_piano[[phrase]])){
-     dt_kor[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
+     dt_kot[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
    }
 }
 
 # assign Subcomponent Change
 for (number in change_1){
-   dt_kor[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
-   dt_kor[Skill == "dynamics" & Interval == number]$Subcomponent <- "FtoP"
+   dt_kot[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
+   dt_kot[Skill == "dynamics" & Interval == number]$Subcomponent <- "FtoP"
 }
 for (number in change_2){
-   dt_kor[Skill == "articulation" & Interval == number]$Subcomponent <- "StoL"
-   dt_kor[Skill == "dynamics" & Interval == number]$Subcomponent <- "PtoF"
+   dt_kot[Skill == "articulation" & Interval == number]$Subcomponent <- "StoL"
+   dt_kot[Skill == "dynamics" & Interval == number]$Subcomponent <- "PtoF"
 }
 
-kor <- dt_kor[Subcomponent != "NA" & Subcomponent != "LtoS" & Subcomponent != "StoL" & Subcomponent != "FtoP" & Subcomponent != "PtoF", .(N = .N, Mean = mean(KOR), SD = sd(KOR)), by = .(Instance, Condition, Skill, Subcomponent)]
+kot <- dt_kot[Subcomponent != "NA" & Subcomponent != "LtoS" & Subcomponent != "StoL" & Subcomponent != "FtoP" & Subcomponent != "PtoF", .(N = .N, Mean = mean(KOT), SD = sd(KOT)), by = .(MidFile, Condition, Skill, Subcomponent)]
 ```
 
 ## Each instance
-```{r kor-each, echo = FALSE}
-kor
+```{r kot-each, echo = FALSE}
+kot
 ```
 
 ## Averaged
 ```{r kor-averaged, echo = FALSE}
-kor[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), .(Condition, Skill, Subcomponent)]
+kot[, .(N = .N, Mean = mean(Mean), SD = sd(Mean)), .(Condition, Skill, Subcomponent)]
 ```
 
 ## Plot
 ### Articulation
-```{r plot-kor-art, echo = FALSE}
-ggboxplot(kor[Skill == "articulation"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
+```{r plot-kot-art, echo = FALSE}
+ggboxplot(kot[Skill == "articulation"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
 ```
 
 ### Dynamics
 ```{r plot-kor-dyn, echo = FALSE}
-ggboxplot(kor[Skill == "dynamics"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
+ggboxplot(kot[Skill == "dynamics"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
 ```
 
 # KV
@@ -455,7 +450,7 @@ for (phrase in 1:length(ls_piano2)){
    }
 }
 
-vel <- dt_vel[Subcomponent != "NA", .(N = .N, Mean = mean(Velocity), SD = sd(Velocity)), by = .(Instance, Condition, Skill, Subcomponent)]
+vel <- dt_vel[Subcomponent != "NA", .(N = .N, Mean = mean(Velocity), SD = sd(Velocity)), by = .(MidFile, Condition, Skill, Subcomponent)]
 ```
 
 ## Each instance
@@ -527,7 +522,7 @@ dt_vel_diff[Skill == "articulation" & Interval == i]$Subcomponent <- "StoL"
 dt_vel_diff[Skill == "dynamics" & Interval == i]$Subcomponent <- "PtoF"
 }
 
-vel_diff <- dt_vel_diff[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(Diff), SD = sd(Diff)), by = .(Instance, Condition, Skill, Subcomponent)]
+vel_diff <- dt_vel_diff[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(Diff), SD = sd(Diff)), by = .(MidFile, Condition, Skill, Subcomponent)]
 ```
 
 ## Each instance
@@ -550,11 +545,3 @@ ggboxplot(vel_diff[Skill == "dynamics"], x = "Condition", y = "Mean", color = "C
 ```{r plot-vel-diff-art, echo = FALSE}
 ggboxplot(vel_diff[Skill == "articulation"], x = "Condition", y = "Mean", color = "Condition", facet.by = "Subcomponent", add = "jitter")
 ```
-
-# Export as midi files
-```{bash, echo = TRUE}
-# python
-source /Users/atsukotominaga/Pyenv/bin/activate
-python mid_export.py
-```
-
