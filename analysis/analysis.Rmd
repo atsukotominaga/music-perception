@@ -111,6 +111,7 @@ data$channel <- NULL
 data$parameterMetaSystem <- NULL
 data$track <- NULL
 data$type <- NULL
+data$time2 <- (data$time/960)*1000 # deltatime to time (ms)
 
 # labelling
 colnames(data)[c(3,4)] <- c("Pitch", "Velocity") # time event also change
@@ -149,12 +150,13 @@ change_2 <- c(16, 41, 57)
 # IOIs
 - average tempo and teaching judgement
 - linear regression lines and 95% confidence interval (gray)
+- dotted lines indicate an ideal tempo (80bpm for 16th notes - 188ms interval)
 
 ```{r ioi, include = FALSE}
 data_onset <- data[event == "Note On"]
 data_offset <- data[event == "Note Off"]
 
-data_onset$IOI <- diff(c(0, data_onset$time))
+data_onset$IOI <- diff(c(0, data_onset$time2))
 dt_ioi <- data_onset[NoteNr != 1]
 dt_ioi$Interval <- rep(1:66, nrow(dt_ioi)/66)
 
@@ -201,7 +203,7 @@ for (number in change_2){
 ```{r ioi-all, echo = FALSE}
 rating <- all # rating data
 
-ioi <- dt_ioi[, .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill)]
+ioi <- dt_ioi[Subcomponent != "NA", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill)]
 
 # sorted
 ioi <- ioi[order(MidFile)]
@@ -212,7 +214,7 @@ ioi$TeachingSD <- rating$SD_Percent
 
 ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) + geom_vline(xintercept = 188, linetype="dotted", color = "gray", size = 1)
 ```
 ## Articulation (***)
 ```{r, echo = FALSE}
@@ -226,7 +228,7 @@ cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
 
 ## Each subcomponent
 ```{r ioi-sub, echo = FALSE}
-ioi_sub <- dt_ioi[, .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill, Subcomponent)]
+ioi_sub <- dt_ioi[Subcomponent != "NA", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill, Subcomponent)]
 
 # sorted
 ioi <- ioi[order(MidFile)]
@@ -237,7 +239,7 @@ ioi$TeachingSD <- rating$SD_Percent
 
 ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) + geom_vline(xintercept = 188, linetype="dotted", color = "gray", size = 1)
 ```
 
 # Tempo at transition points
@@ -257,7 +259,7 @@ ioi_tra$TeachingSD <- rating$SD_Percent
 
 ggscatter(ioi_tra, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) + geom_vline(xintercept = 188, linetype="dotted", color = "gray", size = 1)
 ```
 
 ## Articulation (***)
@@ -274,9 +276,9 @@ cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mea
 - tempo variability and teaching judgement
 - linear regression lines and 95% confidence interval (gray)
 
-## All (**)
+## All (n.s.)
 ```{r cv, echo = FALSE}
-cv <- dt_ioi[, .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile, Skill)]
+cv <- dt_ioi[Subcomponent != "NA", .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile, Skill)]
 
 # sorted
 cv <- cv[order(MidFile)]
@@ -289,7 +291,7 @@ ggscatter(cv, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
           xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
-## Articulation (***)
+## Articulation (n.s.)
 ```{r, echo = FALSE}
 cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
 ```
@@ -303,10 +305,10 @@ cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV)
 - linear regression lines and 95% confidence interval (gray)
 
 ```{r kot, include = FALSE}
-data_onset$KOT <- NA
+data_onset$KOT <- 0
 for (row in 1:nrow(data_onset)){
    if (row < nrow(data_onset)){
-      data_onset$KOT[row+1] <- data_offset$time[row] - data_onset$time[row+1] # offset(n) - onset(n+1)
+      data_onset$KOT[row+1] <- data_offset$time2[row] - data_onset$time2[row+1] # offset(n) - onset(n+1)
    }
 }
 
