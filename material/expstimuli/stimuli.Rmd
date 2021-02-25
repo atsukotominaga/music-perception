@@ -194,7 +194,7 @@ for (i in 1:72){ # 18 stimuli for each category
 print("Experimental stimuli - Done! :)")
 
 # stimuli for practice trials
-for (i in 97:104){ # 4 stimuli for each category
+for (i in 73:80){ # 4 stimuli for each category
   subject = list_include$SubNr[i]
   block = list_include$BlockNr[i]
   trial = list_include$TrialNr[i]
