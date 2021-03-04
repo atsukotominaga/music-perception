@@ -194,7 +194,7 @@ for (i in 1:72){ # 18 stimuli for each category
 print("Experimental stimuli - Done! :)")
 
 # stimuli for practice trials
-for (i in 73:80){ # 4 stimuli for each category
+for (i in 73:80){ # 2 stimuli for each category
   subject = list_include$SubNr[i]
   block = list_include$BlockNr[i]
   trial = list_include$TrialNr[i]
@@ -247,7 +247,7 @@ data$channel <- NULL
 data$parameterMetaSystem <- NULL
 data$track <- NULL
 data$type <- NULL
-data$time2 <- (data$time/960)*1000 # deltatime to time (ms)
+data$time2 <- round((data$time/960)*1000) # deltatime to time (ms)
 
 # labelling
 colnames(data)[c(3,4)] <- c("Pitch", "Velocity") # time event also change
