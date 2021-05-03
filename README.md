@@ -23,7 +23,9 @@ This repo contains scripts and materials for a musical perception study with mus
 - `practice`: stimuli for practice trials
 
 # analysis
-TBC
+- `analysis.Rmd`: analysis script >> output: `analysis.nb.html`
+- `data`: raw performance data
+
 
 # material
 ## instruction
@@ -37,7 +39,7 @@ TBC
 ### selection
 
 1. get performances without pitch error
-    - *Excluded SubNr 16 due to a deviated tempo and used 2sd options*
+    - *Excluded SubNr 16 due to a deviated tempo and performances whose IOIs are outside 2SD*
 - `filtering.R`: to get correct performances and export each as an individual txt file >> output: filtered folder
 - `function.R:` to detect pitch errors in a performance
 - `ideal.txt`: the ideal sequence of the piece. used for filtering
