@@ -109,7 +109,7 @@ dt_include <- dt_all[Error == 0]
 # exclude SubNr 16 due to a deviated tempo
 dt_include <- dt_include[SubNr != 16]
 
-# exclude IOIs +/- 3SD
+# exclude IOIs +/- 2SD
 dt_ioi <- dt_include[Key_OnOff == 1]
 dt_ioi$IOI <- diff(c(0, dt_ioi$TimeStamp))
 dt_ioi <- dt_ioi[NoteNr != 17] # remove irrelevant notes
