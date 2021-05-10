@@ -5,7 +5,7 @@ output: html_notebook
 
 - Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
 
-- 15 participants were included for analysis.
+- 16 participants (experimental error = 1) >> 15 participants were included for analysis.
 
 # Experiment
 
