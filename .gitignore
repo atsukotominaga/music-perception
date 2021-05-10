@@ -3,6 +3,11 @@
 *html
 *sh
 
+# analysis
+analysis/data
+analysis/pilot
+analysis/questionnaire.csv
+
 # experiment
 experiment/data
 
