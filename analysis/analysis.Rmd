@@ -199,7 +199,7 @@ for (number in change_2){
 }
 ```
 
-## All (n.s.)
+## All ()
 ```{r ioi-all, echo = FALSE}
 rating <- all # rating data
 
@@ -216,12 +216,12 @@ ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
           xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
-## Articulation (n.s.)
+## Articulation ()
 ```{r, echo = FALSE}
 cor.test(ioi[Skill == "articulation"]$Teaching, ioi[Skill == "articulation"]$Mean)
 ```
 
-## Dynamics (n.s.)
+## Dynamics ()
 ```{r, echo = FALSE}
 cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
 ```
@@ -230,7 +230,7 @@ cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
 - tempo at transition points (e.g., legato to staccato / forte to piano) and teaching judgement
 - linear regression line (black) and 95% confidence interval (gray)
 
-## All (n.s.)
+## All ()
 ```{r ioi-tra-all, echo = FALSE}
 ioi_tra <- dt_ioi[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill)]
 
@@ -246,12 +246,12 @@ ggscatter(ioi_tra, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line"
           xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
-## Articulation (n.s.)
+## Articulation ()
 ```{r, echo = FALSE}
 cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulation"]$Mean)
 ```
 
-## Dynamics (n.s.)
+## Dynamics ()
 ```{r, echo = FALSE}
 cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mean)
 ```
@@ -260,7 +260,7 @@ cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mea
 - tempo variability and teaching judgement
 - linear regression lines and 95% confidence interval (gray)
 
-## All (n.s.)
+## All ()
 ```{r cv, echo = FALSE}
 cv <- dt_ioi[Subcomponent != "NA", .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile, Skill)]
 
@@ -275,12 +275,12 @@ ggscatter(cv, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = TRUE,
           xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
-## Articulation (n.s.)
+## Articulation ()
 ```{r, echo = FALSE}
 cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
 ```
 
-## Dynamics (n.s.)
+## Dynamics ()
 ```{r, echo = FALSE}
 cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV)
 ```
@@ -352,22 +352,22 @@ ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
           xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
-## Legato (n.s.)
+## Legato ()
 ```{r, echo = FALSE}
 cor.test(kot_all[Subcomponent == "Legato"]$Teaching, kot_all[Subcomponent == "Legato"]$Mean)
 ```
 
-## Staccato (n.s.)
+## Staccato ()
 ```{r, echo = FALSE}
 cor.test(kot_all[Subcomponent == "Staccato"]$Teaching, kot_all[Subcomponent == "Staccato"]$Mean)
 ```
 
-## Forte (n.s.)
+## Forte ()
 ```{r, echo = FALSE}
 cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean)
 ```
 
-## Piano (n.s.)
+## Piano ()
 ```{r, echo = FALSE}
 cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean)
 ```
@@ -424,21 +424,21 @@ ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
           xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
 
-## Forte (*)
+## Forte ()
 ```{r, echo = FALSE}
 cor.test(vel_all[Subcomponent == "Forte"]$Teaching, vel_all[Subcomponent == "Forte"]$Mean)
 ```
 
-## Piano (*)
+## Piano ()
 ```{r, echo = FALSE}
 cor.test(vel_all[Subcomponent == "Piano"]$Teaching, vel_all[Subcomponent == "Piano"]$Mean)
 ```
-## Legato (n.s.)
+## Legato ()
 ```{r, echo = FALSE}
 cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean)
 ```
 
-## Staccato (n.s.)
+## Staccato ()
 ```{r, echo = FALSE}
 cor.test(vel_all[Subcomponent == "Staccato"]$Teaching, vel_all[Subcomponent == "Staccato"]$Mean)
 ```
@@ -506,21 +506,21 @@ ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add 
           xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") +ylim(0, 100)
 ```
 
-## Forte to Piano (***)
+## Forte to Piano ()
 ```{r, echo = FALSE}
 cor.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching, vel_diff_all[Subcomponent == "FtoP"]$Mean)
 ```
 
-## Piano to Forte (***)
+## Piano to Forte ()
 ```{r, echo = FALSE}
 cor.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching, vel_diff_all[Subcomponent == "PtoF"]$Mean)
 ```
-## Legato to Staccato (*)
+## Legato to Staccato ()
 ```{r, echo = FALSE}
 cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean)
 ```
 
-## Staccato to Legato (n.s.)
+## Staccato to Legato ()
 ```{r, echo = FALSE}
 cor.test(vel_diff_all[Subcomponent == "StoL"]$Teaching, vel_diff_all[Subcomponent == "StoL"]$Mean)
 ```
@@ -549,34 +549,34 @@ partial$TeachingSD <- rep(rating$SD_Percent, each = 2)
 ```
 
 # KOT
-## Legato (n.s.)
+## Legato ()
 ```{r kot-partial-leg, echo = TRUE}
 pcor.test(partial[Subcomponent == "Legato"]$KOT, partial[Subcomponent == "Legato"]$Teaching, partial[Subcomponent == "Legato", c("IOI", "KV", "KVDiff")])
 ```
 
-## Staccato (n.s.)
+## Staccato ()
 ```{r kot-partial-sta, echo = TRUE}
 pcor.test(partial[Subcomponent == "Staccato"]$KOT, partial[Subcomponent == "Staccato"]$Teaching, partial[Subcomponent == "Staccato", c("IOI", "KV", "KVDiff")])
 ```
 
 # KV
-## Forte (n.s.)
+## Forte ()
 ```{r vel-partial-for, echo = TRUE}
 pcor.test(partial[Subcomponent == "Forte"]$KV, partial[Subcomponent == "Forte"]$Teaching, partial[Subcomponent == "Forte", c("IOI", "KOT", "KVDiff")])
 ```
 
-## Piano (n.s.)
+## Piano ()
 ```{r vel-partial-pia, echo = TRUE}
 pcor.test(partial[Subcomponent == "Piano"]$KV, partial[Subcomponent == "Piano"]$Teaching, partial[Subcomponent == "Piano", c("IOI", "KOT", "KVDiff")])
 ```
 
 # KV-Diff
-## Forte to Piano (***)
+## Forte to Piano ()
 ```{r vel-diff-partial-ftop, echo = TRUE}
 pcor.test(partial[Subcomponent2 == "FtoP"]$KVDiff, partial[Subcomponent2 == "FtoP"]$Teaching, partial[Subcomponent2 == "FtoP", c("IOI", "KOT", "KV")])
 ```
 
-## Piano to Forte (***)
+## Piano to Forte ()
 ```{r vel-diff-partial-ptof, echo = TRUE}
 pcor.test(partial[Subcomponent2 == "PtoF"]$KVDiff, partial[Subcomponent2 == "PtoF"]$Teaching, partial[Subcomponent2 == "PtoF", c("IOI", "KOT", "KV")])
 ```
