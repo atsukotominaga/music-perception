@@ -1,7 +1,8 @@
-# Can musicians recognise teaching intentions from performance?
+# What makes musicians infer teaching intentions?
+
 
 <p align="center">
-  <img width="1024" height="300" src="https://media.giphy.com/media/VJxNm7zrm3K4E/giphy.gif">
+  <img height="300" src="https://media.giphy.com/media/VJxNm7zrm3K4E/giphy.gif">
 </p>
 
 Open Science Framework: [https://osf.io/f6nr2/](https://osf.io/f6nr2/)  
