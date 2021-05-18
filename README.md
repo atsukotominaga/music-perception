@@ -15,8 +15,6 @@ This repo contains scripts and materials for a musical perception study with mus
 - [Python Environment](https://gist.github.com/atsukotominaga/3414c38eb5add5110d39c4f74723743c)
 - `experiment.py`: for the experiment
 - `midiplayer.maxpat`: to make midi sound from `experiment.py`
-
-## others
 - `image`: experimental stimuli (sheet music)
 - `mid`: experimental stimuli (performance data)
 - `practice`: stimuli for practice trials
