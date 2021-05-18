@@ -2,6 +2,7 @@
 *.DS_Store
 *html
 *sh
+others
 
 # analysis
 analysis/data
