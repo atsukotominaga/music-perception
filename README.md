@@ -13,8 +13,6 @@ This repo contains scripts and materials for a musical perception study with mus
 # experiment
 - Environment: Mac OS X 10.15.6, Max MSP 8
 - [Python Environment](https://gist.github.com/atsukotominaga/3414c38eb5add5110d39c4f74723743c)
-
-## psychopy3
 - `experiment.py`: for the experiment
 - `midiplayer.maxpat`: to make midi sound from `experiment.py`
 
@@ -26,7 +24,6 @@ This repo contains scripts and materials for a musical perception study with mus
 # analysis
 - `analysis.Rmd`: analysis script >> output: `analysis.nb.html`
 - `data`: raw performance data
-
 
 # material
 ## instruction
