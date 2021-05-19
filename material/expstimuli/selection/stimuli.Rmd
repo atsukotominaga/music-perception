@@ -124,8 +124,8 @@ for (row in 1:nrow(ioi_include)){
 }
 ```
 
-## Histogram
-- Gray vertical lines indicate ideal tempi (300ms for 100bpm, 273ms for 110bpm, 250ms for 120bpm)
+## IOIs Histogram
+- Gray vertical lines indicate the ideal tempo (188ms for 80 bpm).
 
 1. Before exclusion
 ```{r plot-hist, echo = FALSE}
