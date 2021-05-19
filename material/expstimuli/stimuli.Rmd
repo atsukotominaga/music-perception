@@ -108,7 +108,7 @@ for (row in 1:nrow(ioi_include)){
 }
 ```
 
-## Histogram
+## IOIs Histogram
 - Exclude performances outside 2sd
 - Gray vertical lines indicate ideal tempi (300ms for 100bpm, 273ms for 110bpm, 250ms for 120bpm)
 
