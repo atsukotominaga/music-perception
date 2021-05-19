@@ -21,6 +21,7 @@ This repo contains scripts and materials for a musical perception study with mus
 
 # analysis
 - `analysis.Rmd`: analysis script >> output: `analysis.nb.html`
+- `questionnaire.Rmd`: demographics info >> output: `questionnaire.nb.html`
 - `data`: raw performance data
 
 # material
@@ -34,15 +35,17 @@ This repo contains scripts and materials for a musical perception study with mus
 ## expstimuli
 ### selection
 
-1. get performances without pitch error
+1. get performances without pitch error and randomly select stimuli
     - *Excluded SubNr 16 due to a deviated tempo and performances whose IOIs are outside 2SD*
-- `filtering.R`: to get correct performances and export each as an individual txt file >> output: filtered folder
+- `filtering_2sd.R`: to get correct performances and export each as an individual txt file >> output: `2sd` folder
 - `function.R:` to detect pitch errors in a performance
 - `ideal.txt`: the ideal sequence of the piece. used for filtering
+- `raw_data`: original performance data
+- `stimuli.Rmd`: profiles for selected stimuli >> output: `stimuli.nb.html`
 
 ### export
 2. export above as mid files
-- `mid_export.py`: to export txt files in the filtered folder as mid files >> output: mid files
+- `mid_export.py`: to export txt files in the filtered folder as mid files >> output: `mid` and `practice` folders
 
 ## etc
 - `checklist.xlsx`: a list to check each procedure during testing (for an experimenter)
