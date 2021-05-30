@@ -44,3 +44,7 @@ print(dt_included)
 ```{r 1, echo = FALSE}
 data.table("Answer" = dt_included$`Have you noticed anything special regarding the tasks in the experiment? If any, please describe below.`)
 ```
+
+```{r export, include = FALSE}
+knitr::purl("questionnaire.Rmd")
+```
