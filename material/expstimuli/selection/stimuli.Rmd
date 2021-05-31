@@ -31,7 +31,7 @@ if (!require("tuneR")) {install.packages("tuneR"); require("tuneR")}
 ```
 
 # Filtering
-```{r filtering, eval = FALSE, include = FALSE}
+```{r filtering, include = FALSE}
 # read functions
 source("./function.R")
 
@@ -108,10 +108,10 @@ dt_ioi <- dt_include[Key_OnOff == 1]
 dt_ioi$IOI <- diff(c(0, dt_ioi$TimeStamp))
 dt_ioi <- dt_ioi[NoteNr != 17] # remove irrelevant notes
 dt_ioi$Interval <- rep(1:66, nrow(dt_ioi)/66)
-ioi <- dt_ioi[Interval != 32 & Interval != 33 & Interval != 65 & Interval != 66, .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(SubNr, BlockNr, TrialNr)]
-mean_ioi <- mean(ioi$Mean)
-sd_ioi <- sd(ioi$Mean)
-ioi_include <- ioi[Mean < mean_ioi+2*sd_ioi & Mean > mean_ioi-2*sd_ioi]
+ioi_original <- dt_ioi[Interval != 32 & Interval != 33 & Interval != 65 & Interval != 66, .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(SubNr, BlockNr, TrialNr, Condition)]
+mean_ioi <- mean(ioi_original$Mean)
+sd_ioi <- sd(ioi_original$Mean)
+ioi_include <- ioi_original[Mean < mean_ioi+2*sd_ioi & Mean > mean_ioi-2*sd_ioi]
 
 dt_include_updated <- data.table()
 for (row in 1:nrow(ioi_include)){
@@ -129,13 +129,17 @@ for (row in 1:nrow(ioi_include)){
 
 1. Before exclusion
 ```{r plot-hist, echo = FALSE}
-gghistogram(ioi, x = "Mean", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 188, color = "gray", size = 1)
+gghistogram(ioi_original, x = "Mean", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 188, color = "gray", size = 1)
 ```
+- the number of performances in the teaching condition: `r nrow(ioi_original[Condition == "teaching"])`
+- the number of performances in the performing condition: `r nrow(ioi_original[Condition == "performing"])`
 
 2. After exclusion
 ```{r plot-hist2, echo = FALSE}
 gghistogram(ioi_include, x = "Mean", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 188, color = "gray", size = 1)
 ```
+- the number of performances in the teaching condition: `r nrow(ioi_include[Condition == "teaching"])`
+- the number of performances in the performing condition: `r nrow(ioi_include[Condition == "performing"])`
 
 ```{r selection, eval = FALSE, include = FALSE}
 foldername = paste(format(Sys.time(), "%s-%d%m%y"), "/", sep = "") # current time
@@ -231,7 +235,7 @@ print("Practice stimuli - Done! :)")
 ```
 
 ```{r stimuli, include = FALSE}
-rm(list = ls()) # clear all
+#rm(list = ls()) # clear all
 
 # read midi data with tuneR
 # create a list of data file names
