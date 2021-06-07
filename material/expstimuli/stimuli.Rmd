@@ -92,10 +92,10 @@ dt_ioi$IOI <- diff(c(0, dt_ioi$TimeStamp))
 dt_ioi <- dt_ioi[NoteNr != 17] # remove irrelevant notes
 dt_ioi$Interval <- rep(1:71, nrow(dt_ioi)/71)
 
-ioi <- dt_ioi[Interval != 25 & Interval != 26 & Interval != 27 & Interval != 28 & Interval != 32 & Interval != 33 & Interval != 34 & Interval != 35 & Interval != 51 & Interval != 52 & Interval != 56 & Interval != 57 & Interval != 65 & Interval != 66 & Interval != 67 & Interval != 68 & Interval != 69 & Interval != 70 & Interval != 71, .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(SubNr, BlockNr, TrialNr, Tempo)]
-mean_ioi <- mean(ioi$Mean)
-sd_ioi <- sd(ioi$Mean)
-ioi_include <- ioi[Mean < mean_ioi+2*sd_ioi & Mean > mean_ioi-2*sd_ioi]
+ioi_original <- dt_ioi[Interval != 25 & Interval != 26 & Interval != 27 & Interval != 28 & Interval != 32 & Interval != 33 & Interval != 34 & Interval != 35 & Interval != 51 & Interval != 52 & Interval != 56 & Interval != 57 & Interval != 65 & Interval != 66 & Interval != 67 & Interval != 68 & Interval != 69 & Interval != 70 & Interval != 71, .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(SubNr, BlockNr, TrialNr, Tempo, Condition)]
+mean_ioi <- mean(ioi_original$Mean)
+sd_ioi <- sd(ioi_original$Mean)
+ioi_include <- ioi_original[Mean < mean_ioi+2*sd_ioi & Mean > mean_ioi-2*sd_ioi]
 
 dt_include_updated <- data.table()
 for (row in 1:nrow(ioi_include)){
@@ -114,10 +114,12 @@ for (row in 1:nrow(ioi_include)){
 
 1. Before exclusion
 ```{r plot-hist, echo = FALSE}
-ioi$Tempo <- factor(ioi$Tempo)
-gghistogram(ioi, x = "Mean", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
-gghistogram(ioi, x = "Mean", fill = "Tempo", color = "Tempo", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
+ioi_original$Tempo <- factor(ioi_original$Tempo)
+gghistogram(ioi_original, x = "Mean", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
+gghistogram(ioi_original, x = "Mean", fill = "Tempo", color = "Tempo", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
 ```
+- the number of performances in the teaching condition: `r nrow(ioi_original[Condition == "teaching"])`
+- the number of performances in the performing condition: `r nrow(ioi_original[Condition == "performing"])`
 
 2. After exclusion
 ```{r plot-hist2, echo = FALSE}
@@ -125,6 +127,8 @@ ioi_include$Tempo <- factor(ioi_include$Tempo)
 gghistogram(ioi_include, x = "Mean", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
 gghistogram(ioi_include, x = "Mean", fill = "Tempo", color = "Tempo", rug = TRUE, add_density = TRUE, bins = 50) + geom_vline(xintercept = 	c(250, 273, 300), color = "gray", size = 1) + lims(y = c(0, 60))
 ```
+- the number of performances in the teaching condition: `r nrow(ioi_include[Condition == "teaching"])`
+- the number of performances in the performing condition: `r nrow(ioi_include[Condition == "performing"])`
 
 ```{r selection, eval = FALSE, include = FALSE}
 foldername = paste(format(Sys.time(), "%s-%d%m%y"), "/", sep = "") # current time
@@ -227,7 +231,7 @@ python mid_export.py
 ```
 
 ```{r stimuli, include = FALSE}
-rm(list = ls()) # clear all
+#rm(list = ls()) # clear all
 
 # read midi data with tuneR
 # create a list of data file names
