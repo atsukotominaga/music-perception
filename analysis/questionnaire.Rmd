@@ -3,6 +3,8 @@ title: "Music Perception 2: Questionnaire"
 output: html_notebook
 ---
 
+- Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
+
 ```{r setup, include = FALSE}
 # packages
 # data manipulation
@@ -43,4 +45,8 @@ print(dt_included)
 
 ```{r 1, echo = FALSE}
 data.table("Answer" = dt_included$`Have you noticed anything special regarding the tasks in the experiment? If any, please describe below.`)
+```
+
+```{r export, include = FALSE}
+knitr::purl("questionnaire.Rmd")
 ```
