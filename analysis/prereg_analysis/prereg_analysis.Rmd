@@ -1,0 +1,158 @@
+---
+title: "Music Perception 1: Preregistered Analysis"
+output: html_notebook
+---
+
+- Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
+
+- 21 participants (experimental error = 1) >> 20 participants were included for analysis.
+
+# Experiment
+## Preregistered Analysis
+We originally had a analysis plan to look at the accuracy of participants' judgements whether participants would be able to judge stimuli from the teaching condition as "teaching". For more detailed explanations, please see [the OSF preregistration](https://osf.io/z3j69).
+
+## Stimuli
+- Stimuli were selected from the previous study ([the sound of teaching music/experiment-1](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-1)).
+- 48 stimuli were randomly chosen from each technique (either articulation or dynamics - therefore in total 96 stimuli). The half of them was selected from the teaching condition and the other half was from the performing condition.
+  + 24 for teaching-articulation performances
+  + 24 for performing-articulation performances
+  + 24 for teaching-dynamics performances
+  + 24 for performing-dynamics performances
+
+## Design
+
+- 2 blocks (articulation / dynamics): participants were asked to do the same task for two techniques (expressions) separately. The order of the blocks was counterbalanced across participants.
+- 48 trials for each block (each stimulus was presented only once) and the stimuli were randomly presented across participants.
+
+## Procedure
+1. Musicians (> 6yo experience) were asked to listen to a number of recordings and judge whether each performance was produced for teaching purposes or not.
+
+Actual instruction:
+```
+Each performance was produced in order to either 1) teach the musical expressive technique (as a teacher) or 2) perform their best (as a performer).
+
+You will be asked to judge whether each performer had the intention to teach or not by pressing the 'Yes' <Left> or 'No' <Right> key.
+```
+
+2. Participants pressed "YES" if they think the recording was produced for teaching (as a teacher) whereas they pressed "NO" if they thought the recording was produced for performing (as a performer).
+
+3. Correct answers would be 1) participants pressed "YES" when they listened to teaching performances or 2) participants pressed "NO" when they listened to performing performances.
+
+## Dependent variables
+- Accuracy (Correct %)
+   + "YES" to teaching stimuli: correct
+   + "NO" to performing stimuli: correct
+   + "NO" to teaching stimuli: incorrect
+   + "YES" to performing stimuli: incorrect
+
+```{r packages, include = FALSE}
+# data manipulation
+if (!require("data.table")) {install.packages("data.table"); require("data.table")}
+# midi
+if (!require("tuneR")) {install.packages("tuneR"); require("tuneR")}
+# plot
+if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
+# stats
+if (!require("ppcor")) {install.packages("ppcor"); require("ppcor")}
+if (!require("performance")) {install.packages("performance"); require("performance")}
+```
+
+```{r read, include = FALSE}
+# read files and combine them
+data_ls <- list.files("../data", pattern = "csv")
+combined <- lapply(data_ls, function(f){
+  fread(paste("../data/", f, sep = ""), sep = ",")
+})
+all_data <- do.call(rbind.data.frame, combined)
+
+# remove irrelevant strings
+data <- all_data[expMode == "experiment"]
+data$MidFile <- gsub("./mid/", "", data$midFile)
+data$MidFile <- gsub(".mid", "", data$MidFile)
+
+# name conditions
+data$Condition <- "NA"
+data$Skill <- "NA"
+data[grepl("_t_", midFile)]$Condition <- "teaching"
+data[grepl("_p_", midFile)]$Condition <- "performing"
+data[grepl("a_", midFile)]$Skill <- "articulation"
+data[grepl("d_", midFile)]$Skill <- "dynamics"
+
+# check correct or incorrect
+data$Correct <- 0
+data[Condition == "teaching" & rating == "Yes"]$Correct <- 1
+data[Condition == "performing" & rating == "No"]$Correct <- 1
+
+all <- data[expMode == "experiment", .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Condition, Skill)]
+all[order(subjectNumber, Condition, Skill)]
+```
+
+# Results
+- significance levels: `***: 0.001, **: 0.01, *: 0.05`
+
+## 1. Statistics
+### All
+```{r acc, echo = FALSE}
+# individual
+ind_data <- data[subjectNumber != 9, .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber)]
+ind_data <- ind_data[order(subjectNumber)]
+
+# all
+subset <- ind_data[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/96)*100, SD_Percent = (sd(Sum)/96)*100)]
+subset
+```
+
+```{r plot, echo = FALSE}
+ggboxplot(ind_data, x = "N", y = "Percent", add = "dotplot", xlab = FALSE) + ylab("Correct %") + theme(axis.text.x = element_blank())
+```
+
+### One-sample *t*-test
+```{r t-test, echo = FALSE}
+# normality check
+shapiro.test(ind_data$Percent)
+
+t.test(ind_data$Percent, mu = 50, alternative = "two.sided")
+```
+
+### Articulation vs. Dynamics
+
+```{r plot2, echo = FALSE}
+ind_data_ad <- data[subjectNumber != 9, .(N = .N, Sum = sum(Correct), Percent = (sum(Correct)/.N)*100), by = .(subjectNumber, Skill)]
+ind_data_ad <- ind_data_ad[order(subjectNumber, Skill)]
+
+subset_ad <- ind_data_ad[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100), by = .(Skill)]
+subset_ad
+
+data_box <- data.table(subjectNumber = ind_data_ad$subjectNumber, articulation = ind_data_ad[Skill == "articulation"]$Percent, dynamics = ind_data_ad[Skill == "dynamics"]$Percent)
+box <- ggpaired(data_box, cond1 = "articulation", cond2 = "dynamics", line.color = "gray", line.size = 0.4, ylab = "Correct %")
+box
+```
+
+## One-sample *t*-test
+### Articulation
+```{r t-test-a, echo = FALSE}
+# normality check
+shapiro.test(ind_data_ad[Skill == "articulation"]$Percent)
+
+t.test(ind_data_ad[Skill == "articulation"]$Percent, mu = 50, alternative = "two.sided")
+```
+
+### Dynamics
+```{r t-test-d, echo = FALSE}
+# normality check
+shapiro.test(ind_data_ad[Skill == "dynamics"]$Percent)
+
+t.test(ind_data_ad[Skill == "dynamics"]$Percent, mu = 50, alternative = "two.sided")
+```
+
+## Paired *t*-test between articulation and dynamics
+```{r p-t-test, echo = FALSE}
+# normality check
+shapiro.test(ind_data_ad[Skill == "dynamics"]$Percent-ind_data_ad[Skill == "articulation"]$Percent)
+
+t.test(ind_data_ad[Skill == "articulation"]$Percent, ind_data_ad[Skill == "dynamics"]$Percent, paired = TRUE)
+```
+
+```{r export, include = FALSE}
+knitr::purl("prereg_analysis.Rmd")
+```
