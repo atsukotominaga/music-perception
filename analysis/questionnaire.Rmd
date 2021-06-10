@@ -3,6 +3,8 @@ title: "Music Perception 1: Questionnaire"
 output: html_notebook
 ---
 
+- Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
+
 ```{r setup, include = FALSE}
 # packages
 # data manipulation
