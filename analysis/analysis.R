@@ -159,13 +159,24 @@ ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(ioi[Skill == "articulation"]$Teaching)
+shapiro.test(ioi[Skill == "articulation"]$Mean)
+
 cor_ioi_art <- cor.test(ioi[Skill == "articulation"]$Teaching, ioi[Skill == "articulation"]$Mean)
 cor_ioi_art
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(ioi[Skill == "dynamics"]$Teaching)
+shapiro.test(ioi[Skill == "dynamics"]$Mean)
+
 cor_ioi_dyn <- cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
 cor_ioi_dyn
+
+cor_ioi_dyn_spearman <- cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean, method = "spearman")
+cor_ioi_dyn_spearman
 
 
 ## ----ioi-tra-all, echo = FALSE------------------------------
@@ -184,10 +195,18 @@ ggscatter(ioi_tra, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line"
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(ioi_tra[Skill == "articulation"]$Teaching)
+shapiro.test(ioi_tra[Skill == "articulation"]$Mean)
+
 cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulation"]$Mean)
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(ioi_tra[Skill == "dynamics"]$Teaching)
+shapiro.test(ioi_tra[Skill == "dynamics"]$Mean)
+
 cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mean)
 
 
@@ -207,10 +226,18 @@ ggscatter(cv, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(cv[Skill == "articulation"]$Teaching)
+shapiro.test(cv[Skill == "articulation"]$CV)
+
 cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(cv[Skill == "dynamics"]$Teaching)
+shapiro.test(cv[Skill == "dynamics"]$CV)
+
 cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV)
 
 
@@ -278,23 +305,45 @@ ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(kot_all[Subcomponent == "Legato"]$Teaching)
+shapiro.test(kot_all[Subcomponent == "Legato"]$Mean)
+
 cor_kot_leg <- cor.test(kot_all[Subcomponent == "Legato"]$Teaching, kot_all[Subcomponent == "Legato"]$Mean)
 cor_kot_leg
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(kot_all[Subcomponent == "Staccato"]$Teaching)
+shapiro.test(kot_all[Subcomponent == "Staccato"]$Mean)
+
 cor_kot_sta <- cor.test(kot_all[Subcomponent == "Staccato"]$Teaching, kot_all[Subcomponent == "Staccato"]$Mean)
 cor_kot_sta
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(kot_all[Subcomponent == "Forte"]$Teaching)
+shapiro.test(kot_all[Subcomponent == "Forte"]$Mean)
+
 cor_kot_for <- cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean)
 cor_kot_for
 
+cor_kot_for_spearman <- cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean, method = "spearman")
+cor_kot_for_spearman
+
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(kot_all[Subcomponent == "Piano"]$Teaching)
+shapiro.test(kot_all[Subcomponent == "Piano"]$Mean)
+
 cor_kot_pia <- cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean)
 cor_kot_pia
+
+cor_kot_pia_spearman <- cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean, method = "spearman")
+cor_kot_pia_spearman
 
 
 ## ----vel, include = FALSE-----------------------------------
@@ -345,21 +394,40 @@ ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(vel_all[Subcomponent == "Forte"]$Teaching)
+shapiro.test(vel_all[Subcomponent == "Forte"]$Mean)
+
 cor_vel_for <- cor.test(vel_all[Subcomponent == "Forte"]$Teaching, vel_all[Subcomponent == "Forte"]$Mean)
 cor_vel_for
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(vel_all[Subcomponent == "Piano"]$Teaching)
+shapiro.test(vel_all[Subcomponent == "Piano"]$Mean)
+
 cor_vel_pia <- cor.test(vel_all[Subcomponent == "Piano"]$Teaching, vel_all[Subcomponent == "Piano"]$Mean)
 cor_vel_pia
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(vel_all[Subcomponent == "Legato"]$Teaching)
+shapiro.test(vel_all[Subcomponent == "Legato"]$Mean)
+
 cor_vel_leg <- cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean)
 cor_vel_leg
 
+cor_vel_leg_spearman <- cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean, method = "spearman")
+cor_vel_leg_spearman
+
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(vel_all[Subcomponent == "Staccato"]$Teaching)
+shapiro.test(vel_all[Subcomponent == "Staccato"]$Mean)
+
 cor_vel_sta <- cor.test(vel_all[Subcomponent == "Staccato"]$Teaching, vel_all[Subcomponent == "Staccato"]$Mean)
 cor_vel_sta
 
@@ -423,21 +491,40 @@ ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add 
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching)
+shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Mean)
+
 cor_vel_diff_ftop <- cor.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching, vel_diff_all[Subcomponent == "FtoP"]$Mean)
 cor_vel_diff_ftop
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching)
+shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Mean)
+
 cor_vel_diff_ptof <- cor.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching, vel_diff_all[Subcomponent == "PtoF"]$Mean)
 cor_vel_diff_ptof
 
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching)
+shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Mean)
+
 cor_vel_diff_ltos <- cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean)
 cor_vel_diff_ltos
 
+cor_vel_diff_ltos_spearman <- cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean, method = "spearman")
+cor_vel_diff_ltos_spearman
+
 
 ## ---- echo = FALSE------------------------------------------
+# normality check
+shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Teaching)
+shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Mean)
+
 cor_vel_diff_stol <- cor.test(vel_diff_all[Subcomponent == "StoL"]$Teaching, vel_diff_all[Subcomponent == "StoL"]$Mean)
 cor_vel_diff_stol
 
