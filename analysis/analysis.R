@@ -175,7 +175,7 @@ shapiro.test(ioi[Skill == "dynamics"]$Mean)
 cor_ioi_dyn <- cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
 cor_ioi_dyn
 
-cor_ioi_dyn_spearman <- cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean, method = "spearman")
+cor_ioi_dyn_spearman <- cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean, method = "spearman", exact = FALSE)
 cor_ioi_dyn_spearman
 
 
@@ -330,7 +330,7 @@ shapiro.test(kot_all[Subcomponent == "Forte"]$Mean)
 cor_kot_for <- cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean)
 cor_kot_for
 
-cor_kot_for_spearman <- cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean, method = "spearman")
+cor_kot_for_spearman <- cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean, method = "spearman", exact = FALSE)
 cor_kot_for_spearman
 
 
@@ -342,7 +342,7 @@ shapiro.test(kot_all[Subcomponent == "Piano"]$Mean)
 cor_kot_pia <- cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean)
 cor_kot_pia
 
-cor_kot_pia_spearman <- cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean, method = "spearman")
+cor_kot_pia_spearman <- cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean, method = "spearman", exact = FALSE)
 cor_kot_pia_spearman
 
 
@@ -419,7 +419,7 @@ shapiro.test(vel_all[Subcomponent == "Legato"]$Mean)
 cor_vel_leg <- cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean)
 cor_vel_leg
 
-cor_vel_leg_spearman <- cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean, method = "spearman")
+cor_vel_leg_spearman <- cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean, method = "spearman", exact = FALSE)
 cor_vel_leg_spearman
 
 
@@ -516,7 +516,7 @@ shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Mean)
 cor_vel_diff_ltos <- cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean)
 cor_vel_diff_ltos
 
-cor_vel_diff_ltos_spearman <- cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean, method = "spearman")
+cor_vel_diff_ltos_spearman <- cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean, method = "spearman", exact = FALSE)
 cor_vel_diff_ltos_spearman
 
 
