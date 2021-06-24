@@ -1,0 +1,555 @@
+---
+title: "Music Perception 1: Variability Analysis"
+output: html_notebook
+---
+
+- Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
+
+- 21 participants (experimental error = 1) >> 20 participants were included for analysis.
+
+# Data analysis
+- Pearson's correlation (if normality is violated, Spearman's rank correlation instead) between variability measurements and participants' judgments as "teaching"
+
+## Variables
+- CV for IOIs (tempo)
+- SD for KOT (articulation)
+- CV for KOT (articulation)
+- CV for KV (dynamics)
+
+```{r packages, include = FALSE}
+# data manipulation
+if (!require("data.table")) {install.packages("data.table"); require("data.table")}
+# midi
+if (!require("tuneR")) {install.packages("tuneR"); require("tuneR")}
+# plot
+if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
+```
+
+```{r read, include = FALSE}
+# read files and combine them
+data_ls <- list.files("data", pattern = "csv")
+combined <- lapply(data_ls, function(f){
+  fread(paste("data/", f, sep = ""), sep = ",")
+})
+all_data <- do.call(rbind.data.frame, combined)
+
+# remove irrelevant strings
+data <- all_data[expMode == "experiment"]
+data$MidFile <- gsub("./mid/", "", data$midFile)
+data$MidFile <- gsub(".mid", "", data$MidFile)
+
+# name conditions
+data$Condition <- "NA"
+data$Skill <- "NA"
+data[grepl("_t_", midFile)]$Condition <- "teaching"
+data[grepl("_p_", midFile)]$Condition <- "performing"
+data[grepl("a_", midFile)]$Skill <- "articulation"
+data[grepl("d_", midFile)]$Skill <- "dynamics"
+```
+
+# Judged as "teaching" (%) for each stimulus
+```{r teaching, echo = FALSE}
+data$Teaching <- 0
+data[rating == "Yes"]$Teaching <- 1
+
+# individual
+individual <- data[subjectNumber != 9, .(N = .N, Sum = sum(Teaching)), by = .(subjectNumber, Condition, Skill, MidFile)]
+individual<- individual[order(subjectNumber)]
+
+# all
+all <- individual[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
+all <- all[order(MidFile)]
+all
+```
+
+```{r midi, include = FALSE}
+# create a list of data file names
+lf <- list.files("../experiment/mid/", pattern = "mid")
+
+# combine data
+all_data <- data.table()
+for (file in lf){
+   current <- readMidi(paste("../experiment/mid/", file, sep = ""))
+   current$MidFile <- gsub(".mid", "", file)
+   all_data <- rbind(all_data, current)
+}
+
+data <- all_data[event == "Note On" | event == "Note Off"]
+data$NoteNr <- rep(1:134, nrow(data)/134)
+data$channel <- NULL
+data$parameterMetaSystem <- NULL
+data$track <- NULL
+data$type <- NULL
+data$time2 <- data$time
+#data$time2 <- (data$time/960)*1000 # deltatime to time (ms)
+
+# labelling
+colnames(data)[c(3,4)] <- c("Pitch", "Velocity") # time event also change
+data$Condition <- "NA"
+data$Skill <- "NA"
+data[grepl("_t_", MidFile)]$Condition <- "teaching"
+data[grepl("_p_", MidFile)]$Condition <- "performing"
+data[grepl("a_", MidFile)]$Skill <- "articulation"
+data[grepl("d_", MidFile)]$Skill <- "dynamics"
+
+# define subcomponents
+# For intervals
+ls_legato <- list(c(1:7), c(17:23), c(42:48), c(58:64))
+ls_staccato <- list(c(9:15), c(25:31), c(34:40), c(50:56))
+ls_forte <- list(c(1:7), c(17:23), c(42:48), c(58:64))
+ls_piano <- list(c(9:15), c(25:31), c(34:40), c(50:56))
+
+# For each note (velocity only)
+ls_legato_2 <- list(c(1:8), c(17:24), c(42:49), c(58:65))
+ls_staccato_2 <- list(c(9:16), c(25:32), c(34:41), c(50:57))
+ls_forte_2 <- list(c(1:8), c(17:24), c(42:49), c(58:65))
+ls_piano_2 <- list(c(9:16), c(25:32), c(34:41), c(50:57))
+
+# Define Skill Change (LtoS, FtoP)
+change_1 <- c(8, 24, 49)
+# Define Skill Change (StoL, PtoF)
+change_2 <- c(16, 41, 57)
+```
+
+# Results
+- significance levels: `***: 0.001, **: 0.01, *: 0.05`
+- scatter plots with linear regression lines and 95% confidence intervals (gray)
+- SD: Standard deviation
+- CV: Coefficient of variation (SD/mean)
+
+# IOIs: CV (tempo variability)
+```{r ioi, include = FALSE}
+data_onset <- data[event == "Note On"]
+data_offset <- data[event == "Note Off"]
+
+data_onset$IOI <- diff(c(0, data_onset$time2))
+dt_ioi <- data_onset[NoteNr != 1]
+dt_ioi$Interval <- rep(1:66, nrow(dt_ioi)/66)
+
+# assign Subcomponents
+dt_ioi$Subcomponent <- "NA"
+# Legato
+for (phrase in 1:length(ls_legato)){
+ for (note in 1:length(ls_legato[[phrase]])){
+   dt_ioi[Skill == "articulation" & Interval == ls_legato[[phrase]][note]]$Subcomponent <- "Legato"
+ }
+}
+# Staccato
+for (phrase in 1:length(ls_staccato)){
+ for (note in 1:length(ls_staccato[[phrase]])){
+   dt_ioi[Skill == "articulation" & Interval == ls_staccato[[phrase]][note]]$Subcomponent <- "Staccato"
+ }
+}
+
+# Forte
+for (phrase in 1:length(ls_forte)){
+ for (note in 1:length(ls_forte[[phrase]])){
+   dt_ioi[Skill == "dynamics" & Interval == ls_forte[[phrase]][note]]$Subcomponent <- "Forte"
+ }
+}
+# Piano
+for (phrase in 1:length(ls_piano)){
+ for (note in 1:length(ls_piano[[phrase]])){
+   dt_ioi[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
+ }
+}
+
+# assign Subcomponent Change
+for (number in change_1){
+ dt_ioi[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
+ dt_ioi[Skill == "dynamics" & Interval == number]$Subcomponent <- "FtoP"
+}
+for (number in change_2){
+ dt_ioi[Skill == "articulation" & Interval == number]$Subcomponent <- "StoL"
+ dt_ioi[Skill == "dynamics" & Interval == number]$Subcomponent <- "PtoF"
+}
+```
+
+## Whole excerpt
+```{r cv-ioi, echo = FALSE}
+rating <- all # rating data
+
+cv <- dt_ioi[Subcomponent != "NA", .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile, Skill)]
+cv
+
+# sorted
+cv <- cv[order(MidFile)]
+
+# plot
+cv$Teaching <- rating$Mean_Percent
+cv$TeachingSD <- rating$SD_Percent
+
+ggscatter(cv, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+### Articulation (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(cv[Skill == "articulation"]$Teaching)
+shapiro.test(cv[Skill == "articulation"]$CV)
+
+cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
+
+cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV, method = "spearman", exact = FALSE)
+```
+
+### Dynamics (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(cv[Skill == "dynamics"]$Teaching)
+shapiro.test(cv[Skill == "dynamics"]$CV)
+
+cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV)
+
+cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV, method = "spearman", exact = FALSE)
+```
+
+## Except transition points
+Generally pianists were likely to play slowly around transition points where one subcomponent of a technique moves to the other (e.g., from legat to staccato, from forte to piano). Therefore, we excluded these points to look at tempo variability.
+
+```{r cv-ioi-2, echo = FALSE}
+cv_2 <- dt_ioi[Subcomponent == "Legato" | Subcomponent == "Staccato" | Subcomponent == "Forte" | Subcomponent == "Piano", .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile, Skill)]
+cv_2
+
+# sorted
+cv_2 <- cv_2[order(MidFile)]
+
+# plot
+cv_2$Teaching <- rating$Mean_Percent
+cv_2$TeachingSD <- rating$SD_Percent
+
+ggscatter(cv_2, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+### Articulation (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(cv_2[Skill == "articulation"]$Teaching)
+shapiro.test(cv_2[Skill == "articulation"]$CV)
+
+cor.test(cv_2[Skill == "articulation"]$Teaching, cv_2[Skill == "articulation"]$CV)
+
+cor.test(cv_2[Skill == "articulation"]$Teaching, cv_2[Skill == "articulation"]$CV, method = "spearman", exact = FALSE)
+```
+
+### Dynamics (*)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(cv_2[Skill == "dynamics"]$Teaching)
+shapiro.test(cv_2[Skill == "dynamics"]$CV)
+
+cor.test(cv_2[Skill == "dynamics"]$Teaching, cv_2[Skill == "dynamics"]$CV)
+
+cor.test(cv_2[Skill == "dynamics"]$Teaching, cv_2[Skill == "dynamics"]$CV, method = "spearman", exact = FALSE)
+```
+# KOT: SD (articulation variability)
+Because some recordings have a negative mean of KOT even for legato parts, SD, instead of CV, would be suitble to see articulation variation.
+
+```{r kot, include = FALSE}
+data_onset$KOT <- 0
+for (row in 1:nrow(data_onset)){
+   if (row < nrow(data_onset)){
+      data_onset$KOT[row+1] <- data_offset$time2[row] - data_onset$time2[row+1] # offset(n) - onset(n+1)
+   }
+}
+
+dt_kot <- data_onset[NoteNr != 1]
+dt_kot$Interval <- rep(1:66, nrow(dt_kot)/66)
+
+# assign Subcomponents
+dt_kot$Subcomponent <- "NA"
+# Legato
+for (phrase in 1:length(ls_legato)){
+   for (note in 1:length(ls_legato[[phrase]])){
+     dt_kot[Skill == "articulation" & Interval == ls_legato[[phrase]][note]]$Subcomponent <- "Legato"
+   }
+}
+# Staccato
+for (phrase in 1:length(ls_staccato)){
+   for (note in 1:length(ls_staccato[[phrase]])){
+     dt_kot[Skill == "articulation" & Interval == ls_staccato[[phrase]][note]]$Subcomponent <- "Staccato"
+   }
+}
+# Forte
+for (phrase in 1:length(ls_forte)){
+   for (note in 1:length(ls_forte[[phrase]])){
+     dt_kot[Skill == "dynamics" & Interval == ls_forte[[phrase]][note]]$Subcomponent <- "Forte"
+   }
+}
+# Piano
+for (phrase in 1:length(ls_piano)){
+   for (note in 1:length(ls_piano[[phrase]])){
+     dt_kot[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
+   }
+}
+# assign Subcomponent Change
+for (number in change_1){
+   dt_kot[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
+   dt_kot[Skill == "dynamics" & Interval == number]$Subcomponent <- "FtoP"
+}
+for (number in change_2){
+   dt_kot[Skill == "articulation" & Interval == number]$Subcomponent <- "StoL"
+   dt_kot[Skill == "dynamics" & Interval == number]$Subcomponent <- "PtoF"
+}
+```
+
+## Articulation
+```{r sd-kot-art, echo = FALSE}
+sd_kot_art <- dt_kot[Subcomponent == "Legato" | Subcomponent == "Staccato", .(N = .N, Mean = mean(KOT), SD = sd(KOT)), by = .(MidFile, Subcomponent)]
+sd_kot_art
+
+# sorted
+sd_kot_art <- sd_kot_art[order(MidFile)]
+
+# plot
+sd_kot_art$Teaching <- rep(rating[Skill == "articulation"]$Mean_Percent, each = 2)
+sd_kot_art$TeachingSD <- rep(rating[Skill == "articulation"]$SD_Percent, each = 2)
+
+ggscatter(sd_kot_art, x = "SD", y = "Teaching", color = "Subcomponent", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "SD (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+### Legato (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(sd_kot_art[Subcomponent == "Legato"]$Teaching)
+shapiro.test(sd_kot_art[Subcomponent == "Legato"]$SD)
+
+cor.test(sd_kot_art[Subcomponent == "Legato"]$Teaching, sd_kot_art[Subcomponent == "Legato"]$SD)
+```
+
+### Staccato (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(sd_kot_art[Subcomponent == "Staccato"]$Teaching)
+shapiro.test(sd_kot_art[Subcomponent == "Staccato"]$SD)
+
+cor.test(sd_kot_art[Subcomponent == "Staccato"]$Teaching, sd_kot_art[Subcomponent == "Staccato"]$SD)
+
+cor.test(sd_kot_art[Subcomponent == "Staccato"]$Teaching, sd_kot_art[Subcomponent == "Staccato"]$SD, method = "spearman", exact = FALSE)
+```
+
+## Dynamics
+```{r sd-kot-dyn, echo = FALSE}
+sd_kot_dyn <- dt_kot[Subcomponent == "Forte" | Subcomponent == "Piano", .(N = .N, Mean = mean(KOT), SD = sd(KOT)), by = .(MidFile, Subcomponent)]
+sd_kot_dyn
+
+# sorted
+sd_kot_dyn <- sd_kot_dyn[order(MidFile)]
+
+# plot
+sd_kot_dyn$Teaching <- rep(rating[Skill == "dynamics"]$Mean_Percent, each = 2)
+sd_kot_dyn$TeachingSD <- rep(rating[Skill == "dynamics"]$SD_Percent, each = 2)
+
+ggscatter(sd_kot_dyn, x = "SD", y = "Teaching", color = "Subcomponent", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "SD (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+### Forte (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(sd_kot_dyn[Subcomponent == "Forte"]$Teaching)
+shapiro.test(sd_kot_dyn[Subcomponent == "Forte"]$SD)
+
+cor.test(sd_kot_dyn[Subcomponent == "Forte"]$Teaching, sd_kot_dyn[Subcomponent == "Forte"]$SD)
+
+cor.test(sd_kot_dyn[Subcomponent == "Forte"]$Teaching, sd_kot_dyn[Subcomponent == "Forte"]$SD, method = "spearman", exact = FALSE)
+```
+
+### Piano (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(sd_kot_dyn[Subcomponent == "Piano"]$Teaching)
+shapiro.test(sd_kot_dyn[Subcomponent == "Piano"]$SD)
+
+cor.test(sd_kot_dyn[Subcomponent == "Piano"]$Teaching, sd_kot_dyn[Subcomponent == "Piano"]$SD)
+
+cor.test(sd_kot_dyn[Subcomponent == "Piano"]$Teaching, sd_kot_dyn[Subcomponent == "Piano"]$SD, method = "spearman", exact = FALSE)
+```
+
+# KOT: CV (articulation variability)
+Because some recordings have the negative mean value or KOT even for Legato parts (i.e., relatively short legato), this measurement might not be useful.
+
+## Articulation
+### Legato
+```{r cv-kot-leg, echo = FALSE}
+cv_kot_leg <- dt_kot[Subcomponent == "Legato", .(N = .N, CV = sd(KOT)/mean(KOT)), by = .(MidFile)]
+cv_kot_leg
+
+# sorted
+cv_kot_leg <- cv_kot_leg[order(MidFile)]
+
+# plot
+cv_kot_leg$Teaching <- rep(rating[Skill == "articulation"]$Mean_Percent, each = 1)
+cv_kot_leg$TeachingSD <- rep(rating[Skill == "articulation"]$SD_Percent, each = 1)
+
+ggscatter(cv_kot_leg, x = "CV", y = "Teaching", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+
+### Staccato
+```{r cv-kot-sta, echo = FALSE}
+cv_kot_sta <- dt_kot[Subcomponent == "Staccato", .(N = .N, CV = sd(KOT)/mean(KOT)), by = .(MidFile)]
+cv_kot_sta
+
+# sorted
+cv_kot_sta <- cv_kot_sta[order(MidFile)]
+
+# plot
+cv_kot_sta$Teaching <- rep(rating[Skill == "articulation"]$Mean_Percent, each = 1)
+cv_kot_sta$TeachingSD <- rep(rating[Skill == "articulation"]$SD_Percent, each = 1)
+
+ggscatter(cv_kot_sta, x = "CV", y = "Teaching", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+## Dynamics
+### Forte
+```{r cv-kot-for, echo = FALSE}
+cv_kot_for <- dt_kot[Subcomponent == "Forte", .(N = .N, CV = sd(KOT)/mean(KOT)), by = .(MidFile)]
+cv_kot_for
+
+# sorted
+cv_kot_for <- cv_kot_for[order(MidFile)]
+
+# plot
+cv_kot_for$Teaching <- rep(rating[Skill == "articulation"]$Mean_Percent, each = 1)
+cv_kot_for$TeachingSD <- rep(rating[Skill == "articulation"]$SD_Percent, each = 1)
+
+ggscatter(cv_kot_for, x = "CV", y = "Teaching", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+### Piano
+```{r cv-kot-pia, echo = FALSE}
+cv_kot_pia <- dt_kot[Subcomponent == "Piano", .(N = .N, CV = sd(KOT)/mean(KOT)), by = .(MidFile)]
+cv_kot_pia
+
+# sorted
+cv_kot_pia <- cv_kot_pia[order(MidFile)]
+
+# plot
+cv_kot_pia$Teaching <- rep(rating[Skill == "articulation"]$Mean_Percent, each = 1)
+cv_kot_pia$TeachingSD <- rep(rating[Skill == "articulation"]$SD_Percent, each = 1)
+
+ggscatter(cv_kot_pia, x = "CV", y = "Teaching", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+# KV: CV (dynamics variability)
+```{r vel, include = FALSE}
+dt_vel <- data_onset
+dt_vel$Note <- rep(1:67, nrow(dt_vel)/67)
+# assign Subcomponents
+# for each note
+dt_vel$Subcomponent <- "NA"
+# Legato
+for (phrase in 1:length(ls_legato_2)){
+   for (note in 1:length(ls_legato_2[[phrase]])){
+     dt_vel[Skill == "articulation" & Note == ls_legato_2[[phrase]][note]]$Subcomponent <- "Legato"
+   }
+}
+# Staccato
+for (phrase in 1:length(ls_staccato_2)){
+   for (note in 1:length(ls_staccato_2[[phrase]])){
+     dt_vel[Skill == "articulation" & Note == ls_staccato_2[[phrase]][note]]$Subcomponent <- "Staccato"
+   }
+}
+# Forte
+for (phrase in 1:length(ls_forte_2)){
+   for (note in 1:length(ls_forte_2[[phrase]])){
+     dt_vel[Skill == "dynamics" & Note == ls_forte_2[[phrase]][note]]$Subcomponent <- "Forte"
+   }
+}
+# Piano
+for (phrase in 1:length(ls_piano_2)){
+   for (note in 1:length(ls_piano_2[[phrase]])){
+     dt_vel[Skill == "dynamics" & Note == ls_piano_2[[phrase]][note]]$Subcomponent <- "Piano"
+   }
+}
+```
+
+## Dynamics
+```{r cv-vel-dyn, echo = FALSE}
+cv_vel_dyn <- dt_vel[Subcomponent == "Forte" | Subcomponent == "Piano", .(N = .N, CV = sd(Velocity)/mean(Velocity)), by = .(MidFile, Subcomponent)]
+cv_vel_dyn
+
+# sorted
+cv_vel_dyn <- cv_vel_dyn[order(MidFile)]
+
+# plot
+cv_vel_dyn$Teaching <- rep(rating[Skill == "dynamics"]$Mean_Percent, each = 2)
+cv_vel_dyn$TeachingSD <- rep(rating[Skill == "dynamics"]$SD_Percent, each = 2)
+
+ggscatter(cv_vel_dyn, x = "CV", y = "Teaching", color = "Subcomponent", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+### Forte (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(cv_vel_dyn[Subcomponent == "Forte"]$Teaching)
+shapiro.test(cv_vel_dyn[Subcomponent == "Forte"]$CV)
+
+cor.test(cv_vel_dyn[Subcomponent == "Forte"]$Teaching, cv_vel_dyn[Subcomponent == "Forte"]$CV)
+```
+
+### Piano (n.s.)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(cv_vel_dyn[Subcomponent == "Piano"]$Teaching)
+shapiro.test(cv_vel_dyn[Subcomponent == "Piano"]$CV)
+
+cor.test(cv_vel_dyn[Subcomponent == "Piano"]$Teaching, cv_vel_dyn[Subcomponent == "Piano"]$CV)
+
+cor.test(cv_vel_dyn[Subcomponent == "Piano"]$Teaching, cv_vel_dyn[Subcomponent == "Piano"]$CV, method = "spearman", exact = FALSE)
+```
+
+## Articulation
+```{r cv-vel-art, echo = FALSE}
+cv_vel_art <- dt_vel[Subcomponent == "Legato" | Subcomponent == "Staccato", .(N = .N, CV = sd(Velocity)/mean(Velocity)), by = .(MidFile, Subcomponent)]
+cv_vel_art
+
+# sorted
+cv_vel_art <- cv_vel_art[order(MidFile)]
+
+# plot
+cv_vel_art$Teaching <- rep(rating[Skill == "articulation"]$Mean_Percent, each = 2)
+cv_vel_art$TeachingSD <- rep(rating[Skill == "articulation"]$SD_Percent, each = 2)
+
+ggscatter(cv_vel_art, x = "CV", y = "Teaching", color = "Subcomponent", add = "reg.line",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
+```
+
+### Legato (**)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(cv_vel_art[Subcomponent == "Legato"]$Teaching)
+shapiro.test(cv_vel_art[Subcomponent == "Legato"]$CV)
+
+cor.test(cv_vel_art[Subcomponent == "Legato"]$Teaching, cv_vel_art[Subcomponent == "Legato"]$CV)
+
+cor.test(cv_vel_art[Subcomponent == "Legato"]$Teaching, cv_vel_art[Subcomponent == "Legato"]$CV, method = "spearman", exact = FALSE)
+```
+
+### Staccato (*)
+```{r, echo = FALSE}
+# normality check
+shapiro.test(cv_vel_art[Subcomponent == "Staccato"]$Teaching)
+shapiro.test(cv_vel_art[Subcomponent == "Staccato"]$CV)
+
+cor.test(cv_vel_art[Subcomponent == "Staccato"]$Teaching, cv_vel_art[Subcomponent == "Staccato"]$CV)
+```
