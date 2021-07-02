@@ -7,7 +7,7 @@ output: html_notebook
 
 - 21 participants (experimental error = 1) >> 20 participants were included for analysis.
 
-# Data analysis
+# Variability
 - Pearson's correlation (if normality is violated, Spearman's rank correlation instead) between variability measurements and participants' judgments as "teaching"
 
 ## Variables
@@ -27,9 +27,9 @@ if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
 
 ```{r read, include = FALSE}
 # read files and combine them
-data_ls <- list.files("data", pattern = "csv")
+data_ls <- list.files("../data", pattern = "csv")
 combined <- lapply(data_ls, function(f){
-  fread(paste("data/", f, sep = ""), sep = ",")
+  fread(paste("../data/", f, sep = ""), sep = ",")
 })
 all_data <- do.call(rbind.data.frame, combined)
 
@@ -553,3 +553,94 @@ shapiro.test(cv_vel_art[Subcomponent == "Staccato"]$CV)
 
 cor.test(cv_vel_art[Subcomponent == "Staccato"]$Teaching, cv_vel_art[Subcomponent == "Staccato"]$CV)
 ```
+
+# Appendix
+
+## deviated CVs based on legato
+```{r kot-extra-1, echo = FALSE}
+cv_deviated_legato <- cv_kot_leg[abs(CV) > 10]
+
+# a_p_16
+a_p_16 <- dt_kot[MidFile == cv_deviated_legato[1]$MidFile]
+a_p_16$Interval <- c(1:nrow(a_p_16))
+
+ggline(a_p_16, x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_16") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_16[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_16 (Legato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_16[Subcomponent == "Staccato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_16 (Staccato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+# a_p_16
+a_p_6 <- dt_kot[MidFile == cv_deviated_legato[2]$MidFile]
+a_p_6$Interval <- c(1:nrow(a_p_6))
+
+ggline(a_p_6, x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_6") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_6[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_6 (Legato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_6[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_ (Staccato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+# a_p_15
+a_p_15 <- dt_kot[MidFile == cv_deviated_legato[3]$MidFile]
+a_p_15$Interval <- c(1:nrow(a_p_15))
+
+ggline(a_p_15, x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_15") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_15[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_15 (Legato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_15[Subcomponent == "Staccato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_15 (Staccato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+# a_p_24
+a_p_24 <- dt_kot[MidFile == cv_deviated_legato[4]$MidFile]
+a_p_24$Interval <- c(1:nrow(a_p_24))
+
+ggline(a_p_24, x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_24") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_24[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_24 (Legato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_24[Subcomponent == "Staccato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_24 (Staccato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+```
+
+## stable CVs based on legato
+```{r kot-extra-2, echo = FALSE}
+cv_stable_legato <- cv_kot_leg[abs(CV) < 0.5]
+
+# a_p_2
+a_p_2 <- dt_kot[MidFile == cv_stable_legato[1]$MidFile]
+a_p_2$Interval <- c(1:nrow(a_p_2))
+
+ggline(a_p_2, x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_2") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_2[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_2 (Legato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_2[Subcomponent == "Staccato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_2 (Staccato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+# a_p_4
+a_p_4 <- dt_kot[MidFile == cv_stable_legato[2]$MidFile]
+a_p_4$Interval <- c(1:nrow(a_p_4))
+
+ggline(a_p_4, x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_4") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_4[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_4 (Legato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+
+ggline(a_p_4[Subcomponent == "Staccato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_4 (Staccato)") +
+  scale_x_continuous(breaks = seq(1,66,1))
+```
+
