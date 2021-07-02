@@ -10,6 +10,9 @@ experiment/data
 analysis/test
 analysis/pilot
 
+# data
+data/removed
+
 # material
 material/expstimuli/selection/old_analysis
 
