@@ -583,7 +583,7 @@ ggline(a_p_6, x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "
 ggline(a_p_6[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_6 (Legato)") +
   scale_x_continuous(breaks = seq(1,66,1))
 
-ggline(a_p_6[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_ (Staccato)") +
+ggline(a_p_6[Subcomponent == "Legato"], x = "Interval", y = "KOT", position = position_dodge(.2), xlab = "Interval", ylab = "KOT (ms)", title = "a_p_6 (Staccato)") +
   scale_x_continuous(breaks = seq(1,66,1))
 
 # a_p_15
