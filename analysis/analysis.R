@@ -13,7 +13,7 @@ if (!require("performance")) {install.packages("performance"); require("performa
 
 ## ----read, include = FALSE----------------------------------
 # read files and combine them
-data_ls <- list.files("data")
+data_ls <- list.files("data", pattern = "csv")
 combined <- lapply(data_ls, function(f){
   fread(paste("data/", f, sep = ""), sep = ",")
 })

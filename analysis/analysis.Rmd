@@ -5,7 +5,7 @@ output: html_notebook
 
 - Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
 
-- 15 participants (experimental error = 1) >> 14 participants were included for analysis.
+- 17 participants (experimental error = 1) >> 16 participants were included for analysis.
 
 # Experiment
 
@@ -59,7 +59,7 @@ if (!require("performance")) {install.packages("performance"); require("performa
 
 ```{r read, include = FALSE}
 # read files and combine them
-data_ls <- list.files("data")
+data_ls <- list.files("data", pattern = "csv")
 combined <- lapply(data_ls, function(f){
   fread(paste("data/", f, sep = ""), sep = ",")
 })
