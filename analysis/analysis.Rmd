@@ -199,7 +199,7 @@ for (number in change_2){
 }
 ```
 
-## All ()
+## All
 ```{r ioi-all, echo = FALSE}
 rating <- all # rating data
 
@@ -218,19 +218,29 @@ ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
 ```
 ## Articulation ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(ioi[Skill == "articulation"]$Teaching)
+shapiro.test(ioi[Skill == "articulation"]$Mean)
+
 cor.test(ioi[Skill == "articulation"]$Teaching, ioi[Skill == "articulation"]$Mean)
 ```
 
 ## Dynamics ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(ioi[Skill == "dynamics"]$Teaching)
+shapiro.test(ioi[Skill == "dynamics"]$Mean)
+
 cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
+
+cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean, method = "spearman", exact = FALSE)
 ```
 
 # Tempo at transition points
 - tempo at transition points (e.g., legato to staccato / forte to piano) and teaching judgement
 - linear regression line (black) and 95% confidence interval (gray)
 
-## All ()
+## All
 ```{r ioi-tra-all, echo = FALSE}
 ioi_tra <- dt_ioi[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill)]
 
@@ -248,19 +258,31 @@ ggscatter(ioi_tra, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line"
 
 ## Articulation ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(ioi_tra[Skill == "articulation"]$Teaching)
+shapiro.test(ioi_tra[Skill == "articulation"]$Mean)
+
 cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulation"]$Mean)
+
+cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulation"]$Mean, method = "spearman", exact = FALSE)
 ```
 
 ## Dynamics ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(ioi_tra[Skill == "dynamics"]$Teaching)
+shapiro.test(ioi_tra[Skill == "dynamics"]$Mean)
+
 cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mean)
+
+cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mean, method = "spearman", exact = FALSE)
 ```
 
 # CV (tempo variability)
 - tempo variability and teaching judgement
 - linear regression lines and 95% confidence interval (gray)
 
-## All ()
+## All
 ```{r cv, echo = FALSE}
 cv <- dt_ioi[Subcomponent != "NA", .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile, Skill)]
 
@@ -277,12 +299,24 @@ ggscatter(cv, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
 ```
 ## Articulation ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(cv[Skill == "articulation"]$Teaching)
+shapiro.test(cv[Skill == "articulation"]$CV)
+
 cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
+
+cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV, method = "spearman", exact = FALSE)
 ```
 
 ## Dynamics ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(cv[Skill == "dynamics"]$Teaching)
+shapiro.test(cv[Skill == "dynamics"]$CV)
+
 cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV)
+
+cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV, method = "spearman", exact = FALSE)
 ```
 
 # KOT
@@ -354,22 +388,42 @@ ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
 ```
 ## Legato ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(kot_all[Subcomponent == "Legato"]$Teaching)
+shapiro.test(kot_all[Subcomponent == "Legato"]$Mean)
+
 cor.test(kot_all[Subcomponent == "Legato"]$Teaching, kot_all[Subcomponent == "Legato"]$Mean)
 ```
 
 ## Staccato ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(kot_all[Subcomponent == "Staccato"]$Teaching)
+shapiro.test(kot_all[Subcomponent == "Staccato"]$Mean)
+
 cor.test(kot_all[Subcomponent == "Staccato"]$Teaching, kot_all[Subcomponent == "Staccato"]$Mean)
 ```
 
 ## Forte ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(kot_all[Subcomponent == "Forte"]$Teaching)
+shapiro.test(kot_all[Subcomponent == "Forte"]$Mean)
+
 cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean)
+
+cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean, method = "spearman", exact = FALSE)
 ```
 
 ## Piano ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(kot_all[Subcomponent == "Piano"]$Teaching)
+shapiro.test(kot_all[Subcomponent == "Piano"]$Mean)
+
 cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean)
+
+cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean, method = "spearman", exact = FALSE)
 ```
 
 # KV
@@ -426,20 +480,40 @@ ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
 
 ## Forte ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(vel_all[Subcomponent == "Forte"]$Teaching)
+shapiro.test(vel_all[Subcomponent == "Forte"]$Mean)
+
 cor.test(vel_all[Subcomponent == "Forte"]$Teaching, vel_all[Subcomponent == "Forte"]$Mean)
+
+cor.test(vel_all[Subcomponent == "Forte"]$Teaching, vel_all[Subcomponent == "Forte"]$Mean, method = "spearman", exact = FALSE)
 ```
 
 ## Piano ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(vel_all[Subcomponent == "Piano"]$Teaching)
+shapiro.test(vel_all[Subcomponent == "Piano"]$Mean)
+
 cor.test(vel_all[Subcomponent == "Piano"]$Teaching, vel_all[Subcomponent == "Piano"]$Mean)
+
+cor.test(vel_all[Subcomponent == "Piano"]$Teaching, vel_all[Subcomponent == "Piano"]$Mean, method = "spearman", exact = FALSE)
 ```
 ## Legato ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(vel_all[Subcomponent == "Legato"]$Teaching)
+shapiro.test(vel_all[Subcomponent == "Legato"]$Mean)
+
 cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean)
 ```
 
 ## Staccato ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(vel_all[Subcomponent == "Staccato"]$Teaching)
+shapiro.test(vel_all[Subcomponent == "Staccato"]$Mean)
+
 cor.test(vel_all[Subcomponent == "Staccato"]$Teaching, vel_all[Subcomponent == "Staccato"]$Mean)
 ```
 
@@ -508,20 +582,40 @@ ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add 
 
 ## Forte to Piano ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching)
+shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Mean)
+
 cor.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching, vel_diff_all[Subcomponent == "FtoP"]$Mean)
+
+cor.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching, vel_diff_all[Subcomponent == "FtoP"]$Mean, method = "spearman", exact = FALSE)
 ```
 
 ## Piano to Forte ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching)
+shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Mean)
+
 cor.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching, vel_diff_all[Subcomponent == "PtoF"]$Mean)
+
+cor.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching, vel_diff_all[Subcomponent == "PtoF"]$Mean, method = "spearman", exact = FALSE)
 ```
 ## Legato to Staccato ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching)
+shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Mean)
+
 cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean)
 ```
 
 ## Staccato to Legato ()
 ```{r, echo = FALSE}
+# normality check
+shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Teaching)
+shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Mean)
+
 cor.test(vel_diff_all[Subcomponent == "StoL"]$Teaching, vel_diff_all[Subcomponent == "StoL"]$Mean)
 ```
 
