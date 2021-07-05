@@ -199,7 +199,7 @@ for (number in change_2){
 }
 ```
 
-## All (***)
+## All
 ```{r ioi-all, echo = FALSE}
 rating <- all # rating data
 
@@ -243,7 +243,7 @@ cor_ioi_dyn_spearman
 - tempo at transition points (e.g., legato to staccato / forte to piano) and teaching judgement
 - linear regression line (black) and 95% confidence interval (gray)
 
-## All (***)
+## All
 ```{r ioi-tra-all, echo = FALSE}
 ioi_tra <- dt_ioi[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill)]
 
@@ -283,7 +283,7 @@ cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mea
 - tempo variability and teaching judgement
 - linear regression lines and 95% confidence interval (gray)
 
-## All (n.s.)
+## All
 ```{r cv, echo = FALSE}
 cv <- dt_ioi[Subcomponent != "NA", .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile, Skill)]
 
