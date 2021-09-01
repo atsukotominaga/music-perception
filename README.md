@@ -21,7 +21,9 @@ This repo contains scripts and materials for a musical perception study with mus
 # analysis
 - `analysis.Rmd`: analysis script >> output: `analysis.nb.html`
 - `questionnaire.Rmd`: demographics info >> output: `questionnaire.nb.html`
-- `data`: raw performance data
+
+# data
+raw performance data
 
 # material
 ## instruction
