@@ -3,15 +3,14 @@
 *html
 *sh
 
-# experiment
-experiment/data
-
 # analysis
-analysis/test
-analysis/pilot
+analysis/others
 
 # data
 data/removed
+
+# experiment
+experiment/data
 
 # material
 material/expstimuli/selection/old_analysis
