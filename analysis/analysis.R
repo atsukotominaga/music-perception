@@ -13,9 +13,9 @@ if (!require("performance")) {install.packages("performance"); require("performa
 
 ## ----read, include = FALSE----------------------------------
 # read files and combine them
-data_ls <- list.files("data", pattern = "csv")
+data_ls <- list.files("../data", pattern = "csv")
 combined <- lapply(data_ls, function(f){
-  fread(paste("data/", f, sep = ""), sep = ",")
+  fread(paste("../data/", f, sep = ""), sep = ",")
 })
 all_data <- do.call(rbind.data.frame, combined)
 
