@@ -12,9 +12,9 @@ if (!require("performance")) {install.packages("performance"); require("performa
 
 ## ----read, include = FALSE----------------------------------
 # read files and combine them
-data_ls <- list.files("../data", pattern = "csv")
+data_ls <- list.files("../../data", pattern = "csv")
 combined <- lapply(data_ls, function(f){
-  fread(paste("../data/", f, sep = ""), sep = ",")
+  fread(paste("../../data/", f, sep = ""), sep = ",")
 })
 all_data <- do.call(rbind.data.frame, combined)
 
@@ -68,7 +68,7 @@ ind_data_ad <- ind_data_ad[order(subjectNumber, Skill)]
 subset_ad <- ind_data_ad[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum)/48)*100, SD_Percent = (sd(Sum)/48)*100), by = .(Skill)]
 subset_ad
 
-data_box <- data.table(subjectNumber = ind_data_ad$subjectNumber, articulation = ind_data_ad[Skill == "articulation"]$Percent, dynamics = ind_data_ad[Skill == "dynamics"]$Percent)
+data_box <- data.table(subjectNumber = ind_data_ad[Skill == "articulation"]$subjectNumber, articulation = ind_data_ad[Skill == "articulation"]$Percent, dynamics = ind_data_ad[Skill == "dynamics"]$Percent)
 box <- ggpaired(data_box, cond1 = "articulation", cond2 = "dynamics", line.color = "gray", line.size = 0.4, ylab = "Correct %")
 box
 
