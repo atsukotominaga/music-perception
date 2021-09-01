@@ -2,14 +2,15 @@
 *.DS_Store
 *html
 *sh
-others
 
 # analysis
-analysis/data
 analysis/pilot
-analysis/questionnaire.csv
+
+# data
+data/removed
 
 # experiment
 experiment/data
 
-# material
+# others
+others
