@@ -1,0 +1,52 @@
+---
+title: "Music Perception 2: Questionnaire"
+output: html_notebook
+---
+
+- Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
+
+```{r setup, include = FALSE}
+# packages
+# data manipulation
+if (!require("data.table")) {install.packages("data.table"); require("data.table")}
+# plot
+if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
+```
+
+# Questionnaire
+
+```{r read, echo = FALSE}
+dt <- fread("questionnaire.csv", header = T, sep = ",", dec = ".", na.string = "NA")
+
+# change some colnames
+colnames(dt)[2] <- "SubNr"
+colnames(dt)[3] <- "Age"
+colnames(dt)[4] <- "Gender"
+colnames(dt)[7] <- "Handedness"
+
+# extract the total number of years of training for the longest instrument (input manually based on the original csv file)
+dt$Training <- c(14, 13, 7, 18, 23, 12, 17, 20, 12, 7, 12, 7, 7, 13, 20, 15, 6, 15, 8, 5, 20)
+
+# exclude participants
+dt_included <- dt[SubNr != 4]
+
+print(dt_included)
+```
+
+## Descriptive stats for included participants
+- Number of included participants: `r nrow(dt_included)` (mean age: `r round(mean(dt_included$Age), 2)`, sd: `r round(sd(dt_included$Age), 2)`)
+- Male: `r nrow(dt_included[Gender == "Male"])` (mean age: `r round(mean(dt_included[Gender == "Male"]$Age), 2)`, sd: `r round(sd(dt_included[Gender == "Male"]$Age), 2)`)
+- Female: `r nrow(dt_included[Gender == "Female"])` (mean age: `r round(mean(dt_included[Gender == "Female"]$Age), 2)`, sd: `r round(sd(dt_included[Gender == "Female"]$Age), 2)`)
+- Average training years: `r round(mean(dt_included$Training), 2)` years (*SD* = `r round(sd(dt_included$Training), 2)`)
+- Handedness: Right (`r nrow(dt_included[Handedness == "Right"])`), Left (`r nrow(dt_included[Handedness == "Left"])`), Both (`r nrow(dt_included[Handedness == "Both"])`)
+
+## Some descriptive questions
+1. Did you try to perform differently when you are asked to play as a teacher during the experiment? If so, please describe how you changed your performance?
+
+```{r 1, echo = FALSE}
+data.table("Answer" = dt_included$`Have you noticed anything special regarding the tasks in the experiment? If any, please describe below.`)
+```
+
+```{r export, include = FALSE}
+knitr::purl("questionnaire.Rmd")
+```

@@ -1,0 +1,16 @@
+# general
+*.DS_Store
+*html
+*sh
+
+# analysis
+analysis/pilot
+
+# data
+data/removed
+
+# experiment
+experiment/data
+
+# others
+others
