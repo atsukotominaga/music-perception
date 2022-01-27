@@ -1,4 +1,4 @@
-## ----setup, include = FALSE---------------------------------
+## ----setup, include = FALSE---------------------------------------
 # data manipulation
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
 # midi
@@ -11,7 +11,7 @@ if (!require("ppcor")) {install.packages("ppcor"); require("ppcor")}
 if (!require("performance")) {install.packages("performance"); require("performance")}
 
 
-## ----read, include = FALSE----------------------------------
+## ----read, include = FALSE----------------------------------------
 # read files and combine them
 data_ls <- list.files("../data", pattern = "csv")
 combined <- lapply(data_ls, function(f){
@@ -33,7 +33,7 @@ data[grepl("a_", midFile)]$Skill <- "articulation"
 data[grepl("d_", midFile)]$Skill <- "dynamics"
 
 
-## ----teaching, echo = FALSE---------------------------------
+## ----teaching, echo = FALSE---------------------------------------
 data$Teaching <- 0
 data[rating == "Yes"]$Teaching <- 1
 
@@ -47,7 +47,7 @@ all <- all[order(MidFile)]
 all
 
 
-## ----midi, include = FALSE----------------------------------
+## ----midi, include = FALSE----------------------------------------
 # create a list of data file names
 lf <- list.files("../experiment/mid/", pattern = "mid")
 
@@ -95,7 +95,7 @@ change_1 <- c(5, 17, 47)
 change_2 <- c(8, 20, 39)
 
 
-## ----ioi, include = FALSE-----------------------------------
+## ----ioi, include = FALSE-----------------------------------------
 data_onset <- data[event == "Note On"]
 data_offset <- data[event == "Note Off"]
 
@@ -142,7 +142,7 @@ for (number in change_2){
 }
 
 
-## ----ioi-all, echo = FALSE----------------------------------
+## ----ioi-all, echo = FALSE----------------------------------------
 rating <- all # rating data
 
 ioi <- dt_ioi[Subcomponent != "NA", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill)]
@@ -159,7 +159,7 @@ ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
           xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(ioi[Skill == "articulation"]$Teaching)
 shapiro.test(ioi[Skill == "articulation"]$Mean)
@@ -167,7 +167,7 @@ shapiro.test(ioi[Skill == "articulation"]$Mean)
 cor.test(ioi[Skill == "articulation"]$Teaching, ioi[Skill == "articulation"]$Mean)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(ioi[Skill == "dynamics"]$Teaching)
 shapiro.test(ioi[Skill == "dynamics"]$Mean)
@@ -177,7 +177,7 @@ cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
 cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ----ioi-tra-all, echo = FALSE------------------------------
+## ----ioi-tra-all, echo = FALSE------------------------------------
 ioi_tra <- dt_ioi[Subcomponent == "LtoS" | Subcomponent == "StoL" | Subcomponent == "FtoP" | Subcomponent == "PtoF", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill)]
 
 # sorted
@@ -192,7 +192,7 @@ ggscatter(ioi_tra, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line"
           xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(ioi_tra[Skill == "articulation"]$Teaching)
 shapiro.test(ioi_tra[Skill == "articulation"]$Mean)
@@ -202,7 +202,7 @@ cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulati
 cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulation"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(ioi_tra[Skill == "dynamics"]$Teaching)
 shapiro.test(ioi_tra[Skill == "dynamics"]$Mean)
@@ -212,7 +212,7 @@ cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mea
 cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ----cv, echo = FALSE---------------------------------------
+## ----cv, echo = FALSE---------------------------------------------
 cv <- dt_ioi[Subcomponent != "NA", .(N = .N, CV = sd(IOI)/mean(IOI)), by = .(MidFile, Skill)]
 
 # sorted
@@ -227,7 +227,7 @@ ggscatter(cv, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
           xlab = "CV", ylab = "Judged as teaching (%)") + ylim(0, 100)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(cv[Skill == "articulation"]$Teaching)
 shapiro.test(cv[Skill == "articulation"]$CV)
@@ -237,7 +237,7 @@ cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
 cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV, method = "spearman", exact = FALSE)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(cv[Skill == "dynamics"]$Teaching)
 shapiro.test(cv[Skill == "dynamics"]$CV)
@@ -247,7 +247,7 @@ cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV)
 cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV, method = "spearman", exact = FALSE)
 
 
-## ----kot, include = FALSE-----------------------------------
+## ----kot, include = FALSE-----------------------------------------
 data_onset$KOT <- 0
 for (row in 1:nrow(data_onset)){
    if (row < nrow(data_onset)){
@@ -295,7 +295,7 @@ for (number in change_2){
 }
 
 
-## ----kot-all, echo = FALSE----------------------------------
+## ----kot-all, echo = FALSE----------------------------------------
 kot_all <- dt_kot[Subcomponent == "Legato" | Subcomponent == "Staccato" | Subcomponent == "Forte" | Subcomponent == "Piano", .(N = .N, Mean = mean(KOT), SD = sd(KOT)), by = .(MidFile, Skill, Subcomponent)]
 
 # sorted
@@ -310,7 +310,7 @@ ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
           xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(kot_all[Subcomponent == "Legato"]$Teaching)
 shapiro.test(kot_all[Subcomponent == "Legato"]$Mean)
@@ -318,7 +318,7 @@ shapiro.test(kot_all[Subcomponent == "Legato"]$Mean)
 cor.test(kot_all[Subcomponent == "Legato"]$Teaching, kot_all[Subcomponent == "Legato"]$Mean)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(kot_all[Subcomponent == "Staccato"]$Teaching)
 shapiro.test(kot_all[Subcomponent == "Staccato"]$Mean)
@@ -326,7 +326,7 @@ shapiro.test(kot_all[Subcomponent == "Staccato"]$Mean)
 cor.test(kot_all[Subcomponent == "Staccato"]$Teaching, kot_all[Subcomponent == "Staccato"]$Mean)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(kot_all[Subcomponent == "Forte"]$Teaching)
 shapiro.test(kot_all[Subcomponent == "Forte"]$Mean)
@@ -336,7 +336,7 @@ cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "For
 cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(kot_all[Subcomponent == "Piano"]$Teaching)
 shapiro.test(kot_all[Subcomponent == "Piano"]$Mean)
@@ -346,7 +346,7 @@ cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Pia
 cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ----vel, include = FALSE-----------------------------------
+## ----vel, include = FALSE-----------------------------------------
 dt_vel <- data_onset
 dt_vel$Note <- rep(1:72, nrow(dt_vel)/72)
 # assign Subcomponents
@@ -378,7 +378,7 @@ for (phrase in 1:length(ls_piano_2)){
 }
 
 
-## ----vel-all, echo = FALSE----------------------------------
+## ----vel-all, echo = FALSE----------------------------------------
 vel_all <- dt_vel[Subcomponent == "Legato" | Subcomponent == "Staccato" | Subcomponent == "Forte" | Subcomponent == "Piano", .(N = .N, Mean = mean(Velocity), SD = sd(Velocity)), by = .(MidFile, Skill, Subcomponent)]
 
 # sorted
@@ -393,7 +393,7 @@ ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
           xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(vel_all[Subcomponent == "Forte"]$Teaching)
 shapiro.test(vel_all[Subcomponent == "Forte"]$Mean)
@@ -403,7 +403,7 @@ cor.test(vel_all[Subcomponent == "Forte"]$Teaching, vel_all[Subcomponent == "For
 cor.test(vel_all[Subcomponent == "Forte"]$Teaching, vel_all[Subcomponent == "Forte"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(vel_all[Subcomponent == "Piano"]$Teaching)
 shapiro.test(vel_all[Subcomponent == "Piano"]$Mean)
@@ -413,7 +413,7 @@ cor.test(vel_all[Subcomponent == "Piano"]$Teaching, vel_all[Subcomponent == "Pia
 cor.test(vel_all[Subcomponent == "Piano"]$Teaching, vel_all[Subcomponent == "Piano"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(vel_all[Subcomponent == "Legato"]$Teaching)
 shapiro.test(vel_all[Subcomponent == "Legato"]$Mean)
@@ -421,7 +421,7 @@ shapiro.test(vel_all[Subcomponent == "Legato"]$Mean)
 cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(vel_all[Subcomponent == "Staccato"]$Teaching)
 shapiro.test(vel_all[Subcomponent == "Staccato"]$Mean)
@@ -429,7 +429,7 @@ shapiro.test(vel_all[Subcomponent == "Staccato"]$Mean)
 cor.test(vel_all[Subcomponent == "Staccato"]$Teaching, vel_all[Subcomponent == "Staccato"]$Mean)
 
 
-## ----vel-diff, include = FALSE------------------------------
+## ----vel-diff, include = FALSE------------------------------------
 data_onset$Diff <- diff(c(0, data_onset$Velocity))
 dt_vel_diff <- data_onset[NoteNr != 1]
 # assign Interval
@@ -472,7 +472,7 @@ dt_vel_diff[Skill == "dynamics" & Interval == i]$Subcomponent <- "PtoF"
 }
 
 
-## ----vel-diff-all, echo = FALSE-----------------------------
+## ----vel-diff-all, echo = FALSE-----------------------------------
 vel_diff_all <- dt_vel_diff[Subcomponent == "FtoP" | Subcomponent == "PtoF" | Subcomponent == "LtoS" | Subcomponent == "StoL", .(N = .N, Mean = mean(Diff), SD = sd(Diff)), by = .(MidFile, Skill, Subcomponent)]
 
 # sorted
@@ -487,7 +487,7 @@ ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add 
           xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching)
 shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Mean)
@@ -497,7 +497,7 @@ cor.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching, vel_diff_all[Subcomponen
 cor.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching, vel_diff_all[Subcomponent == "FtoP"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching)
 shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Mean)
@@ -507,7 +507,7 @@ cor.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching, vel_diff_all[Subcomponen
 cor.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching, vel_diff_all[Subcomponent == "PtoF"]$Mean, method = "spearman", exact = FALSE)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching)
 shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Mean)
@@ -515,7 +515,7 @@ shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Mean)
 cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean)
 
 
-## ---- echo = FALSE------------------------------------------
+## ---- echo = FALSE------------------------------------------------
 # normality check
 shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Teaching)
 shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Mean)
@@ -523,7 +523,7 @@ shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Mean)
 cor.test(vel_diff_all[Subcomponent == "StoL"]$Teaching, vel_diff_all[Subcomponent == "StoL"]$Mean)
 
 
-## ----partial, include = FALSE-------------------------------
+## ----partial, include = FALSE-------------------------------------
 partial <- dt_ioi[Subcomponent != "NA", .(N = .N, IOI = mean(IOI), IOISD = sd(IOI)), by = .(MidFile, Skill)]
 partial <- rbind(partial, partial)
 partial <- partial[order(MidFile)]
@@ -541,54 +541,54 @@ partial$Teaching <- rep(rating$Mean_Percent, each = 2)
 partial$TeachingSD <- rep(rating$SD_Percent, each = 2)
 
 
-## ----kot-partial-leg, echo = TRUE---------------------------
+## ----kot-partial-leg, echo = TRUE---------------------------------
 pcor.test(partial[Subcomponent == "Legato"]$KOT, partial[Subcomponent == "Legato"]$Teaching, partial[Subcomponent == "Legato", c("IOI", "KV", "KVDiff")])
 
 
-## ----kot-partial-sta, echo = TRUE---------------------------
+## ----kot-partial-sta, echo = TRUE---------------------------------
 pcor.test(partial[Subcomponent == "Staccato"]$KOT, partial[Subcomponent == "Staccato"]$Teaching, partial[Subcomponent == "Staccato", c("IOI", "KV", "KVDiff")])
 
 
-## ----vel-partial-for, echo = TRUE---------------------------
+## ----vel-partial-for, echo = TRUE---------------------------------
 pcor.test(partial[Subcomponent == "Forte"]$KV, partial[Subcomponent == "Forte"]$Teaching, partial[Subcomponent == "Forte", c("IOI", "KOT", "KVDiff")])
 
 
-## ----vel-partial-pia, echo = TRUE---------------------------
+## ----vel-partial-pia, echo = TRUE---------------------------------
 pcor.test(partial[Subcomponent == "Piano"]$KV, partial[Subcomponent == "Piano"]$Teaching, partial[Subcomponent == "Piano", c("IOI", "KOT", "KVDiff")])
 
 
-## ----vel-diff-partial-ftop, echo = TRUE---------------------
+## ----vel-diff-partial-ftop, echo = TRUE---------------------------
 pcor.test(partial[Subcomponent2 == "FtoP"]$KVDiff, partial[Subcomponent2 == "FtoP"]$Teaching, partial[Subcomponent2 == "FtoP", c("IOI", "KOT", "KV")])
 
 
-## ----vel-diff-partial-ptof, echo = TRUE---------------------
+## ----vel-diff-partial-ptof, echo = TRUE---------------------------
 pcor.test(partial[Subcomponent2 == "PtoF"]$KVDiff, partial[Subcomponent2 == "PtoF"]$Teaching, partial[Subcomponent2 == "PtoF", c("IOI", "KOT", "KV")])
 
 
-## ---- echo = TRUE-------------------------------------------
+## ---- echo = TRUE-------------------------------------------------
 m1 <- lm(Teaching ~ IOI + KOT + KV + KVDiff, data = partial[Subcomponent == "Legato"])
 summary(m1)
 check_model(m1)
 
 
-## ---- echo = TRUE-------------------------------------------
+## ---- echo = TRUE-------------------------------------------------
 m2 <- lm(Teaching ~ IOI + KOT + KV + KVDiff, data = partial[Subcomponent == "Staccato"])
 summary(m2)
 check_model(m2)
 
 
-## ---- echo = TRUE-------------------------------------------
+## ---- echo = TRUE-------------------------------------------------
 m3 <- lm(Teaching ~ IOI + KOT + KV + KVDiff, data = partial[Subcomponent == "Forte"])
 summary(m3)
 check_model(m3)
 
 
-## ---- echo = TRUE-------------------------------------------
+## ---- echo = TRUE-------------------------------------------------
 m4 <- lm(Teaching ~ IOI + KOT + KV + KVDiff, data = partial[Subcomponent == "Piano"])
 summary(m4)
 check_model(m4)
 
 
-## ----export, include = FALSE--------------------------------
+## ----export, include = FALSE--------------------------------------
 knitr::purl("analysis.Rmd")
 

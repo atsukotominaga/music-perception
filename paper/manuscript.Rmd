@@ -1,0 +1,404 @@
+---
+title             : "What makes listeners infer teaching intentions?"
+shorttitle        : "What makes listeners infer teaching intentions?"
+
+author: 
+  - name          : "Atsuko Tominaga"
+    affiliation   : "1,*"
+    # corresponding : yes    # Define only one corresponding author
+    # address       : "Quellenstraße 51, 1100 Vienna, Austria"
+    # email         : "Tominaga_Atsuko@phd.ceu.edu"
+    
+  - name          : "Günther Knoblich"
+    affiliation   : "1"
+    
+  - name          : "Natalie Sebanz"
+    affiliation   : "1"
+
+affiliation:
+  - id            : "1"
+    institution   : "Department of Cognitive Science, Central European University, Quellenstraße 51, 1100 Vienna, Austria"
+  - id            : "*"
+    institution   : "Corresponding author: Tominaga_Atsuko@phd.ceu.edu"
+
+abstract: |
+  Social learning plays an important role in human skill transmission. It has been known that experts tend to change their behaviour particularly for teaching purposes. Our previous research demonstrated that expert pianists systematically modulated their sound so as to teach musical expressive techniques such as articulation and dynamics. For example, pianists played slower and exaggerated each technique when they had an intention to teach. In order to achieve successful skill transmission, it is vital to examine whether such sound modulations are identified and used to infer teaching intentions by novices, who are going to acquire skills. The current experiments investigated which features of piano performance make musicians (in the role of potential learners) infer teaching intentions. Musicians listened to a number of piano recordings where a musical expressive technique of either articulation or dynamics was implemented. Musicians were asked to judge whether each performance was produced in order to teach the designated expressive technique. We quantified recordings with regard to tempo, articulation and dynamics. Overall, slower tempo contributed to musicians’ judgments as teaching. Moreover, performances with exaggeration for each technique (e.g., shorter staccato, larger contrast between forte and piano) were more likely to be judged as teaching. These performance features are consistent with expert pianists’ sound modulations for teaching purposes. Therefore, musicians (in the role of potential learners) seem to be able to identify didactic sound modulations, only by listening to recorded performances.
+  
+keywords          : "teaching, intention, skill transmission, musical expression"
+
+bibliography      : ["references.bib"]
+
+floatsintext      : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : no
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r setup, include = FALSE}
+# packages
+if (!require("papaja")) {install.packages("papaja"); require("papaja")}
+if (!require("here")) {install.packages("here"); require("here")}
+if (!require("magick")) {install.packages("magick"); require("magick")}
+
+# create image folder
+if (!file.exists(here("paper/image"))){
+  dir.create(here("paper/image"))
+}
+```
+
+```{r function, include = FALSE}
+# function to extract the overall ANOVA p-value out of a linear model object
+# https://gettinggeneticsdone.blogspot.com/2011/01/rstats-function-for-extracting-f-test-p.html
+lmp <- function (modelobject) {
+	if (class(modelobject) != "lm") stop("Not an object of class 'lm' ")
+	f <- summary(modelobject)$fstatistic
+	p <- pf(f[1], f[2], f[3],lower.tail = F)
+	attributes(p) <- NULL
+	return(p)
+}
+```
+
+# Introduction
+Learning from others is one of the important elements of skill acquisition. Not only are we able to learn by observing and imitating others, but also we benefit greatly from interacting with others such as teachers and peers [@tomasello_1993]. Adults are often being pedagogical to children in order to explain and transmit cultural conventions [@csibra_2009]. Active teaching seems to play a crucial role not only to transit skills over generations but also to further develop sophisticated cultures, which cannot be achieved by one single individual or generation [@tennie_2009]. From a learner's perspective, it is important to identify informative teachers and infer teachers' expectations so that learners can acquire skills through interacting with teachers [@gweon_2020; @veissiere_2020].
+
+In pedagogical settings where teachers are supposed to convey useful information to learners, it has been found that teachers often modulate their behaviour for teaching purposes. For example, adults are likely to modulate their speech and action for infants so as to help infants acquire skills [e.g., @brand_2002; @kuhl_2004]. Also, some studies have revealed that even towards adult learners, people modulated their speech and action in the similar way as they did for infants [@mcellin_2017; @uther_2007]. These findings suggest that there are general pedagogical behaviours such as slow demonstration and exaggeration of speech and action to send teaching intentions to learners.
+
+Tominaga, Knoblich & Sebanz (*in prep*) extended this line of research to expertise transmission where skills to be acquired are much more complicated than general knowledge, which is mostly acquired throughout development [e.g., @csibra_2009]. Expertise usually demands an enormous amount of practice to acquire so that only experts can accomplish a higher level of performance including artistic expression. Based on the assumption that expert pianists are very good at controlling and modulating their sound to communicate, we investigated how expert pianists could modulate their performance when they were intending to teach musical expressive techniques of articulation (the smoothness of sound) and dynamics (the loudness of sound). The results demonstrated that expert pianists could successfully modulate their performance by playing slower or exaggerating relevant aspects of the performance (e.g., producing shorter staccato or making a larger contrast between forte and piano) to teach musical expressive techniques. Therefore, it seems that even in the domain of expertise, experts exhibit general pedagogical behaviours to communicate with their potential learners.
+
+In order to achieve successful skill transmission, it is necessary to investigate whether novice learners can identify teaching intentions produced by experts. A recent study by @mcellin_2018 demonstrated that people could identify informative intentions such as acting with others or teaching by relying on specific kinematics cues (e.g., velocity profiles of movements). Some research in the field of action expertise suggest that motor simulation (i.e., using one's own motor systems to simulate an action) plays a key role to understand observed actions. For example, expert basketball players were better at predicting the outcome of a free shot compared to expert observers (coaches or sports journalists) and novices [@aglioti_2008]. Also, it was found that deceptive intentions of fake basketball passes were detected from non-verbal bodily cues only by expert basketball players [@sebanz_2009]. Taken together, people seem to be able to infer informative intentions by observing actions and motor expertise may enable accurate action prediction.
+
+In the domain of music, musical emotion is often communicated by sound alone and listeners seem to be able to infer performers' intended emotions only by listening to recorded performances [e.g., @akkermans_2019; @gabrielsson_1996]. It has been known that musicians are generally more accurate to decode emotions from performances [@battcock_2021; @lima_2011]. @repp_2004 also found that expert pianists could distinguish their own performance from others' performances by listening to recordings. These results suggest that musical expertise may be important to accurately identify and infer intentions by listening to recorded performances.
+
+The current experiments investigate which features of piano performance make musicians (in the role of potential learners) infer teaching intentions, only by listening to recorded performances. We collected various piano recordings from our previous experiments (Tominaga et al., *in prep*). The obtained recordings consisted of two pieces (one was used for Experiment 1 and the other was used for Experiment 2 in the current paper). The two pieces were performed by various pianists multiple times, therefore the recordings contained many variations in terms of timing, articulation and dynamics. In the current experiments, we asked musically trained participants to judge which performance was performed for teaching purposes. If teachers' intentions are successfully communicated with learners, pedagogical behavioural features in our previous experiments such as slower demonstration and exaggerated performance should be identified and used to infer teaching intentions. In Experiment 1, we examined which features of piano performance were correlated with participants judgments as "teaching". Experiment 2 was conducted to replicate what we found in Experiment 1 with a more naturalistic piece of music.
+
+```{r questionnaire-1, include = FALSE}
+source(here("experiment-1/analysis", "questionnaire.R"), chdir = TRUE)
+```
+
+# Experiment 1
+# Methods
+## Participants
+We recruited `r nrow(dt)` participants who had at least six years of training in any musical instrument. They were able to read sheet music and knew two musical expressive techniques of articulation and dynamics. One participant was excluded due to an experimental error. Therefore, `r nrow(dt_included)` participants (Female: `r nrow(dt_included[Gender == "Female"])`) were included for data analysis and had `r round(mean(dt_included$Training), 2)` years of musical training on average (*SD* = `r round(sd(dt_included$Training), 2)`). They were all right-handed with a mean age of `r round(mean(dt_included$Age), 2)` (*SD* = `r round(sd(dt_included$Age), 2)`). All participants were recruited through an online participant platform (SONA system, https://www.sona-systems.com). The study (No. 2020/02) was approved by the Psychological Research Ethics Board (PREBO) CEU PU in Austria.
+
+## Apparatus
+The experiment was programmed in Python 3.8.2 using the PsychoPy library (2020.2.4; https://www.psychopy.org/) on a Mac Book Pro with Mac OS X Catalina 10.15.6. Stimuli (MIDI data) were played using the Mido library (1.2.9; https://mido.readthedocs.io/en/latest/) on a Max/MSP patcher (8.1.7; https://cycling74.com/products/max). During the experiment, participants listened to the stimuli via headphones (Audio-Technica ATH-M50X).
+
+## Stimuli
+Piano recordings were used as stimuli. The stimuli were produced by actual pianists on a weighed Yamaha MIDI (Musical Instrument Digital Interface) digital piano and recorded as MIDI files. One piece of music was selected as a base piece and was taken from "A Dozen a Day - Play with Ease in Many Keys" by Edna-Mae Burnam and modified for the experiment. The piece was performed with a musical expressive technique of either articulation (*Figure \ref{fig:stim1}*, A) or dynamics (*Figure \ref{fig:stim1}*, B) by multiple pianists. Therefore, all stimuli had the same musical sequence but had subtle differences in terms of musical expressions (e.g., timing, articulation and dynamics). Articulation refers to the smoothness of sound, which is comprised of legato and staccato. Legato indicates smooth and connected sound whereas staccato indicates sharp and separate sound. Dynamics refers to the loudness of sound, which is comprised of forte and piano. Forte indicates loud sound while piano indicates soft sound. The stimuli were performed around 80 quarter-beats per minute (i.e., around 188 ms for 16th-note IOIs).
+
+Ninety-six stimuli (MIDI recordings) were obtained from our previous experiments (Tominaga et al., *submitted*). In the previous experiments, we asked expert pianists to perform one piece of music with a musical expressive technique of either articulation (*Figure \ref{fig:stim1}*, A) or dynamics (*Figure \ref{fig:stim1}*, B). There were two experimental conditions. In the teaching condition, participants were instructed to perform the piece with the designated expressive technique as if they were teaching it to students (e.g., in a lesson). In the performing condition, participants were instructed to perform the piece with the designated expressive technique as if they were performing it to an audience (e.g., in a concert). There were 453 valid performances (i.e., performances without any pitch error) for the teaching condition and 436 valid performances for the performing conditions. We randomly chose 24 articulation recordings and 24 dynamics recordings from the teaching condition as well as 24 articulation recordings and 24 dynamics recordings from the performing condition. It is important to note that the recordings from the teaching condition did not necessarily exhibit specific features of teaching performance that we found in our previous experiments since we randomly sampled the recordings.
+
+## Procedure
+Upon arrival, participants read information sheet about the experiment and gave informed consent prior to participation. In the experiment, all instructions were displayed on a computer screen and an experimenter also explained the procedure. Participants were instructed that they were going to listen to piano recordings and would be asked if each recording was performed as if a pianist were teaching it to students (e.g., in a lesson / teaching) or as if a pianist were performing it to an audience (e.g., in a concert / performing). They responded by pressing either a yes (teaching / left arrow key) or no (performing / right arrow key) button. While listening to each stimulus, sheet music, which corresponded to the stimulus, was shown on a monitor in front of the participants. After making a judgment, the next recording was played (*Figure \ref{fig:procedure1}*).
+
+There were two blocks and each block only contained recordings with one musical expressive technique of either articulation or dynamics. Each block consisted of 4 practice trials and 48 experimental trials. In each trial, participants listened to one recording only once. After listening the recording, they were asked to judge by pressing either the left arrow key (i.e., teaching) or the right arrow key (i.e., performing). Each recording was evaluated only once in the experiment. The order of the blocks was counterbalanced across the participants. The order of the recordings was randomised within each block.
+
+At the end of the experiment, participants filled in a questionnaire about their demographic information and experience in musical instruments.
+
+## Data analysis{#dataanalysis}
+Data processing and statistical analysis were performed in R version 4.0.5. Correlation analysis was performed with the standard *cor* function and regression models for multiple regression were fit with the standard *lm* function from the *stats* R package. Stimuli (MIDI files) were converted to numerical data in terms of time, pitch and velocity for the onset and offset of each note using the *tuneR* R package ([https://cran.r-project.org/web/packages/tuneR/tuneR.pdf](https://cran.r-project.org/web/packages/tuneR/tuneR.pdf)).
+
+Stimuli (performances) were quantified with regard to tempo (interonset intervals; IOIs), articulation (key-overlap time; KOT), dynamics (key velocity; KV) and dynamics contrast (key velocity difference; KV-Diff) only for 16th notes. Interonset intervals are time intervals between onsets of adjacent notes. Larger IOIs indicate slower tempo while smaller IOIs indicate faster tempo. Key-overlap time is the time overlap between two adjacent notes, namely the difference between the offset time of the current note and the onset time of the ensuing note [e.g., @bresin_2000]. Positive KOT values indicate legato styles whereas negative KOT values indicate staccato styles. Key velocity is obtained from MIDI data to describe how fast a performer hit the key. Larger KV values indicate forte styles while smaller KV values indicate piano styles. Additionally, we also measured dynamics contrast where one subcomponent of the technique moves to the other (e.g., from forte to piano) to illustrate how much dynamics contrast a performer made at transition points.
+
+First, we investigated data by looking at correlations between performance features (i.e., IOIs, KOT, KV, KV-Diff) and participants' judgments as "teaching" (i.e., what percentage of participants responded as "yes (teaching)") for each stimulus. Second, we run multiple regression and entered all four performance features to examine which predictor significantly contributed to participants' judgments as teaching. Since articulation and dynamics were comprised of two opposite directional values (i.e., legato vs. staccato, forte vs. piano), we entered each subcomponent (i.e., legato, staccato, forte, piano) separately to represent either an articulation or dynamics feature of the performance for a regression model. For articulation recordings, there were two models. The first model considered only legato parts of the stimuli for KOT and KV, and transition points from legato to staccato for KV-Diff. The second model considered only staccato parts of the stimuli for KOT and KV, and transition points from staccato to legato for KV-Diff. For dynamics recordings, there were two models. The first model considered only forte parts of the stimuli for KV and KOT, and transition points from forte to piano for KV-Diff. The second model considered only piano parts of the stimuli for KV and KOT, and transition points from piano to forte for KV-Diff. With regard to tempo (IOIs), there was only one value for each technique because tempo was consistent across the performance and was not dependent on subcomponents.
+
+<!-- Additionally, we also analysed data in terms of accuracy of their judgments as we originally planned in our Open Science Framework preregistration (available here: [https://osf.io/z3j69/](https://osf.io/z3j69/)). As we sampled data from the two conditions (i.e., teaching and performing) in our previous experiments, we were also interested in whether musicians could accurately judge the stimuli selected from the teaching condition as "teaching (yes)" and the stimuli selected from the performing condition as "performing (no)". However, during a pilot study, we realised that the stimuli in the teaching condition were not sufficiently different from those in the performing condition because of the random sampling. Therefore, we decided to switch to the current analysis and added the planned analysis in *[Supplementary Materials](#supplementary)*.   -->
+
+```{r stim-1, out.width = "100%", fig.cap = "\\label{fig:stim1}Stimuli. (A)Articulation. The curved line (slur) indicates legato and the dots indicate staccato. (B)Dynamics. The symbol `f' denotes forte and the symbol `p' denotes piano. Only the 16th notes were used for data analysis.", echo = FALSE}
+stim_a <- image_border(image_read(here("paper/image", "stim_a.png")), "#FFFFFF", "120x120")
+stim_d <- image_border(image_read(here("paper/image", "stim_d.png")), "#FFFFFF", "120x120")
+
+# combine
+img_stimuli_1 <- image_append(c(stim_a, stim_d), stack = TRUE)
+img_stimuli_1 <- image_annotate(img_stimuli_1, "(A)", size = 80, location = "+100+0", color = "black", font = "helvetica")
+img_stimuli_1 <- image_annotate(img_stimuli_1, "(B)", size = 80, location = "+100+650", color = "black", font = "helvetica")
+img_stimuli_1
+```
+
+```{r procedure-1, out.width = "100%", fig.cap = "\\label{fig:procedure1}Procedure. Participants listened to a recording via headphones while corresponding sheet music was displayed on a monitor. They were required to respond by pressing a left-arrow (yes) or right-arrow (no) key for each judgment.", echo = FALSE}
+knitr::include_graphics(here("paper/image", "procedure.png"))
+```
+
+\clearpage
+
+# Results
+
+```{r results-1, cache = TRUE, include = FALSE}
+source(here("experiment-1/analysis", "analysis.R"), chdir = TRUE)
+```
+
+All results were reported as significant at *p* < 0.05.
+
+## Correlation
+A Pearson product-moment correlation coefficient was computed by default for correlation analysis and a Spearman's rank correlation coefficient was additionally computed if normality assumption was violated based on the Shapiro-Wilk normality test.
+
+### Tempo (IOIs)
+Performance tempi (IOIs) were significantly correlated with participants' judgments as teaching for both techniques (Articulation; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_ioi_art$estimate))`, *p* `r if(cor_ioi_art$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_ioi_art$p.value))}`, Dynamics; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_ioi_dyn$estimate))`, *p* `r if(cor_ioi_dyn$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_ioi_dyn$p.value))}`, *Figure \ref{fig:ioi-1}*).  Participants tended to identify slower performances as teaching.
+
+However, the Shapiro-Wilk normality test revealed that the distribution of IOIs for dynamics recordings was not normally distributed. Therefore, a Spearman's rank correlation coefficient was additionally used to assess the relationship between performance tempi of dynamics recordings and participants' judgments. The result failed to reach significance (*r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_ioi_dyn_spearman$estimate))`, *p* `r if(cor_ioi_dyn_spearman$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_ioi_dyn_spearman$p.value))}`), suggesting that we need to be careful about the interpretation of the relationship between performance tempi of dynamics recordings and participants' judgments as teaching.
+
+```{r ioi-1, include = FALSE}
+cor_ioi_1 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line", palette = "d3",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) + geom_vline(xintercept = 188, linetype = "dotted", color = "gray", size = 1) +
+  theme_pubr(base_size = 20, base_family = "Helvetica") +
+  labs(color = "")
+cor_ioi_1
+
+# save
+ggsave(here("paper/image", "cor_ioi_1.png"), plot = cor_ioi_1, dpi = 600, width = 7, height = 5)
+img_cor_ioi_1 <- image_read(here("paper/image", "cor_ioi_1.png"))
+```
+
+### Articulation (KOT)
+For articulation recordings, there was a significant relationship between KOT values and participants' judgments as teaching (*Figure \ref{fig:kot-1}*, left). Specifically, performances with shorter staccato (*r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_kot_sta$estimate))`, *p* `r if(cor_kot_sta$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_kot_sta$p.value))}`) and longer legato (*r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_kot_leg$estimate))`, *p* `r if(cor_kot_leg$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_kot_leg$p.value))}`) were more likely to be judged as teaching.
+
+For dynamics recordings, there was no significant relationship between KOT values and participants' judgments as teaching (Forte; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_kot_for$estimate))`, *p* `r if(cor_kot_for$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', cor_kot_for$p.value))}`, Piano; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_kot_pia$estimate))`, *p* `r if(cor_kot_pia$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', cor_kot_pia$p.value))}`, *Figure \ref{fig:kot-1}*, right).
+
+```{r kot-1, include = FALSE}
+kot_all$Subcomponent <- factor(kot_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
+cor_kot_1 <- ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
+  theme_pubr(base_size = 20, base_family = "Helvetica") +
+  labs(color = "")
+cor_kot_1
+
+# save
+ggsave(here("paper/image", "cor_kot_1.png"), plot = cor_kot_1, dpi = 600, width = 7, height = 5)
+img_cor_kot_1  <- image_read(here("paper/image", "cor_kot_1.png"))
+```
+
+### Dynamics (KV)
+For dynamics recordings, there was a significant relationship between KV values and participants' judgments as teaching (*Figure \ref{fig:vel-1}*, right). Specifically, performances with louder forte were more likely to be judged as teaching (*r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_vel_for$estimate))`, *p* `r if(cor_vel_for$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_vel_for$p.value))}`). However, there was no significant relationship between KV values for piano and participants' judgments as teaching (*r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_vel_pia$estimate))`, *p* `r if(cor_vel_pia$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', cor_vel_pia$p.value))}`).
+
+For articulation recordings, there was no significant relationship between KV values and participants' judgments as teaching (Legato; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_vel_leg$estimate))`, *p* `r if(cor_vel_leg$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', cor_vel_leg$p.value))}`, Staccato; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_vel_sta$estimate))`, *p* `r if(cor_vel_sta$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', cor_vel_sta$p.value))}`, *Figure \ref{fig:vel-1}*, left).
+
+```{r vel-1, include = FALSE}
+vel_all$Subcomponent <- factor(vel_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
+cor_vel_1 <- ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
+  theme_pubr(base_size = 20, base_family = "Helvetica") +
+  labs(color = "")
+cor_vel_1
+
+# save
+ggsave(here("paper/image", "cor_vel_1.png"), plot = cor_vel_1, dpi = 600, width = 7, height = 5)
+img_cor_vel_1  <- image_read(here("paper/image", "cor_vel_1.png"))
+```
+
+### Dynamics contrast (KV-Diff)
+For dynamics recordings, there was a significant relationship between KV difference between forte and piano and participants' judgments as teaching (*Figure \ref{fig:vel-diff-1}*, right). Specifically, performances with larger contrasts between forte and piano were more likely to be judged as teaching (From Forte to Piano; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_vel_diff_ftop$estimate))`, *p* `r if(cor_vel_diff_ftop$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_vel_diff_ftop$p.value))}`, From Piano to Forte; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_vel_diff_ptof$estimate))`, *p* `r if(cor_vel_diff_ptof$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_vel_diff_ptof$p.value))}`).
+
+For articulation recordings, there was no significant relationship between KV difference between legato and staccato and participants' judgments as teaching (From Legato to Staccato; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_vel_diff_ltos$estimate))`, *p* `r if(cor_vel_diff_ltos$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_vel_diff_ltos$p.value))}`, From Staccato to Legato; *r* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_vel_diff_stol$estimate))`, *p* `r if(cor_vel_diff_stol$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', cor_vel_diff_stol$p.value))}`, *Figure \ref{fig:vel-diff-1}*, left).
+
+```{r vel-diff-1, include = FALSE}
+vel_diff_all$Subcomponent <- factor(vel_diff_all$Subcomponent, levels = c("LtoS", "StoL", "FtoP", "PtoF"))
+cor_vel_diff_1 <- ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
+  theme_pubr(base_size = 20, base_family = "Helvetica") +
+  labs(color = "")
+cor_vel_diff_1
+
+# save
+ggsave(here("paper/image", "cor_vel_diff_1.png"), plot = cor_vel_diff_1, dpi = 600, width = 7, height = 5)
+img_cor_vel_diff_1  <- image_read(here("paper/image", "cor_vel_diff_1.png"))
+```
+
+## Multiple regression
+
+In order to further explore which feature of performance contributed the most to participants' judgments as teaching, multiple regression analyses were conducted. Statistical model assumptions were tested using the *performance* R package [@ludecke_2021] and all assumptions were met. Since articulation and dynamics consisted of two opposite subcomponents (i.e., legato vs. staccato, forte vs. piano) and therefore cannot be summed up to represent each technique, we reported four regression models for each subcomponent (see details in *[Data analysis](#dataanalysis)*).
+
+### Legato
+A multiple regression analysis was conducted to predict participants' judgments as teaching based on performance features of tempo (IOIs), articulation (KOT for legato parts), dynamics (KV for legato parts) and dynamics contrast (KV-Diff from legato to staccato). The result of the regression indicated that the model explained `r summary(m1)$adj.r.squared*100` % of the variance (*F*(`r summary(m1)$fstatistic[2]`, `r summary(m1)$fstatistic[3]`) = `r round(summary(m1)$fstatistic[1], 1)`, *p* `r if(lmp(m1) < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', lmp(m1)))}`). It was found that tempo (IOIs; *$\beta$* = `r summary(m1)$coefficients[2]`, *p* `r if(summary(m1)$coefficients[2, 4] < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', summary(m1)$coefficients[2, 4]))}`) and articulation for the legato parts (KOT; *$\beta$* = `r summary(m1)$coefficients[3]`, *p* `r if(summary(m1)$coefficients[3, 4] < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', summary(m1)$coefficients[3, 4]))}`) were significant predictors of participants' judgments as teaching.
+
+### Staccato
+A multiple regression analysis was conducted to predict participants' judgments as teaching based on performance features of tempo (IOIs), articulation (KOT for staccato parts), dynamics (KV for staccato parts) and dynamics contrast (KV-Diff from staccato to legato). The result of the regression indicated that the model explained `r summary(m2)$adj.r.squared*100` % of the variance (*F*(`r summary(m2)$fstatistic[2]`, `r summary(m2)$fstatistic[3]`) = `r round(summary(m2)$fstatistic[1], 1)`, *p* `r if(lmp(m2) < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', lmp(m2)))}`). It was found that tempo (IOIs; *$\beta$* = `r summary(m2)$coefficients[2]`, *p* `r if(summary(m2)$coefficients[2, 4] < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', summary(m2)$coefficients[2, 4]))}`) and articulation for the staccato parts (KOT; *$\beta$* = `r summary(m2)$coefficients[3]`, *p* `r if(summary(m2)$coefficients[3, 4] < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', summary(m2)$coefficients[3, 4]))}`) were significant predictors of participants' judgments as teaching.
+
+### Forte
+A multiple regression analysis was conducted to predict participants' judgments as teaching based on performance features of tempo (IOIs), articulation (KOT for forte parts), dynamics (KV for forte parts) and dynamics contrast (KV-Diff from forte to piano). The result of the regression indicated that the model explained `r summary(m3)$adj.r.squared*100` % of the variance (*F*(`r summary(m3)$fstatistic[2]`, `r summary(m3)$fstatistic[3]`) = `r round(summary(m3)$fstatistic[1], 1)`, *p* `r if(lmp(m3) < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', lmp(m3)))}`). It was found that tempo (IOIs; *$\beta$* = `r summary(m3)$coefficients[2]`, *p* `r if(summary(m3)$coefficients[2, 4] < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', summary(m3)$coefficients[2, 4]))}`) and dynamics for the forte parts (KV; *$\beta$* = `r summary(m3)$coefficients[4]`, *p* `r if(summary(m3)$coefficients[4, 4] < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', summary(m3)$coefficients[4, 4]))}`) were significant predictors of participants' judgments as teaching.
+
+### Piano
+A multiple regression analysis was conducted to predict participants' judgments as teaching based on performance features of tempo (IOIs), articulation (KOT for piano parts), dynamics (KV for piano parts) and dynamics contrast (KV-Diff from piano to forte). The result of the regression indicated that the model explained `r summary(m4)$adj.r.squared*100` % of the variance (*F*(`r summary(m4)$fstatistic[2]`, `r summary(m4)$fstatistic[3]`) = `r round(summary(m4)$fstatistic[1], 1)`, *p* `r if(lmp(m4) < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', lmp(m4)))}`). It was found that tempo (IOIs; *$\beta$* = `r summary(m4)$coefficients[2]`, *p* `r if(summary(m4)$coefficients[2, 4] < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', summary(m4)$coefficients[2, 4]))}`) and dynamics contrast from piano to forte (KV-Diff; *$\beta$* = `r summary(m4)$coefficients[5]`, *p* `r if(summary(m4)$coefficients[5, 4] < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', summary(m4)$coefficients[5, 4]))}`) were significant predictors of participants' judgments as teaching.
+
+```{r plot-ioi-1, fig.align = "center", out.width = "70%", fig.cap = "\\label{fig:ioi-1}Experiment 1: Scatter plot showing the correlation between tempo feature (IOIs) and average participants' judgments as teaching for each recording. Therefore, each dot represents each stimulus."}
+img_cor_ioi_1
+```
+
+```{r plot-kot-1, fig.align = "center", out.width = "70%", fig.cap = "\\label{fig:kot-1}Experiment 1: Scatter plot showing the correlation between articulation feature (KOT) and average participants' judgments as teaching for each recording. Therefore, each dot represents each stimulus."}
+img_cor_kot_1
+```
+
+```{r plot-vel-1, fig.align = "center", out.width = "70%", fig.cap = "\\label{fig:vel-1}Experiment 1: Scatter plot showing the correlation between dynamics feature (KV) and average participants' judgments as teaching for each recording. Therefore, each dot represents each stimulus."}
+img_cor_vel_1
+```
+
+```{r plot-vel-diff-1, fig.align = "center", out.width = "70%", fig.cap = "\\label{fig:vel-diff-1}Experiment 1: Scatter plot showing the correlation between dynamics contrast feature (KV-Diff) and average participants' judgments as teaching for each recording. Therefore, each dot represents each stimulus."}
+img_cor_vel_diff_1
+```
+
+\clearpage
+
+# Discussion
+
+Experiment 1 investigated which features of piano performance made musicians (in the role of potential learners) infer teaching intentions. The results demonstrated that performances with slower tempo were more likely to be judged as teaching by musicians regardless which expressive technique was implemented in the piece. For articulation recordings, performances with longer legato and shorter staccato were tended to be judged as teaching. For dynamics recordings, performances with louder forte were more likely to be judged as teaching whereas there was no relationship between softer sound (i.e., piano) and participants' judgements as teaching. However, performances with larger contrasts between forte and piano for both directions (i.e., from forte to piano, from piano to forte) were more likely to be judged as teaching. This result may suggest that dynamics contrast might be reliably used to infer teaching intentions, rather than absolute dynamics values themselves. Moreover, multiple regression analyses implied that tempo feature is the strongest predictor of participants' judgments as teaching in general whereas there were specific predictors depending on which expressive technique was implemented in the piece. These performance features were overall consistent with what expert pianists did in our previous experiments for teaching purposes. Therefore, our findings suggest that musicians may be able to successfully infer teaching intentions of expert pianists, only by listening to recorded performances.
+
+\clearpage
+
+# Experiment 2
+
+The aim of Experiment 2 was to replicate our previous findings in Experiment 1 with a more naturalistic piece of music. We could not finish data collection, therefore interpreted data by looking at scatter plots without any statistical analysis.
+
+```{r questionnaire-2, include = FALSE}
+source(here("experiment-2/analysis", "questionnaire.R"), chdir = TRUE)
+```
+
+# Methods
+## Participants
+We recruited `r nrow(dt)` participants who had at least six years of training in any musical instrument or singing. They were able to read sheet music and know two musical expressive techniques of articulation and dynamics. One participant was excluded because s/he did not understand the instructions. Therefore, `r nrow(dt_included)` participants (Female: `r nrow(dt_included[Gender == "Female"])`) were included for data analysis and had `r round(mean(dt_included$Training), 2)` years of training on average in any musical instrument or singing (*SD* = `r round(sd(dt_included$Training), 2)`). Most people were right-handed (Left; `r nrow(dt_included[Handedness == "Left"])`) with a mean age of `r round(mean(dt_included$Age), 2)` (*SD* = `r round(sd(dt_included$Age), 2)`). As Experiment 1, all participants were recruited through the SONA system and the study (No. 2020/02) was approved by the PREBO CEU PU in Austria.
+
+## Apparatus and procedure
+The experimental setting and procedure were identical to Experiment 1 except that each block consisted of 4 practice trials and 36 experimental trials. The number of trials was reduced due to the time constraint of the experiment.
+
+## Stimuli
+As Experiment 1, stimuli were produced by actual pianists on a weighed Yamaha MIDI digital piano and recorded as MIDI files. One piece of music was selected as a base piece, which was performed with a musical expressive technique of either articulation (*Figure \ref{fig:stim2}*, A) or dynamics (*Figure \ref{fig:stim2}*, B). The excerpt was taken from ``Sonatina Op.36 (No.3) in C major" by Muzio Clementi and modified for the experiment. The stimuli were performed around 100 - 120 quarter-beats per minute (i.e., around 250 - 300 ms for 8th-note IOIs).
+
+Recorded piano performances for the stimuli were obtained from our previous experiments (Tominaga et al., *in prep*). Half of the stimuli (36 recordings) was randomly chosen from 248 valid performances in the teaching condition whereas the other half (36 recordings) was randomly chosen from 256 valid performances in the performing condition. In total, 72 recordings were selected as stimuli for the current experiment. Again, it is important to note that each recording from the teaching condition did not necessarily exhibit specific features of teaching performances that we found in the previous experiments since we randomly sampled recordings.
+
+## Data analysis{#dataanalysis2}
+As Experiment 1, stimuli were quantified with regard to tempo (IOIs), articulation (KOT), dynamics (KV) and dynamics contrast (KV-Diff). Only the 8th notes with expressive notations were included for data analysis. We did not run any statistical analysis for Experiment 2.
+
+```{r stim-2, out.width = "100%", fig.cap = "\\label{fig:stim2}Stimuli. (A)Articulation. The curved line (slur) indicates legato and the dots indicate staccato. (B)Dynamics. The symbol `f' denotes forte and the symbol `p' denotes piano. Only the 8th notes with expressive notations were used for data analysis.", echo = FALSE}
+stim_a_2 <- image_border(image_read(here("paper/image", "stim_a_2.png")), "#FFFFFF", "120x120")
+stim_d_2 <- image_border(image_read(here("paper/image", "stim_d_2.png")), "#FFFFFF", "120x120")
+
+# combine
+img_stimuli_2 <- image_append(c(stim_a_2, stim_d_2), stack = TRUE)
+img_stimuli_2 <- image_annotate(img_stimuli_2, "(A)", size = 80, location = "+100+70", color = "black", font = "helvetica")
+img_stimuli_2 <- image_annotate(img_stimuli_2, "(B)", size = 80, location = "+100+1125", color = "black", font = "helvetica")
+img_stimuli_2
+```
+
+# Results
+
+```{r results-2, cache = TRUE, include = FALSE}
+source(here("experiment-2/analysis", "analysis.R"), chdir = TRUE)
+```
+
+## Scatter plots
+### Tempo (IOIs)
+As Experiment 1, it seems that performance tempi (IOIs) are correlated with participants' judgments as teaching. Slower performances were more likely to be judged as teaching. However, the slope of articulation seems to be less steep than that of Experiment 1 (*Figure \ref{fig:ioi-2}*).
+
+```{r ioi-2, include = FALSE}
+cor_ioi_2 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line", palette = "d3",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
+  theme_pubr(base_size = 20, base_family = "Helvetica") +
+  labs(color = "")
+cor_ioi_2
+
+# save
+ggsave(here("paper/image", "cor_ioi_2.png"), plot = cor_ioi_2, dpi = 600, width = 7, height = 5)
+img_cor_ioi_2 <- image_read(here("paper/image", "cor_ioi_2.png"))
+```
+
+### Articulation (KOT)
+Unlike Experiment 1, there seems to be no relationship between KOT values and participants' judgments as teaching. The scatter plot suggests that participants did not use articulation values to infer teaching intentions (*Figure \ref{fig:kot-2}*).
+
+```{r kot-2, include = FALSE}
+kot_all$Subcomponent <- factor(kot_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
+cor_kot_2 <- ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+          add.params = list(fill = "lightgray"), conf.int = TRUE,
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
+  theme_pubr(base_size = 20, base_family = "Helvetica") +
+  labs(color = "")
+cor_kot_2
+
+# save
+ggsave(here("paper/image", "cor_kot_2.png"), plot = cor_kot_2, dpi = 600, width = 7, height = 5)
+img_cor_kot_2  <- image_read(here("paper/image", "cor_kot_2.png"))
+```
+
+### Dynamics (KV)
+As Experiment 1, there seems to be a relationship between KV values and participants' judgments as teaching (*Figure \ref{fig:vel-2}*). Performances with louder forte adn softer piano seem to be judged as teaching.
+
+```{r vel-2, include = FALSE}
+vel_all$Subcomponent <- factor(vel_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
+cor_vel_2 <- ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
+  theme_pubr(base_size = 20, base_family = "Helvetica") +
+  labs(color = "")
+cor_vel_2
+
+# save
+ggsave(here("paper/image", "cor_vel_2.png"), plot = cor_vel_2, dpi = 600, width = 7, height = 5)
+img_cor_vel_2  <- image_read(here("paper/image", "cor_vel_2.png"))
+```
+
+### Dynamics contrast (KV-Diff)
+As Experiment 1, there seems to be a relationship between KV values and participants' judgments as teaching (*Figure \ref{fig:vel-diff-2}*). Performances with larger contrasts between forte and piano seem to be judged as teaching.
+
+```{r vel-diff-2, include = FALSE}
+vel_diff_all$Subcomponent <- factor(vel_diff_all$Subcomponent, levels = c("LtoS", "StoL", "FtoP", "PtoF"))
+cor_vel_diff_2 <- ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
+  theme_pubr(base_size = 20, base_family = "Helvetica") +
+  labs(color = "")
+cor_vel_diff_2
+
+# save
+ggsave(here("paper/image", "cor_vel_diff_2.png"), plot = cor_vel_diff_2, dpi = 600, width = 7, height = 5)
+img_cor_vel_diff_2  <- image_read(here("paper/image", "cor_vel_diff_2.png"))
+```
+
+```{r plot-ioi-2, fig.align = "center", out.width = "70%", fig.cap = "\\label{fig:ioi-2}Experiment 2: Scatter plot showing the correlation between tempo featurea (IOIs) and average participants' judgments as teaching for each recording. Therefore, each dot represents each stimulus."}
+img_cor_ioi_2
+```
+
+```{r plot-kot-2, fig.align = "center", out.width = "70%", fig.cap = "\\label{fig:kot-2}Experiment 2: Scatter plot showing the correlation between articulation features (KOT) and average participants' judgments as teaching for each recording. Therefore, each dot represents each stimulus."}
+img_cor_kot_2
+```
+
+```{r plot-vel-2, fig.align = "center", out.width = "70%", fig.cap = "\\label{fig:vel-2}Experiment 2: Scatter plot showing the correlation between dynamics features (KV) and average participants' judgments as teaching for each recording. Therefore, each dot represents each stimulus."}
+img_cor_vel_2
+```
+
+```{r plot-vel-diff-2, fig.align = "center", out.width = "70%", fig.cap = "\\label{fig:vel-diff-2}Experiment 2: Scatter plot showing the correlation between dynamics contrast features (KV-Diff) and average participants' judgment as teaching for each stimulus."}
+img_cor_vel_diff_2
+```
+
+# Discussion
+Experiment 2 aims to replicate our previous findings in Experiment 1 with a more naturalistic piece of music. The preliminary data suggest that some features of piano performance contributes to participant' judgments as teaching. For instance, performances with slower tempo were likely to be judged as teaching regardless which expressive technique was implemented. Also, performances with louder forte and softer piano were likely to be judged as teaching for dynamics recordings. Moreover, there seems to be a strong relationship between dynamics contrast between forte and piano and participants' judgments as teaching.
+
+However, it seems there was no relationship between articulation values and participants' judgments as teaching. Compared with Experiment 1, the piece used in Experiment 2 was musically much complex. Therefore, articulation features may not be that reliable in order to infer teaching intentions. Unlike tempo and loudness, which are relatively easier to understand, articulation is very particular to music. The reason we could not see a relationship between articulation values and participants' judgments as teaching might be coming from conceptual and perceptual difficulties of articulation, even for musicians. 
+
+\newpage
+
+# References
+
+\begingroup
+\setlength{\parindent}{-0in}
+\setlength{\leftskip}{0in}
+<div id="refs" custom-style="Bibliography"></div>
+
+\endgroup
+
+```{r results-prereg, cache = TRUE}
+source(here("experiment-1/analysis/prereg_analysis", "prereg_analysis.R"), chdir = TRUE)
+```
+
+<!-- # Supplementary Materials{#supplementary} -->
+
+<!-- ## Accuracy for Experiment 1 -->
+<!-- We examined whether participants could accurately judge the stimuli chosen from the teaching condition in the previous experiments as teaching (yes response in the current experiment) and the stimuli chosen from the performing condition in the previous experiments as performing (no response in the current experiment). We compared how accurate participants were against the chance level (50%). The results revealed that the accuracy of participants' judgments was above the chance level (*M* = `r round(mean(ind_data_ad[Skill == "articulation"]$Percent), 1)`, *SD* = `r round(sd(ind_data_ad[Skill == "articulation"]$Percent), 2)`; *t*(`r t.test(ind_data$Percent, mu = 50, alternative = "two.sided")$parameter`) = `r t.test(ind_data$Percent, mu = 50, alternative = "two.sided")$statistic`, *p* `r if(t.test(ind_data$Percent, mu = 50, alternative = "two.sided")$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_vel_diff_ptof$p.value))}`). However, the 95 confidence intervals for the sample mean contained the sample -->
