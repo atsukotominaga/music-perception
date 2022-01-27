@@ -1,16 +1,12 @@
 # What makes musicians infer teaching intentions? 2
 
-<p align="center">
-  <img height="300" src="https://media.giphy.com/media/VJxNm7zrm3K4E/giphy.gif">
-</p>
-
 Open Science Framework: [https://osf.io/f6nr2/](https://osf.io/f6nr2/)  
 Preregistration: []()
 
 This repo contains scripts and materials for a musical perception study with musicians.
 
 # experiment
-- Environment: Mac OS X 10.15.6, Max MSP 8
+- Environment: Mac OS X 10.15.6, Max MSP 8.1.7
 - [Python Environment](https://gist.github.com/atsukotominaga/3414c38eb5add5110d39c4f74723743c)
 - `experiment.py`: for the experiment
 - `midiplayer.maxpat`: to make midi sound from `experiment.py`

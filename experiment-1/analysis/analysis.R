@@ -1,4 +1,4 @@
-## ----packages, include = FALSE------------------------------
+## ----setup, include = FALSE---------------------------------
 # data manipulation
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
 # midi

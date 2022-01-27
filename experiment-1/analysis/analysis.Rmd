@@ -1,6 +1,8 @@
 ---
-title: "Music Perception 1: Analysis"
-output: html_notebook
+title: 'Music Perception 1: Analysis'
+output:
+  html_document:
+    df_print: paged
 ---
 
 - Last checked: `r format(Sys.Date(), "%d-%b-%Y")`
@@ -44,7 +46,7 @@ You will be asked to judge whether each performer had the intention to teach or 
 - KV (dynamics)
 - KV-Diff (dynamics)
 
-```{r packages, include = FALSE}
+```{r setup, include = FALSE}
 # data manipulation
 if (!require("data.table")) {install.packages("data.table"); require("data.table")}
 # midi
