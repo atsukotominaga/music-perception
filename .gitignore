@@ -1,20 +1,13 @@
 # general
 *.DS_Store
+*.bib
 *html
 *sh
 merged
 
-# analysis
-analysis/others
-
-# data
-data/removed
-
 # experiment
 experiment/data
 
-# material
-material/expstimuli/selection/old_analysis
-
-# others
-others
+# paper
+paper/feedback
+paper/manuscript_files
