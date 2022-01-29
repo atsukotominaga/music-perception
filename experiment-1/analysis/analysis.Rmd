@@ -60,8 +60,8 @@ if (!require("performance")) {install.packages("performance"); require("performa
 
 ```{r read, include = FALSE}
 # read files and combine them
-data_ls <- list.files("../data", pattern = "csv")
-combined <- lapply(data_ls, function(f){
+data_lf <- list.files("../data", pattern = "csv")
+combined <- lapply(data_lf, function(f){
   fread(paste("../data/", f, sep = ""), sep = ",")
 })
 all_data <- do.call(rbind.data.frame, combined)
@@ -90,56 +90,56 @@ individual <- data[subjectNumber != 9, .(N = .N, Sum = sum(Teaching)), by = .(su
 individual<- individual[order(subjectNumber)]
 
 # all
-all <- individual[, .(N = .N, Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
+all <- individual[, .(N = .N, Sum = sum(Sum), Mean = mean(Sum), SD = sd(Sum), Mean_Percent = (mean(Sum))*100, SD_Percent = (sd(Sum))*100), by = .(Condition, Skill, MidFile)]
 all <- all[order(MidFile)]
 all
 ```
 
 ```{r midi, include = FALSE}
 # create a list of data file names
-lf <- list.files("../experiment/mid/", pattern = "mid")
+midi_lf <- list.files("../experiment/mid/", pattern = "mid")
 
 # combine data
-all_data <- data.table()
-for (file in lf){
+all_midi <- data.table()
+for (file in midi_lf){
    current <- readMidi(paste("../experiment/mid/", file, sep = ""))
    current$MidFile <- gsub(".mid", "", file)
-   all_data <- rbind(all_data, current)
+   all_midi <- rbind(all_midi, current)
 }
 
-data <- all_data[event == "Note On" | event == "Note Off"]
-data$NoteNr <- rep(1:134, nrow(data)/134)
-data$channel <- NULL
-data$parameterMetaSystem <- NULL
-data$track <- NULL
-data$type <- NULL
-data$time2 <- (data$time/960)*1000 # deltatime to time (ms)
+midi <- all_midi[event == "Note On" | event == "Note Off"]
+midi$NoteNr <- rep(1:134, nrow(midi)/134)
+midi$channel <- NULL
+midi$parameterMetaSystem <- NULL
+midi$track <- NULL
+midi$type <- NULL
+midi$time2 <- (midi$time/960)*1000 # deltatime to time (ms)
 
 # labelling
-colnames(data)[c(3,4)] <- c("Pitch", "Velocity") # time event also change
-data$Condition <- "NA"
-data$Skill <- "NA"
-data[grepl("_t_", MidFile)]$Condition <- "teaching"
-data[grepl("_p_", MidFile)]$Condition <- "performing"
-data[grepl("a_", MidFile)]$Skill <- "articulation"
-data[grepl("d_", MidFile)]$Skill <- "dynamics"
+colnames(midi)[c(3,4)] <- c("Pitch", "Velocity") # time event also change
+midi$Condition <- "NA"
+midi$Skill <- "NA"
+midi[grepl("_t_", MidFile)]$Condition <- "teaching"
+midi[grepl("_p_", MidFile)]$Condition <- "performing"
+midi[grepl("a_", MidFile)]$Skill <- "articulation"
+midi[grepl("d_", MidFile)]$Skill <- "dynamics"
 
 # define subcomponents
-# For intervals
+# for intervals
 ls_legato <- list(c(1:7), c(17:23), c(42:48), c(58:64))
 ls_staccato <- list(c(9:15), c(25:31), c(34:40), c(50:56))
 ls_forte <- list(c(1:7), c(17:23), c(42:48), c(58:64))
 ls_piano <- list(c(9:15), c(25:31), c(34:40), c(50:56))
 
-# For each note (velocity only)
+# for each note (velocity only)
 ls_legato_2 <- list(c(1:8), c(17:24), c(42:49), c(58:65))
 ls_staccato_2 <- list(c(9:16), c(25:32), c(34:41), c(50:57))
 ls_forte_2 <- list(c(1:8), c(17:24), c(42:49), c(58:65))
 ls_piano_2 <- list(c(9:16), c(25:32), c(34:41), c(50:57))
 
-# Define Skill Change (LtoS, FtoP)
+# define Skill Change (LtoS, FtoP)
 change_1 <- c(8, 24, 49)
-# Define Skill Change (StoL, PtoF)
+# define Skill Change (StoL, PtoF)
 change_2 <- c(16, 41, 57)
 ```
 
@@ -155,8 +155,8 @@ change_2 <- c(16, 41, 57)
 - dotted lines indicate an ideal tempo (80bpm for 16th notes - 188ms interval)
 
 ```{r ioi, include = FALSE}
-data_onset <- data[event == "Note On"]
-data_offset <- data[event == "Note Off"]
+data_onset <- midi[event == "Note On"]
+data_offset <- midi[event == "Note Off"]
 
 data_onset$IOI <- diff(c(0, data_onset$time2))
 dt_ioi <- data_onset[NoteNr != 1]
@@ -221,8 +221,15 @@ ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
 ## Articulation (***)
 ```{r, echo = FALSE}
 # normality check
-shapiro.test(ioi[Skill == "articulation"]$Teaching)
-shapiro.test(ioi[Skill == "articulation"]$Mean)
+ioi_art_norm_teaching <- shapiro.test(ioi[Skill == "articulation"]$Teaching)
+ioi_art_norm_judge <- shapiro.test(ioi[Skill == "articulation"]$Mean)
+qqnorm(ioi[Skill == "articulation"]$Teaching)
+qqline(ioi[Skill == "articulation"]$Teaching)
+ioi_art_norm_teaching
+
+qqnorm(ioi[Skill == "articulation"]$Mean)
+qqline(ioi[Skill == "articulation"]$Mean)
+ioi_art_norm_judge
 
 cor_ioi_art <- cor.test(ioi[Skill == "articulation"]$Teaching, ioi[Skill == "articulation"]$Mean)
 cor_ioi_art
@@ -231,8 +238,16 @@ cor_ioi_art
 ## Dynamics (**)
 ```{r, echo = FALSE}
 # normality check
-shapiro.test(ioi[Skill == "dynamics"]$Teaching)
-shapiro.test(ioi[Skill == "dynamics"]$Mean)
+ioi_dyn_norm_teaching <- shapiro.test(ioi[Skill == "dynamics"]$Teaching)
+ioi_dyn_norm_judge <- shapiro.test(ioi[Skill == "dynamics"]$Mean)
+
+qqnorm(ioi[Skill == "dynamics"]$Teaching)
+qqline(ioi[Skill == "dynamics"]$Teaching)
+ioi_dyn_norm_teaching
+
+qqnorm(ioi[Skill == "dynamics"]$Mean)
+qqline(ioi[Skill == "dynamics"]$Mean)
+ioi_dyn_norm_judge
 
 cor_ioi_dyn <- cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
 cor_ioi_dyn
@@ -264,8 +279,17 @@ ggscatter(ioi_tra, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line"
 ## Articulation (***)
 ```{r, echo = FALSE}
 # normality check
-shapiro.test(ioi_tra[Skill == "articulation"]$Teaching)
-shapiro.test(ioi_tra[Skill == "articulation"]$Mean)
+ioi_art_tra_norm_teaching <- shapiro.test(ioi_tra[Skill == "articulation"]$Teaching)
+
+ioi_art_tra_norm_judge <- shapiro.test(ioi_tra[Skill == "articulation"]$Mean)
+
+qqnorm(ioi_tra[Skill == "articulation"]$Teaching)
+qqline(ioi_tra[Skill == "articulation"]$Teaching)
+ioi_art_tra_norm_teaching
+
+qqnorm(ioi_tra[Skill == "articulation"]$Mean)
+qqline(ioi_tra[Skill == "articulation"]$Mean)
+ioi_art_tra_norm_judge
 
 cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulation"]$Mean)
 ```
@@ -273,8 +297,16 @@ cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulati
 ## Dynamics (**)
 ```{r, echo = FALSE}
 # normality check
-shapiro.test(ioi_tra[Skill == "dynamics"]$Teaching)
-shapiro.test(ioi_tra[Skill == "dynamics"]$Mean)
+ioi_dyn_tra_norm_teaching <- shapiro.test(ioi_tra[Skill == "dynamics"]$Teaching)
+ioi_dyn_tra_norm_judge <- shapiro.test(ioi_tra[Skill == "dynamics"]$Mean)
+
+qqnorm(ioi_tra[Skill == "dynamics"]$Teaching)
+qqline(ioi_tra[Skill == "dynamics"]$Teaching)
+ioi_dyn_tra_norm_teaching
+
+qqnorm(ioi_tra[Skill == "dynamics"]$Mean)
+qqline(ioi_tra[Skill == "dynamics"]$Mean)
+ioi_dyn_tra_norm_judge
 
 cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mean)
 
@@ -303,8 +335,8 @@ ggscatter(cv, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
 ## Articulation (n.s.)
 ```{r, echo = FALSE}
 # normality check
-shapiro.test(cv[Skill == "articulation"]$Teaching)
-shapiro.test(cv[Skill == "articulation"]$CV)
+cv_art_norm_teaching <- shapiro.test(cv[Skill == "articulation"]$Teaching)
+cv_art_norm_judge <- shapiro.test(cv[Skill == "articulation"]$CV)
 
 cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
 ```
