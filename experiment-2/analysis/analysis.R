@@ -164,7 +164,7 @@ ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 ioi_art_norm_teaching <- shapiro.test(ioi[Skill == "articulation"]$Teaching)
-ioi_art_norm_judge <- shapiro.test(ioi[Skill == "articulation"]$Mean)
+ioi_art_norm_performance <- shapiro.test(ioi[Skill == "articulation"]$Mean)
 
 qqnorm(ioi[Skill == "articulation"]$Teaching)
 qqline(ioi[Skill == "articulation"]$Teaching)
@@ -172,7 +172,7 @@ ioi_art_norm_teaching
 
 qqnorm(ioi[Skill == "articulation"]$Mean)
 qqline(ioi[Skill == "articulation"]$Mean)
-ioi_art_norm_judge
+ioi_art_norm_performance
 
 cor_ioi_art <- cor.test(ioi[Skill == "articulation"]$Teaching, ioi[Skill == "articulation"]$Mean)
 cor_ioi_art
@@ -181,7 +181,7 @@ cor_ioi_art
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 ioi_dyn_norm_teaching <- shapiro.test(ioi[Skill == "dynamics"]$Teaching)
-ioi_dyn_norm_judge <- shapiro.test(ioi[Skill == "dynamics"]$Mean)
+ioi_dyn_norm_performance <- shapiro.test(ioi[Skill == "dynamics"]$Mean)
 
 qqnorm(ioi[Skill == "dynamics"]$Teaching)
 qqline(ioi[Skill == "dynamics"]$Teaching)
@@ -189,7 +189,7 @@ ioi_dyn_norm_teaching
 
 qqnorm(ioi[Skill == "dynamics"]$Mean)
 qqline(ioi[Skill == "dynamics"]$Mean)
-ioi_dyn_norm_judge
+ioi_dyn_norm_performance
 
 cor_ioi_dyn <- cor.test(ioi[Skill == "dynamics"]$Teaching, ioi[Skill == "dynamics"]$Mean)
 cor_ioi_dyn
@@ -216,7 +216,7 @@ ggscatter(ioi_tra, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line"
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 ioi_art_tra_norm_teaching <- shapiro.test(ioi_tra[Skill == "articulation"]$Teaching)
-ioi_art_tra_norm_judge <- shapiro.test(ioi_tra[Skill == "articulation"]$Mean)
+ioi_art_tra_norm_performance <- shapiro.test(ioi_tra[Skill == "articulation"]$Mean)
 
 qqnorm(ioi_tra[Skill == "articulation"]$Teaching)
 qqline(ioi_tra[Skill == "articulation"]$Teaching)
@@ -224,7 +224,7 @@ ioi_art_tra_norm_teaching
 
 qqnorm(ioi_tra[Skill == "articulation"]$Mean)
 qqline(ioi_tra[Skill == "articulation"]$Mean)
-ioi_art_tra_norm_judge
+ioi_art_tra_norm_performance
 
 cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulation"]$Mean)
 
@@ -234,7 +234,7 @@ cor.test(ioi_tra[Skill == "articulation"]$Teaching, ioi_tra[Skill == "articulati
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 ioi_dyn_tra_norm_teaching <- shapiro.test(ioi_tra[Skill == "dynamics"]$Teaching)
-ioi_dyn_tra_norm_judge <- shapiro.test(ioi_tra[Skill == "dynamics"]$Mean)
+ioi_dyn_tra_norm_performance <- shapiro.test(ioi_tra[Skill == "dynamics"]$Mean)
 
 qqnorm(ioi_tra[Skill == "dynamics"]$Teaching)
 qqline(ioi_tra[Skill == "dynamics"]$Teaching)
@@ -242,7 +242,7 @@ ioi_dyn_tra_norm_teaching
 
 qqnorm(ioi_tra[Skill == "dynamics"]$Mean)
 qqline(ioi_tra[Skill == "dynamics"]$Mean)
-ioi_dyn_tra_norm_judge
+ioi_dyn_tra_norm_performance
 
 cor.test(ioi_tra[Skill == "dynamics"]$Teaching, ioi_tra[Skill == "dynamics"]$Mean)
 
@@ -267,7 +267,7 @@ ggscatter(cv, x = "CV", y = "Teaching", color = "Skill", add = "reg.line",
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 cv_art_norm_teaching <- shapiro.test(cv[Skill == "articulation"]$Teaching)
-cv_art_norm_judge <- shapiro.test(cv[Skill == "articulation"]$CV)
+cv_art_norm_performance <- shapiro.test(cv[Skill == "articulation"]$CV)
 
 qqnorm(cv[Skill == "articulation"]$Teaching)
 qqline(cv[Skill == "articulation"]$Teaching)
@@ -275,7 +275,7 @@ cv_art_norm_teaching
 
 qqnorm(cv[Skill == "articulation"]$CV)
 qqline(cv[Skill == "articulation"]$CV)
-cv_art_norm_judge
+cv_art_norm_performance
 
 cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
 
@@ -285,7 +285,7 @@ cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV, m
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 cv_dyn_norm_teaching <- shapiro.test(cv[Skill == "dynamics"]$Teaching)
-cv_dyn_norm_judge <- shapiro.test(cv[Skill == "dynamics"]$CV)
+cv_dyn_norm_performance <- shapiro.test(cv[Skill == "dynamics"]$CV)
 
 qqnorm(cv[Skill == "dynamics"]$Teaching)
 qqline(cv[Skill == "dynamics"]$Teaching)
@@ -293,7 +293,7 @@ cv_dyn_norm_teaching
 
 qqnorm(cv[Skill == "dynamics"]$CV)
 qqline(cv[Skill == "dynamics"]$CV)
-cv_dyn_norm_judge
+cv_dyn_norm_performance
 
 cor.test(cv[Skill == "dynamics"]$Teaching, cv[Skill == "dynamics"]$CV)
 
@@ -367,7 +367,7 @@ ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 kot_leg_norm_teaching <- shapiro.test(kot_all[Subcomponent == "Legato"]$Teaching)
-kot_leg_norm_judge <- shapiro.test(kot_all[Subcomponent == "Legato"]$Mean)
+kot_leg_norm_performance <- shapiro.test(kot_all[Subcomponent == "Legato"]$Mean)
 
 qqnorm(kot_all[Subcomponent == "Legato"]$Teaching)
 qqline(kot_all[Subcomponent == "Legato"]$Teaching)
@@ -375,7 +375,7 @@ kot_leg_norm_teaching
 
 qqnorm(kot_all[Subcomponent == "Legato"]$Mean)
 qqline(kot_all[Subcomponent == "Legato"]$Mean)
-kot_leg_norm_judge
+kot_leg_norm_performance
 
 cor_kot_leg <- cor.test(kot_all[Subcomponent == "Legato"]$Teaching, kot_all[Subcomponent == "Legato"]$Mean)
 cor_kot_leg
@@ -384,7 +384,7 @@ cor_kot_leg
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 kot_sta_norm_teaching <- shapiro.test(kot_all[Subcomponent == "Staccato"]$Teaching)
-kot_sta_norm_judge <- shapiro.test(kot_all[Subcomponent == "Staccato"]$Mean)
+kot_sta_norm_performance <- shapiro.test(kot_all[Subcomponent == "Staccato"]$Mean)
 
 qqnorm(kot_all[Subcomponent == "Staccato"]$Teaching)
 qqline(kot_all[Subcomponent == "Staccato"]$Teaching)
@@ -392,7 +392,7 @@ kot_sta_norm_teaching
 
 qqnorm(kot_all[Subcomponent == "Staccato"]$Mean)
 qqline(kot_all[Subcomponent == "Staccato"]$Mean)
-kot_sta_norm_judge
+kot_sta_norm_performance
 
 cor_kot_sta <- cor.test(kot_all[Subcomponent == "Staccato"]$Teaching, kot_all[Subcomponent == "Staccato"]$Mean)
 cor_kot_sta
@@ -401,7 +401,7 @@ cor_kot_sta
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 kot_for_norm_teaching <- shapiro.test(kot_all[Subcomponent == "Forte"]$Teaching)
-kot_for_norm_judge <- shapiro.test(kot_all[Subcomponent == "Forte"]$Mean)
+kot_for_norm_performance <- shapiro.test(kot_all[Subcomponent == "Forte"]$Mean)
 
 qqnorm(kot_all[Subcomponent == "Forte"]$Teaching)
 qqline(kot_all[Subcomponent == "Forte"]$Teaching)
@@ -409,7 +409,7 @@ kot_for_norm_teaching
 
 qqnorm(kot_all[Subcomponent == "Forte"]$Mean)
 qqline(kot_all[Subcomponent == "Forte"]$Mean)
-kot_for_norm_judge
+kot_for_norm_performance
 
 cor_kot_for <- cor.test(kot_all[Subcomponent == "Forte"]$Teaching, kot_all[Subcomponent == "Forte"]$Mean)
 cor_kot_for
@@ -421,7 +421,7 @@ cor_kot_for_spearman
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 kot_pia_norm_teaching <- shapiro.test(kot_all[Subcomponent == "Piano"]$Teaching)
-kot_pia_norm_judge <- shapiro.test(kot_all[Subcomponent == "Piano"]$Mean)
+kot_pia_norm_performance <- shapiro.test(kot_all[Subcomponent == "Piano"]$Mean)
 
 qqnorm(kot_all[Subcomponent == "Piano"]$Teaching)
 qqline(kot_all[Subcomponent == "Piano"]$Teaching)
@@ -429,7 +429,7 @@ kot_pia_norm_teaching
 
 qqnorm(kot_all[Subcomponent == "Piano"]$Mean)
 qqline(kot_all[Subcomponent == "Piano"]$Mean)
-kot_pia_norm_judge
+kot_pia_norm_performance
 
 cor_kot_pia <- cor.test(kot_all[Subcomponent == "Piano"]$Teaching, kot_all[Subcomponent == "Piano"]$Mean)
 cor_kot_pia
@@ -488,7 +488,7 @@ ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 vel_for_norm_teaching <- shapiro.test(vel_all[Subcomponent == "Forte"]$Teaching)
-vel_for_norm_judge <- shapiro.test(vel_all[Subcomponent == "Forte"]$Mean)
+vel_for_norm_performance <- shapiro.test(vel_all[Subcomponent == "Forte"]$Mean)
 
 qqnorm(vel_all[Subcomponent == "Forte"]$Teaching)
 qqline(vel_all[Subcomponent == "Forte"]$Teaching)
@@ -496,7 +496,7 @@ vel_for_norm_teaching
 
 qqnorm(vel_all[Subcomponent == "Forte"]$Mean)
 qqline(vel_all[Subcomponent == "Forte"]$Mean)
-vel_for_norm_judge
+vel_for_norm_performance
 
 cor_vel_for <- cor.test(vel_all[Subcomponent == "Forte"]$Teaching, vel_all[Subcomponent == "Forte"]$Mean)
 cor_vel_for
@@ -508,7 +508,7 @@ cor_vel_for_spearman
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 vel_pia_norm_teaching <- shapiro.test(vel_all[Subcomponent == "Piano"]$Teaching)
-vel_pia_norm_judge <- shapiro.test(vel_all[Subcomponent == "Piano"]$Mean)
+vel_pia_norm_performance <- shapiro.test(vel_all[Subcomponent == "Piano"]$Mean)
 
 qqnorm(vel_all[Subcomponent == "Piano"]$Teaching)
 qqline(vel_all[Subcomponent == "Piano"]$Teaching)
@@ -516,7 +516,7 @@ vel_pia_norm_teaching
 
 qqnorm(vel_all[Subcomponent == "Piano"]$Mean)
 qqline(vel_all[Subcomponent == "Piano"]$Mean)
-vel_pia_norm_judge
+vel_pia_norm_performance
 
 cor_vel_pia <- cor.test(vel_all[Subcomponent == "Piano"]$Teaching, vel_all[Subcomponent == "Piano"]$Mean)
 cor_vel_pia
@@ -528,7 +528,7 @@ cor_vel_pia_spearman
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 vel_leg_norm_teaching <- shapiro.test(vel_all[Subcomponent == "Legato"]$Teaching)
-vel_leg_norm_judge <- shapiro.test(vel_all[Subcomponent == "Legato"]$Mean)
+vel_leg_norm_performance <- shapiro.test(vel_all[Subcomponent == "Legato"]$Mean)
 
 qqnorm(vel_all[Subcomponent == "Legato"]$Teaching)
 qqline(vel_all[Subcomponent == "Legato"]$Teaching)
@@ -536,7 +536,7 @@ vel_leg_norm_teaching
 
 qqnorm(vel_all[Subcomponent == "Legato"]$Mean)
 qqline(vel_all[Subcomponent == "Legato"]$Mean)
-vel_leg_norm_judge
+vel_leg_norm_performance
 
 cor_vel_leg <- cor.test(vel_all[Subcomponent == "Legato"]$Teaching, vel_all[Subcomponent == "Legato"]$Mean)
 cor_vel_leg
@@ -545,7 +545,7 @@ cor_vel_leg
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 vel_sta_norm_teaching <- shapiro.test(vel_all[Subcomponent == "Staccato"]$Teaching)
-vel_sta_norm_judge <- shapiro.test(vel_all[Subcomponent == "Staccato"]$Mean)
+vel_sta_norm_performance <- shapiro.test(vel_all[Subcomponent == "Staccato"]$Mean)
 
 qqnorm(vel_all[Subcomponent == "Staccato"]$Teaching)
 qqline(vel_all[Subcomponent == "Staccato"]$Teaching)
@@ -553,7 +553,7 @@ vel_sta_norm_teaching
 
 qqnorm(vel_all[Subcomponent == "Staccato"]$Mean)
 qqline(vel_all[Subcomponent == "Staccato"]$Mean)
-vel_sta_norm_judge
+vel_sta_norm_performance
 
 cor_vel_sta <- cor.test(vel_all[Subcomponent == "Staccato"]$Teaching, vel_all[Subcomponent == "Staccato"]$Mean)
 cor_vel_sta
@@ -620,7 +620,7 @@ ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add 
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 vel_diff_ftop_norm_teaching <- shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching)
-vel_diff_ftop_norm_judge <- shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Mean)
+vel_diff_ftop_norm_performance <- shapiro.test(vel_diff_all[Subcomponent == "FtoP"]$Mean)
 
 qqnorm(vel_diff_all[Subcomponent == "FtoP"]$Teaching)
 qqline(vel_diff_all[Subcomponent == "FtoP"]$Teaching)
@@ -628,7 +628,7 @@ vel_diff_ftop_norm_teaching
 
 qqnorm(vel_diff_all[Subcomponent == "FtoP"]$Mean)
 qqline(vel_diff_all[Subcomponent == "FtoP"]$Mean)
-vel_diff_ftop_norm_judge
+vel_diff_ftop_norm_performance
 
 cor_vel_diff_ftop <- cor.test(vel_diff_all[Subcomponent == "FtoP"]$Teaching, vel_diff_all[Subcomponent == "FtoP"]$Mean)
 cor_vel_diff_ftop
@@ -640,7 +640,7 @@ cor_vel_diff_ftop_spearman
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 vel_diff_ptof_norm_teaching <- shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching)
-vel_diff_ptof_norm_judge <- shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Mean)
+vel_diff_ptof_norm_performance <- shapiro.test(vel_diff_all[Subcomponent == "PtoF"]$Mean)
 
 qqnorm(vel_diff_all[Subcomponent == "PtoF"]$Teaching)
 qqline(vel_diff_all[Subcomponent == "PtoF"]$Teaching)
@@ -648,7 +648,7 @@ vel_diff_ptof_norm_teaching
 
 qqnorm(vel_diff_all[Subcomponent == "PtoF"]$Mean)
 qqline(vel_diff_all[Subcomponent == "PtoF"]$Mean)
-vel_diff_ptof_norm_judge
+vel_diff_ptof_norm_performance
 
 cor_vel_diff_ptof <- cor.test(vel_diff_all[Subcomponent == "PtoF"]$Teaching, vel_diff_all[Subcomponent == "PtoF"]$Mean)
 cor_vel_diff_ptof
@@ -660,7 +660,7 @@ cor_vel_diff_ptof_spearman
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 vel_diff_ltos_norm_teaching <- shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching)
-vel_diff_ltos_norm_judge <- shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Mean)
+vel_diff_ltos_norm_performance <- shapiro.test(vel_diff_all[Subcomponent == "LtoS"]$Mean)
 
 qqnorm(vel_diff_all[Subcomponent == "LtoS"]$Teaching)
 qqline(vel_diff_all[Subcomponent == "LtoS"]$Teaching)
@@ -668,7 +668,7 @@ vel_diff_ltos_norm_teaching
 
 qqnorm(vel_diff_all[Subcomponent == "LtoS"]$Mean)
 qqline(vel_diff_all[Subcomponent == "LtoS"]$Mean)
-vel_diff_ltos_norm_judge
+vel_diff_ltos_norm_performance
 
 cor_vel_diff_ltos <- cor.test(vel_diff_all[Subcomponent == "LtoS"]$Teaching, vel_diff_all[Subcomponent == "LtoS"]$Mean)
 cor_vel_diff_ltos
@@ -677,7 +677,7 @@ cor_vel_diff_ltos
 ## ---- echo = FALSE------------------------------------------------------------
 # normality check
 vel_diff_stol_norm_teaching <- shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Teaching)
-vel_diff_stol_norm_judge <- shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Mean)
+vel_diff_stol_norm_performance <- shapiro.test(vel_diff_all[Subcomponent == "StoL"]$Mean)
 
 qqnorm(vel_diff_all[Subcomponent == "StoL"]$Teaching)
 qqline(vel_diff_all[Subcomponent == "StoL"]$Teaching)
@@ -685,7 +685,7 @@ vel_diff_stol_norm_teaching
 
 qqnorm(vel_diff_all[Subcomponent == "StoL"]$Mean)
 qqline(vel_diff_all[Subcomponent == "StoL"]$Mean)
-vel_diff_stol_norm_judge
+vel_diff_stol_norm_performance
 
 cor_vel_diff_stol <- cor.test(vel_diff_all[Subcomponent == "StoL"]$Teaching, vel_diff_all[Subcomponent == "StoL"]$Mean)
 cor_vel_diff_stol
