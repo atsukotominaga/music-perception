@@ -131,6 +131,7 @@ for (phrase in 1:length(ls_piano)){
    dt_ioi[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
  }
 }
+
 # assign Subcomponent Change
 for (number in change_1){
  dt_ioi[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
@@ -333,6 +334,7 @@ for (phrase in 1:length(ls_piano)){
      dt_kot[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
    }
 }
+
 # assign Subcomponent Change
 for (number in change_1){
    dt_kot[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"

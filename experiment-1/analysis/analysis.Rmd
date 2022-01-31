@@ -36,9 +36,6 @@ You will be asked to judge whether each performer had the intention to teach or 
 
 2. Participants pressed "YES" if they think the recording was produced for teaching (as a teacher) whereas they pressed "NO" if they thought the recording was produced for performing (as a performer).
 
-- For additional analysis
-(3. Correct answers would be 1) participants pressed "YES" when they listened to teaching performances or 2) participants pressed "NO" when they listened to performing performances.)
-
 ## Variables
 - IOIs (tempo)
 - IOIs at transition points (tempo)
@@ -192,6 +189,7 @@ for (phrase in 1:length(ls_piano)){
    dt_ioi[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
  }
 }
+
 # assign Subcomponent Change
 for (number in change_1){
  dt_ioi[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
@@ -353,6 +351,7 @@ cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV)
 
 cor.test(cv[Skill == "articulation"]$Teaching, cv[Skill == "articulation"]$CV, method = "spearman", exact = FALSE)
 ```
+
 ## Dynamics (n.s.)
 ```{r, echo = TRUE}
 # normality check
@@ -413,6 +412,7 @@ for (phrase in 1:length(ls_piano)){
      dt_kot[Skill == "dynamics" & Interval == ls_piano[[phrase]][note]]$Subcomponent <- "Piano"
    }
 }
+
 # assign Subcomponent Change
 for (number in change_1){
    dt_kot[Skill == "articulation" & Interval == number]$Subcomponent <- "LtoS"
@@ -439,6 +439,7 @@ ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "re
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
           xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
 ```
+
 ## Legato (**)
 ```{r, echo = TRUE}
 # normality check
@@ -808,11 +809,12 @@ partial$TeachingSD <- rep(rating$SD_Percent, each = 2)
 # KOT
 ## Legato (**)
 ### Estimate
+- partial correlation coefficient between two variables (Teaching vs KOT)
+
 ```{r partial-plot-leg, echo = FALSE}
 # plot
 corrplot.mixed(pcor(partial[Subcomponent == "Legato", c("Teaching", "IOI", "KOT", "KV", "KVDiff")])$estimate, diag = c("n"))
 ```
-
 
 ```{r kot-partial-leg, echo = TRUE}
 pcor.test(partial[Subcomponent == "Legato"]$KOT, partial[Subcomponent == "Legato"]$Teaching, partial[Subcomponent == "Legato", c("IOI", "KV", "KVDiff")])
@@ -820,6 +822,8 @@ pcor.test(partial[Subcomponent == "Legato"]$KOT, partial[Subcomponent == "Legato
 
 ## Staccato (*)
 ### Estimate
+- partial correlation coefficient between two variables (Teaching vs KOT)
+
 ```{r partial-plot-sta, echo = FALSE}
 # plot
 corrplot.mixed(pcor(partial[Subcomponent == "Staccato", c("Teaching", "IOI", "KOT", "KV", "KVDiff")])$estimate, diag = c("n"))
@@ -832,6 +836,8 @@ pcor.test(partial[Subcomponent == "Staccato"]$KOT, partial[Subcomponent == "Stac
 # KV
 ## Forte (*)
 ### Estimate
+- partial correlation coefficient between two variables (Teaching vs KV)
+
 ```{r partial-plot-for, echo = FALSE}
 # plot
 corrplot.mixed(pcor(partial[Subcomponent == "Forte", c("Teaching", "IOI", "KOT", "KV", "KVDiff")])$estimate, diag = c("n"))
@@ -843,6 +849,8 @@ pcor.test(partial[Subcomponent == "Forte"]$KV, partial[Subcomponent == "Forte"]$
 
 ## Piano (n.s.)
 ### Estimate
+- partial correlation coefficient between two variables (Teaching vs KV)
+
 ```{r partial-plot-pia, echo = FALSE}
 # plot
 corrplot.mixed(pcor(partial[Subcomponent == "Piano", c("Teaching", "IOI", "KOT", "KV", "KVDiff")])$estimate, diag = c("n"))
@@ -855,6 +863,8 @@ pcor.test(partial[Subcomponent == "Piano"]$KV, partial[Subcomponent == "Piano"]$
 # KV-Diff
 ## Forte to Piano (n.s.)
 ### Estimate
+- partial correlation coefficient between two variables (Teaching vs KVDiff)
+
 ```{r partial-plot-ftop, echo = FALSE}
 # plot
 corrplot.mixed(pcor(partial[Subcomponent2 == "FtoP", c("Teaching", "IOI", "KOT", "KV", "KVDiff")])$estimate, diag = c("n"))
@@ -866,6 +876,8 @@ pcor.test(partial[Subcomponent2 == "FtoP"]$KVDiff, partial[Subcomponent2 == "Fto
 
 ## Piano to Forte (***)
 ### Estimate
+- partial correlation coefficient between two (Teaching vs KVDiff)
+
 ```{r partial-plot-ptof, echo = FALSE}
 # plot
 corrplot.mixed(pcor(partial[Subcomponent2 == "PtoF", c("Teaching", "IOI", "KOT", "KV", "KVDiff")])$estimate, diag = c("n"))
