@@ -223,11 +223,11 @@ The experiment was programmed in Python 3.8.2 using the PsychoPy Python library 
 \hypertarget{stimuli}{%
 \subsection{Stimuli}\label{stimuli}}
 
-We selected stimuli from our previous experiments (Tominaga et al., \emph{submitted}; Experiment 1). Stimuli were produced by actual pianists on a weighed Yamaha MIDI (Musical Instrument Digital Interface) digital piano and recorded as MIDI files. Multiple pianists played one piece of music with a musical expressive techniques of either articulation (\emph{Figure \ref{fig:stim1}}, A) or dynamics (\emph{Figure \ref{fig:stim1}}, B). Articulation refers to the smoothness of sound, which is comprised of legato and staccato. Legato indicates smooth and connected sound whereas staccato indicates sharp and separate sound. Dynamics refers to the loudness of sound, which is comprised of forte and piano. Forte indicates loud sound while piano indicates soft sound. The piece was taken from ``A Dozen a Day - Play with Ease in Many Keys'' by Edna-Mae Burnam and modified for the experiment. The stimuli were performed around 80 quarter-beats per minute.
+We selected stimuli from our previous experiments (Tominaga et al., \emph{submitted}). Stimuli were produced by actual pianists on a weighed Yamaha MIDI (Musical Instrument Digital Interface) digital piano and recorded as MIDI files. Multiple pianists played one piece of music with a musical expressive techniques of either articulation (\emph{Figure \ref{fig:stim1}}, A) or dynamics (\emph{Figure \ref{fig:stim1}}, B). Articulation refers to the smoothness of sound, which is comprised of legato and staccato. Legato indicates smooth and connected sound whereas staccato indicates sharp and separate sound. Dynamics refers to the loudness of sound, which is comprised of forte and piano. Forte indicates loud sound while piano indicates soft sound. The piece was taken from ``A Dozen a Day - Play with Ease in Many Keys'' by Edna-Mae Burnam and modified for the experiment. The stimuli were performed around 80 quarter-beats per minute.
 
 In Tominaga et al., (\emph{submitted}), participants were asked to perform the piece with either articulation or dynamics in two different conditions. In the teaching condition, participants were instructed to perform the piece with the designated expressive technique as if they were teaching it to students (e.g., in a lesson). In the performing condition, participants were instructed to perform the piece with the designated expressive technique as if they were performing it to an audience (e.g., in a concert). In total, we obtained 453 valid performances (i.e., performances without any pitch error) from the teaching condition and 436 valid performances from the performing condition.
 
-For the current experiment, 96 performances were chosen from the valid performances in Tominaga et al.~(\emph{submitted}). We randomly sampled 24 articulation performances and 24 dynamics performances from the teaching condition as well as 24 articulation performances and 24 dynamics performances from the performing condition. It is important to note that the performances from the teaching condition did not necessarily exhibit specific features of teaching that we found in our previous experiments (e.g., exaggeration) since we randomly sampled the performances.
+For the current experiment, 96 performances were chosen from the valid performances in Tominaga et al.~(\emph{submitted}; Experiment 1). We randomly sampled 24 articulation performances and 24 dynamics performances from the teaching condition as well as 24 articulation performances and 24 dynamics performances from the performing condition. It is important to note that the performances from the teaching condition did not necessarily exhibit specific features of teaching that we found in our previous experiments (e.g., exaggeration) since we randomly sampled the performances.
 
 \hypertarget{procedure}{%
 \subsection{Procedure}\label{procedure}}
@@ -306,7 +306,7 @@ The Shapiro-Wilk normality test revealed that the distribution of KV difference 
 \hypertarget{multiple-regression}{%
 \subsection{Multiple regression}\label{multiple-regression}}
 
-In order to further explore which feature of performance contributed the most to participants' judgments as teaching, multiple regression analyses were conducted. Statistical model assumptions were tested using the \emph{performance} R package (Lüdecke, Ben-Shachar, Patil, Waggoner, \& Makowski, 2021) and all assumptions were met. Since articulation and dynamics consisted of two opposite subcomponents (i.e., legato vs.~staccato, forte vs.~piano) and therefore cannot be summed up to represent each technique, we reported four regression models for each subcomponent (see details in \emph{\protect\hyperlink{dataanalysis}{Data analysis}}).
+In order to further explore which feature of performance contributed the most to participants' judgments as teaching, multiple regression analyses were conducted. Statistical model assumptions were tested using the \emph{performance} R package (Lüdecke, Ben-Shachar, Patil, Waggoner, \& Makowski, 2021) and all assumptions were met. Since articulation and dynamics consisted of two opposite subcomponents (i.e., legato vs.~staccato, forte vs.~piano) and therefore cannot be summed up to represent each technique as one value, we reported four separateregression models for each subcomponent (see details in \emph{Data analysis}).
 
 \hypertarget{legato}{%
 \subsubsection{Legato}\label{legato}}
@@ -369,14 +369,14 @@ A multiple regression analysis was conducted to predict participants' judgments 
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
-Experiment 1 investigated which features of piano performance made musicians (in the role of potential learners) infer teaching intentions. The results demonstrated that performances with slower tempo were more likely to be judged as teaching by musicians regardless which expressive technique was implemented in the piece. For articulation recordings, performances with longer legato and shorter staccato were tended to be judged as teaching. For dynamics recordings, performances with louder forte were more likely to be judged as teaching whereas there was no relationship between softer sound (i.e., piano) and participants' judgments as teaching. Importantly, performances with larger contrasts between forte and piano for both directions (i.e., from forte to piano, from piano to forte) were more likely to be judged as teaching. This result may suggest that dynamics contrast might be reliably used to infer teaching intentions, rather than absolute dynamics values themselves. Moreover, multiple regression analyses implied that tempo feature is the strongest predictor of participants' judgments as teaching in general whereas there were specific predictors depending on which expressive technique was implemented in the piece. These performance features were overall consistent with what expert pianists did in our previous experiments for teaching purposes. Therefore, our findings suggest that musicians may rely on generic pedagogical behaviour (e.g., slower demonstration, exaggeration) to infer teaching intentions of expert pianists, only by listening to recorded performances.
+Experiment 1 investigated which features of piano performance made musicians (in the role of potential learners) infer teaching intentions. The results demonstrated that performances with slower tempo were more likely to be judged as teaching by musicians regardless which expressive technique was implemented in the piece. For articulation recordings, performances with longer legato and shorter staccato were tended to be judged as teaching. For dynamics recordings, performances with louder forte were more likely to be judged as teaching whereas there was no relationship between softer sound (i.e., piano) and participants' judgments as teaching. Importantly, performances with larger contrasts between forte and piano for both directions (i.e., from forte to piano, from piano to forte) were more likely to be judged as teaching. This result may suggest that dynamics contrast might be reliably used to infer teaching intentions, rather than absolute dynamics values themselves. Moreover, multiple regression analyses implied that tempo feature is the strongest predictor of participants' judgments as teaching in general whereas there were specific predictors depending on which expressive technique was implemented in the piece. These performance features were overall consistent with what expert pianists did in our previous experiments for teaching purposes. Therefore, our findings suggest that musicians may rely on generic pedagogical behaviours (e.g., slower demonstration, exaggeration) to infer teaching intentions of expert pianists, only by listening to recorded performances.
 
 \clearpage
 
 \hypertarget{experiment-2}{%
 \section{Experiment 2}\label{experiment-2}}
 
-The aim of Experiment 2 was to replicate our previous findings in Experiment 1 with a more naturalistic piece of music. We could not finish data collection, therefore interpreted data by looking at scatter plots without any statistical analysis.
+The aim of Experiment 2 was to replicate our previous findings in Experiment 1 with a more naturalistic piece of music. Given the findings on Experiment 1, we predicted that slower performance would be likely to be judged as teaching. Also performances with exaggerated articulation and dynamics (in particular, longer legato and shorter staccato, larger contrast between forte and piano) would be likely to be judged as teaching.
 
 \hypertarget{methods-1}{%
 \section{Methods}\label{methods-1}}
@@ -389,19 +389,19 @@ We recruited 21 participants who had at least six years of training in any music
 \hypertarget{apparatus-and-procedure}{%
 \subsection{Apparatus and procedure}\label{apparatus-and-procedure}}
 
-The experimental setting and procedure were identical to Experiment 1 except that each block consisted of 4 practice trials and 36 experimental trials. The number of trials was reduced due to the time constraint of the experiment.
+The apparatus and procedure were identical to Experiment 1 except that each block consisted of 4 practice trials and 36 experimental trials. The number of trials was reduced due to the time constraint of the experiment.
 
 \hypertarget{stimuli-1}{%
 \subsection{Stimuli}\label{stimuli-1}}
 
-As Experiment 1, stimuli were produced by actual pianists on a weighed Yamaha MIDI digital piano and recorded as MIDI files. One piece of music was selected as a base piece, which was performed with a musical expressive technique of either articulation (\emph{Figure \ref{fig:stim2}}, A) or dynamics (\emph{Figure \ref{fig:stim2}}, B). The excerpt was taken from ``Sonatina Op.36 (No.3) in C major'' by Muzio Clementi and modified for the experiment. The stimuli were performed around 100 - 120 quarter-beats per minute (i.e., around 250 - 300 ms for 8th-note IOIs).
+As Experiment 1, we selected stimuli from our previous experiments (Tominaga et al., \emph{submitted}). The excerpt was taken from ``Sonatina Op.36 (No.3) in C major'' by Muzio Clementi and modified for the experiment. The excerpt was performed with either articulation (\emph{Figure \ref{fig:stim2}}, A) or dynamics (\emph{Figure \ref{fig:stim2}}, B). The stimuli were performed around 100 - 120 quarter-beats per minute (i.e., around 250 - 300 ms for 8th-note IOIs).
 
-Recorded piano performances for the stimuli were obtained from our previous experiments (Tominaga et al., \emph{in prep}). Half of the stimuli (36 recordings) was randomly chosen from 248 valid performances in the teaching condition whereas the other half (36 recordings) was randomly chosen from 256 valid performances in the performing condition. In total, 72 recordings were selected as stimuli for the current experiment. Again, it is important to note that each recording from the teaching condition did not necessarily exhibit specific features of teaching performances that we found in the previous experiments since we randomly sampled recordings.
+For the current experiment, 96 performances were chosen from the valid performances in Tominaga et al.~(\emph{submitted}; Experiment 2). There were 248 valid performances in the teaching condition and 256 valid performances in the performing condition. We randomly sampled 18 articulation performances and 18 dynamics performances from the teaching condition as well as 18 articulation performances and 18 dynamics performances from the performing condition. In total, 72 recordings were selected as stimuli for the current experiment. Again, it is important to note that each performance from the teaching condition did not necessarily exhibit specific features of teaching that we found in the previous experiments (e.g., exaggeration) since we randomly sampled the performances.
 
 \hypertarget{dataanalysis2}{%
 \subsection{Data analysis}\label{dataanalysis2}}
 
-As Experiment 1, stimuli were quantified with regard to tempo (IOIs), articulation (KOT), dynamics (KV) and dynamics contrast (KV-Diff). Only the 8th notes with expressive notations were included for data analysis. We did not run any statistical analysis for Experiment 2.
+The data analysis was identical to Experiment 1. Only the 8th notes with expressive notations were included for data analysis. As a result, only one 8th note in the 4th measure without any expression was not included.
 
 \begin{figure}
 \includegraphics[width=1\linewidth]{manuscript_files/figure-latex/stim-2-1} \caption{\label{fig:stim2}Stimuli. (A)Articulation. The curved line (slur) indicates legato and the dots indicate staccato. (B)Dynamics. The symbol `f' denotes forte and the symbol `p' denotes piano. Only the 8th notes with expressive notations were used for data analysis.}\label{fig:stim-2}
@@ -410,28 +410,67 @@ As Experiment 1, stimuli were quantified with regard to tempo (IOIs), articulati
 \hypertarget{results-1}{%
 \section{Results}\label{results-1}}
 
-\hypertarget{scatter-plots}{%
-\subsection{Scatter plots}\label{scatter-plots}}
+All results were reported as significant at \emph{p} \textless{} 0.05.
+
+\hypertarget{correlation-1}{%
+\subsection{Correlation}\label{correlation-1}}
+
+As Experiment 1, a Pearson product-moment correlation coefficient was computed by default for correlation analysis and a Spearman's rank correlation coefficient was additionally computed if normality assumption was violated based on the Shapiro-Wilk normality test.
 
 \hypertarget{tempo-iois-1}{%
 \subsubsection{Tempo (IOIs)}\label{tempo-iois-1}}
 
-As Experiment 1, it seems that performance tempi (IOIs) are correlated with participants' judgments as teaching. Slower performances were more likely to be judged as teaching. However, the slope of articulation seems to be less steep than that of Experiment 1 (\emph{Figure \ref{fig:ioi-2}}).
+Unlike Experiment 1, there was no significant relationship between performance tempi (IOIs) and participants' judgments as teaching for both techniques (Articulation; \emph{r} = .25, \emph{p} = 0.147, Dynamics; \emph{r} = .39, \emph{p} = 0.019, \emph{Figure \ref{fig:ioi-2}}).
+
+The Shapiro-Wilk normality test revealed that the distribution of IOIs for dynamics recordings was not normally distributed (\emph{p} = 0.080). A Spearman's rank correlation coefficient also showed that there was no significant relationship between tempi for dynamics performances and participants' judgments as teaching (\emph{r} = .29, \emph{p} = 0.091).
 
 \hypertarget{articulation-kot-1}{%
 \subsubsection{Articulation (KOT)}\label{articulation-kot-1}}
 
-Unlike Experiment 1, there seems to be no relationship between KOT values and participants' judgments as teaching. The scatter plot suggests that participants did not use articulation values to infer teaching intentions (\emph{Figure \ref{fig:kot-2}}).
+Unlike Experiment 1, for articulation recordings, there was no significant relationship between KOT values and participants' judgments as teaching (Legato; \emph{r} = -.15, \emph{p} = 0.390, Staccato; \emph{r} = -.03, \emph{p} = 0.880, \emph{Figure \ref{fig:kot-2}}, left).
+
+For dynamics recordings, there was no significant relationship between KOT values for forte and participants' judgments as teaching (\emph{r} = -.11, \emph{p} = 0.52). However, there was a significant relationship between KOT values for piano and participants' judgments as teaching (\emph{r} = -.35, \emph{p} = 0.03), suggesting that performances with louder staccato were more likely to be considered as teaching performance (\emph{Figure \ref{fig:kot-2}}, right).
 
 \hypertarget{dynamics-kv-1}{%
 \subsubsection{Dynamics (KV)}\label{dynamics-kv-1}}
 
-As Experiment 1, there seems to be a relationship between KV values and participants' judgments as teaching (\emph{Figure \ref{fig:vel-2}}). Performances with louder forte adn softer piano seem to be judged as teaching.
+As Experiment 1, for dynamics recordings, there was a significant relationship between KV values and participants' judgments as teaching (\emph{Figure \ref{fig:vel-2}}, right). Specifically, performances with louder forte (\emph{r} = .45, \emph{p} = 0.007) and softer piano (\emph{r} = -.45, \emph{p} = 0.01) were more likely to be judged as teaching.
+
+The Shapiro-Wilk normality test revealed that the distribution of KV values for dynamics recordings was not normally distributed (Forte; \emph{p} = 0.048, Piano' \emph{p} = 0.004). Spearman's rank correlation coefficient also confirmed that performances with louder forte (\emph{r} = .43, \emph{p} = 0.010) and softer piano (\emph{r} = -.45, \emph{p} = 0.01) were more likely to be judged as teaching.
+
+For articulation recordings, there was no significant relationship between KV values and participants' judgments as teaching (Legato; \emph{r} = .08, \emph{p} = 0.63, Staccato; \emph{r} = .21, \emph{p} = 0.22, \emph{Figure \ref{fig:vel-2}}, left).
 
 \hypertarget{dynamics-contrast-kv-diff-1}{%
 \subsubsection{Dynamics contrast (KV-Diff)}\label{dynamics-contrast-kv-diff-1}}
 
-As Experiment 1, there seems to be a relationship between KV values and participants' judgments as teaching (\emph{Figure \ref{fig:vel-diff-2}}). Performances with larger contrasts between forte and piano seem to be judged as teaching.
+As Experiment 1, for dynamics recordings, there was a significant relationship between KV difference between forte and piano and participants' judgments as teaching (\emph{Figure \ref{fig:vel-diff-2}}, right). Specifically, performances with larger contrasts between forte and piano were more likely to be judged as teaching (From Forte to Piano; \emph{r} = -.75, \emph{p} \textless{} 0.001, From Piano to Forte; \emph{r} = .59, \emph{p} \textless{} 0.001).
+
+The Shapiro-Wilk normality test revealed that the distribution of KV-Diff values for dynamics recordings was not normally distributed (Forte to Piano; \emph{p} = 0.850, Piano to Forte; \emph{p} = 0.008). Spearman's rank correlation coefficient also confirmed that performances with larger contrasts between forte and piano were more likely to be judged as teaching (Forte to Piano; \emph{r} = -.73, \emph{p} \textless{} 0.001, Piano to Forte; \emph{r} = .59, \emph{p} \textless{} 0.001).
+
+\hypertarget{multiple-regression-1}{%
+\subsection{Multiple regression}\label{multiple-regression-1}}
+
+As Experiment 1, we performed multiple regression analyses to further explore which feature of performance contributed the most to participants' judgments as teaching. Again, since articulation and dynamics consisted of two opposite subcomponents (i.e., legato vs.~staccato, forte vs.~piano) and therefore cannot be summed up to represent each technique as one value, we reported four separate regression models for each subcomponent (see details in \emph{Data analysis} in Experiment 1).
+
+\hypertarget{legato-1}{%
+\subsubsection{Legato}\label{legato-1}}
+
+A multiple regression analysis was conducted to predict participants' judgments as teaching based on performance features of tempo (IOIs), articulation (KOT for legato parts), dynamics (KV for legato parts) and dynamics contrast (KV-Diff from legato to staccato). The result of the regression indicated that the model explained 19.77 \% of the variance (\emph{F}(4, 31) = 3.20, \emph{p} = 0.03). It was found that tempo (IOIs; \emph{\(\beta\)} = 0.58, \emph{p} = 0.011), dynamics (KV) and dynamics contrast (KV-Diff) for the legato parts were articulation for the legato parts were significant predictors of participants' judgments as teaching. However, articulation (KOT; \emph{\(\beta\)} = -0.08, \emph{p} = 0.466) for the legato parts was not a significant predictor as opposed to Experiment 1.
+
+\hypertarget{staccato-1}{%
+\subsubsection{Staccato}\label{staccato-1}}
+
+A multiple regression analysis was conducted to predict participants' judgments as teaching based on performance features of tempo (IOIs), articulation (KOT for staccato parts), dynamics (KV for staccato parts) and dynamics contrast (KV-Diff from staccato to legato). The overall was not statistically significant (\(R^{2}\) = 12.28, \emph{F}(4, 31) = 2.20, \emph{p} = 0.09).
+
+\hypertarget{forte-1}{%
+\subsubsection{Forte}\label{forte-1}}
+
+A multiple regression analysis was conducted to predict participants' judgments as teaching based on performance features of tempo (IOIs), articulation (KOT for forte parts), dynamics (KV for forte parts) and dynamics contrast (KV-Diff from forte to piano). The result of the regression indicated that the model explained 60.69 \% of the variance (\emph{F}(4, 31) = 14.50, \emph{p} \textless{} 0.001). It was found that dynamics contrast from forte to piano (KV-Diff; \emph{\(\beta\)} = -1.64, \emph{p} \textless{} 0.001) were significant predictors of participants' judgments as teaching.
+
+\hypertarget{piano-1}{%
+\subsubsection{Piano}\label{piano-1}}
+
+A multiple regression analysis was conducted to predict participants' judgments as teaching based on performance features of tempo (IOIs), articulation (KOT for piano parts), dynamics (KV for piano parts) and dynamics contrast (KV-Diff from piano to forte). The result of the regression indicated that the model explained 49.49 \% of the variance (\emph{F}(4, 31) = 9.60, \emph{p} \textless{} 0.001). It was found that tempo (IOIs; \emph{\(\beta\)} = 0.55, \emph{p} = 0.022) and dynamics contrast from piano to forte (KV-Diff; \emph{\(\beta\)} = 1.09, \emph{p} \textless{} 0.001) were significant predictors of participants' judgments as teaching.
 
 \begin{figure}
 
@@ -472,9 +511,9 @@ As Experiment 1, there seems to be a relationship between KV values and particip
 \hypertarget{discussion-1}{%
 \section{Discussion}\label{discussion-1}}
 
-Experiment 2 aims to replicate our previous findings in Experiment 1 with a more naturalistic piece of music. The preliminary data suggest that some features of piano performance contributes to participant' judgments as teaching. For instance, performances with slower tempo were likely to be judged as teaching regardless which expressive technique was implemented. Also, performances with louder forte and softer piano were likely to be judged as teaching for dynamics recordings. Moreover, there seems to be a strong relationship between dynamics contrast between forte and piano and participants' judgments as teaching.
+Experiment 2 aimed to replicate our previous findings in Experiment 1 with a more naturalistic piece of music. We successfully replicated the findings from Experiment 1 in dynamics features. Performances with louder forte and softer piano were likely to be judged as teaching for dynamics recordings. Moreover, there seems to be a strong relationship between dynamics contrast between forte and piano and participants' judgments as teaching.
 
-However, it seems there was no relationship between articulation values and participants' judgments as teaching. Compared with Experiment 1, the piece used in Experiment 2 was musically much complex. Therefore, articulation features may not be that reliable in order to infer teaching intentions. Unlike tempo and loudness, which are relatively easier to understand, articulation is very particular to music. The reason we could not see a relationship between articulation values and participants' judgments as teaching might be coming from conceptual and perceptual difficulties of articulation, even for musicians.
+However, we failed to replicate the results in terms of tempo (IOIs) and articulation (KOT). Compared with Experiment 1, the piece used in Experiment 2 was musically much complex. Therefore, articulation features may not be that reliable in order to infer teaching intentions. Unlike tempo and loudness, which are relatively easier to understand, articulation is very particular to music. The reason we could not see a relationship between articulation values and participants' judgments as teaching might be coming from conceptual and perceptual difficulties of articulation, even for musicians.
 
 \newpage
 
