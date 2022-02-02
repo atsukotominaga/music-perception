@@ -8,7 +8,6 @@ if (!require("tuneR")) {install.packages("tuneR"); require("tuneR")}
 # plot
 if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
 if (!require("corrplot")) {install.packages("corrplot"); require("corrplot")}
-if (!require("qqplotr")) {install.packages("qqplotr"); require("qqplotr")}
 # stats
 if (!require("ppcor")) {install.packages("ppcor"); require("ppcor")}
 if (!require("performance")) {install.packages("performance"); require("performance")}
@@ -763,28 +762,76 @@ corrplot.mixed(pcor(partial[Subcomponent2 == "PtoF", c("Teaching", "IOI", "KOT",
 pcor.test(partial[Subcomponent2 == "PtoF"]$KVDiff, partial[Subcomponent2 == "PtoF"]$Teaching, partial[Subcomponent2 == "PtoF", c("IOI", "KOT", "KV")])
 
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
 m1 <- lm(Teaching ~ IOI + KOT + KV + KVDiff, data = partial[Subcomponent == "Legato"])
 summary(m1)
 check_model(m1)
 
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
+check_collinearity(m1)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_heteroscedasticity(m1)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_normality(m1)
+
+
+## ---- echo = FALSE------------------------------------------------------------
 m2 <- lm(Teaching ~ IOI + KOT + KV + KVDiff, data = partial[Subcomponent == "Staccato"])
 summary(m2)
 check_model(m2)
 
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
+check_collinearity(m2)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_heteroscedasticity(m2)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_normality(m2)
+
+
+## ---- echo = FALSE------------------------------------------------------------
 m3 <- lm(Teaching ~ IOI + KOT + KV + KVDiff, data = partial[Subcomponent == "Forte"])
 summary(m3)
 check_model(m3)
 
 
-## ---- echo = TRUE-------------------------------------------------------------
+## ---- echo = FALSE------------------------------------------------------------
+check_collinearity(m3)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_heteroscedasticity(m3)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_normality(m3)
+
+
+## ---- echo = FALSE------------------------------------------------------------
 m4 <- lm(Teaching ~ IOI + KOT + KV + KVDiff, data = partial[Subcomponent == "Piano"])
 summary(m4)
 check_model(m4)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_collinearity(m4)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_heteroscedasticity(m4)
+
+
+## ---- echo = FALSE------------------------------------------------------------
+check_normality(m4)
 
 
 ## ----export, include = FALSE--------------------------------------------------
