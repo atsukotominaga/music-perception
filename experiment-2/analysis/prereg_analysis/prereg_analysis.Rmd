@@ -9,20 +9,19 @@ output: html_notebook
 
 # Experiment
 ## Preregistered Analysis
-We originally had a analysis plan to look at the accuracy of participants' judgements whether participants would be able to judge stimuli from the teaching condition as "teaching". For more detailed explanations, please see [the OSF preregistration](https://osf.io/z3j69).
+The preregistered analysis aims to investigate whether participants could distinguish performances produced for teaching purposes from those produced for performing purposes. For more detailed explanations, please see [the OSF preregistration](https://osf.io/z3j69).
 
 ## Stimuli
 - Stimuli were selected from the previous study ([the sound of teaching music/experiment-2](https://github.com/atsukotominaga/music-teaching/tree/main/experiment-2)).
-- 36 stimuli were randomly chosen from each technique (either articulation or dynamics - therefore in total 72 stimuli). The half of them was selected from the teaching condition and the other half was from the performing condition.
+- 36 stimuli were randomly chosen from each technique (either articulation or dynamics - therefore in total 72 stimuli). Half of them was selected from the teaching condition and the other half was from the performing condition.
   + 18 for teaching-articulation performances
   + 18 for performing-articulation performances
   + 18 for teaching-dynamics performances
   + 18 for performing-dynamics performances
 
 ## Design
-
-- 2 blocks (articulation / dynamics): participants were asked to do the same task for two techniques (expressions) separately. The order of the blocks was counterbalanced across participants.
-- 36 trials for each block (each stimulus was presented only once) and the stimuli were randomly presented across participants.
+- 2 blocks (articulation / dynamics): participants were asked to do the same task for two techniques separately. The order of the blocks was counterbalanced across participants.
+- 36 trials for each block (each stimulus was presented only once) and the stimuli were randomly presented within a block.
 
 ## Procedure
 1. Musicians (> 6yo experience) were asked to listen to a number of recordings and judge whether each performance was produced for teaching purposes or not.
@@ -54,6 +53,7 @@ if (!require("tuneR")) {install.packages("tuneR"); require("tuneR")}
 if (!require("ggpubr")) {install.packages("ggpubr"); require("ggpubr")}
 # stats
 if (!require("afex")) {install.packages("afex"); require("afex")}
+if (!require("rstatix")) {install.packages("rstatix"); require("rstatix")}
 ```
 
 ```{r read, include = FALSE}
@@ -110,7 +110,14 @@ ggboxplot(ind_data, x = "N", y = "Percent", add = "dotplot", xlab = FALSE) + yla
 # normality check
 shapiro.test(ind_data$Percent)
 
-t.test(ind_data$Percent, mu = 50, alternative = "two.sided")
+ttest_all <- t.test(ind_data$Percent, mu = 50, alternative = "two.sided")
+ttest_all
+```
+
+### Effect size
+```{r, echo = FALSE}
+coheneff_all <- ind_data %>% cohens_d(Percent ~ 1, mu = 50)
+coheneff_all
 ```
 
 ## Articulation vs. Dynamics
@@ -149,7 +156,14 @@ ggplot(data = d, aes(y=y)) +
 # normality check
 shapiro.test(ind_data_ad[Skill == "articulation"]$Percent)
 
-t.test(ind_data_ad[Skill == "articulation"]$Percent, mu = 50, alternative = "two.sided")
+ttest_art <- t.test(ind_data_ad[Skill == "articulation"]$Percent, mu = 50, alternative = "two.sided")
+ttest_art
+```
+
+### Effect size
+```{r, echo = FALSE}
+coheneff_art <- ind_data_ad[Skill == "articulation"] %>% cohens_d(Percent ~ 1, mu = 50)
+coheneff_art
 ```
 
 ### Dynamics
@@ -157,7 +171,14 @@ t.test(ind_data_ad[Skill == "articulation"]$Percent, mu = 50, alternative = "two
 # normality check
 shapiro.test(ind_data_ad[Skill == "dynamics"]$Percent)
 
-t.test(ind_data_ad[Skill == "dynamics"]$Percent, mu = 50, alternative = "two.sided")
+ttest_dyn <- t.test(ind_data_ad[Skill == "dynamics"]$Percent, mu = 50, alternative = "two.sided")
+ttest_dyn
+```
+
+### Effect size
+```{r, echo = FALSE}
+coheneff_dyn <- ind_data_ad[Skill == "dynamics"] %>% cohens_d(Percent ~ 1, mu = 50)
+coheneff_dyn
 ```
 
 ### Paired *t*-test between articulation and dynamics
@@ -165,7 +186,13 @@ t.test(ind_data_ad[Skill == "dynamics"]$Percent, mu = 50, alternative = "two.sid
 # normality check
 shapiro.test(ind_data_ad[Skill == "dynamics"]$Percent-ind_data_ad[Skill == "articulation"]$Percent)
 
-t.test(ind_data_ad[Skill == "articulation"]$Percent, ind_data_ad[Skill == "dynamics"]$Percent, paired = TRUE)
+ttest_paired <- t.test(ind_data_ad[Skill == "articulation"]$Percent, ind_data_ad[Skill == "dynamics"]$Percent, paired = TRUE)
+ttest_paired
+```
+### Effect size
+```{r, echo = FALSE}
+coheneff_paired <- ind_data_ad %>% cohens_d(Percent ~ Skill, mu = 50)
+coheneff_paired
 ```
 
 ## Two-way ANOVA (Condition * Skill)
