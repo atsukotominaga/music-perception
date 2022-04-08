@@ -151,11 +151,10 @@ Performance tempi (IOIs) were significantly correlated with participants' judgme
 ```{r ioi-1, include = FALSE}
 cor_ioi_1 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line", palette = "d3",
           add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) + theme_pubr(base_size = 20, base_family = "Helvetica")
-cor_ioi_1
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(150, 242, 20)) + coord_cartesian(xlim = c(150, 242), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
 
 # save
-ggsave(here("paper/image", "cor_ioi_1.png"), plot = cor_ioi_1, dpi = 600, width = 7, height = 5)
+ggsave(here("paper/image", "cor_ioi_1.png"), plot = cor_ioi_1, dpi = 300, width = 6, height = 6)
 img_cor_ioi_1 <- image_read(here("paper/image", "cor_ioi_1.png"))
 ```
 
@@ -167,13 +166,11 @@ For dynamics recordings, there was no significant relationship between KOT value
 ```{r kot-1, include = FALSE}
 kot_all$Subcomponent <- factor(kot_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
 cor_kot_1 <- ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
-          add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
-  theme_pubr(base_size = 20, base_family = "Helvetica")
-cor_kot_1
+          add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-250, 200, 100)) + coord_cartesian(xlim = c(-250, 200), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 20, base_family = "Helvetica")
 
 # save
-ggsave(here("paper/image", "cor_kot_1.png"), plot = cor_kot_1, dpi = 600, width = 7, height = 5)
+ggsave(here("paper/image", "cor_kot_1.png"), plot = cor_kot_1, dpi = 300, width = 7, height = 5)
 img_cor_kot_1  <- image_read(here("paper/image", "cor_kot_1.png"))
 ```
 
@@ -186,12 +183,10 @@ For articulation recordings, there was no significant relationship between KV va
 vel_all$Subcomponent <- factor(vel_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
 cor_vel_1 <- ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
-  theme_pubr(base_size = 20, base_family = "Helvetica")
-cor_vel_1
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(40, 100, 10)) + coord_cartesian(xlim = c(40, 100), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 20, base_family = "Helvetica")
 
 # save
-ggsave(here("paper/image", "cor_vel_1.png"), plot = cor_vel_1, dpi = 600, width = 7, height = 5)
+ggsave(here("paper/image", "cor_vel_1.png"), plot = cor_vel_1, dpi = 300, width = 7, height = 5)
 img_cor_vel_1  <- image_read(here("paper/image", "cor_vel_1.png"))
 ```
 
@@ -204,12 +199,10 @@ For articulation recordings, there was no significant relationship between KV di
 vel_diff_all$Subcomponent <- factor(vel_diff_all$Subcomponent, levels = c("LtoS", "StoL", "FtoP", "PtoF"))
 cor_vel_diff_1 <- ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
-  theme_pubr(base_size = 20, base_family = "Helvetica")
-cor_vel_diff_1
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-35, 55, 20)) + scale_x_continuous(breaks = seq(-40, 55, 20)) + coord_cartesian(xlim = c(-40, 55), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
 
 # save
-ggsave(here("paper/image", "cor_vel_diff_1.png"), plot = cor_vel_diff_1, dpi = 600, width = 7, height = 5)
+ggsave(here("paper/image", "cor_vel_diff_1.png"), plot = cor_vel_diff_1, dpi = 300, width = 7, height = 5)
 img_cor_vel_diff_1  <- image_read(here("paper/image", "cor_vel_diff_1.png"))
 ```
 
@@ -307,12 +300,10 @@ Unlike Experiment 1, there was a significant relationship between performance te
 ```{r ioi-2, include = FALSE}
 cor_ioi_2 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line", palette = "d3",
           add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
-  theme_pubr(base_size = 20, base_family = "Helvetica")
-cor_ioi_2
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(240, 332, 20)) + coord_cartesian(xlim = c(240, 332), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
 
 # save
-ggsave(here("paper/image", "cor_ioi_2.png"), plot = cor_ioi_2, dpi = 600, width = 7, height = 5)
+ggsave(here("paper/image", "cor_ioi_2.png"), plot = cor_ioi_2, dpi = 300, width = 6, height = 6)
 img_cor_ioi_2 <- image_read(here("paper/image", "cor_ioi_2.png"))
 ```
 
@@ -325,12 +316,10 @@ For dynamics recordings, there was no significant relationship between KOT value
 kot_all$Subcomponent <- factor(kot_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
 cor_kot_2 <- ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
-  theme_pubr(base_size = 20, base_family = "Helvetica")
-cor_kot_2
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-300, 150, 100)) + coord_cartesian(xlim = c(-300, 150), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
 
 # save
-ggsave(here("paper/image", "cor_kot_2.png"), plot = cor_kot_2, dpi = 600, width = 7, height = 5)
+ggsave(here("paper/image", "cor_kot_2.png"), plot = cor_kot_2, dpi = 300, width = 7, height = 5)
 img_cor_kot_2  <- image_read(here("paper/image", "cor_kot_2.png"))
 ```
 
@@ -343,12 +332,10 @@ For articulation recordings, there was no significant relationship between KV va
 vel_all$Subcomponent <- factor(vel_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
 cor_vel_2 <- ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + xlim(50, 102) + ylim(0, 100) +
-  theme_pubr(base_size = 20, base_family = "Helvetica")
-cor_vel_2
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(40, 100, 10)) + coord_cartesian(xlim = c(40, 100), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
 
 # save
-ggsave(here("paper/image", "cor_vel_2.png"), plot = cor_vel_2, dpi = 600, width = 7, height = 5)
+ggsave(here("paper/image", "cor_vel_2.png"), plot = cor_vel_2, dpi = 300, width = 7, height = 5)
 img_cor_vel_2  <- image_read(here("paper/image", "cor_vel_2.png"))
 ```
 
@@ -361,12 +348,10 @@ For articulation recordings, there was no significant relationship between KV di
 vel_diff_all$Subcomponent <- factor(vel_diff_all$Subcomponent, levels = c("LtoS", "StoL", "FtoP", "PtoF"))
 cor_vel_diff_2 <- ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + ylim(0, 100) +
-  theme_pubr(base_size = 20, base_family = "Helvetica")
-cor_vel_diff_2
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-40, 55, 20)) + coord_cartesian(xlim = c(-40, 55), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
 
 # save
-ggsave(here("paper/image", "cor_vel_diff_2.png"), plot = cor_vel_diff_2, dpi = 600, width = 7, height = 5)
+ggsave(here("paper/image", "cor_vel_diff_2.png"), plot = cor_vel_diff_2, dpi = 300, width = 7, height = 5)
 img_cor_vel_diff_2  <- image_read(here("paper/image", "cor_vel_diff_2.png"))
 ```
 
