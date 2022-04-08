@@ -143,7 +143,7 @@ for (number in change_2){
 }
 
 
-## ----ioi-all, echo = FALSE----------------------------------------------------
+## ----ioi-all, echo = FALSE, fig.width = 6, fig.height = 6---------------------
 rating <- all # rating data
 
 ioi <- dt_ioi[Subcomponent != "NA", .(N = .N, Mean = mean(IOI), SD = sd(IOI)), by = .(MidFile, Skill)]
@@ -157,7 +157,7 @@ ioi$TeachingSD <- rating$SD_Percent
 
 ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line",
           add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(240, 332, 10)) + coord_cartesian(xlim = c(240, 332), ylim = c(0, 100))
 
 
 ## ---- echo = FALSE------------------------------------------------------------
@@ -416,7 +416,7 @@ for (number in change_2){
 }
 
 
-## ----kot-all, echo = FALSE----------------------------------------------------
+## ----kot-all, echo = FALSE, fig.width = 7, fig.height = 4.5-------------------
 kot_all <- dt_kot[Subcomponent == "Legato" | Subcomponent == "Staccato" | Subcomponent == "Forte" | Subcomponent == "Piano", .(N = .N, Mean = mean(KOT), SD = sd(KOT)), by = .(MidFile, Skill, Subcomponent)]
 
 # sorted
@@ -428,7 +428,8 @@ kot_all$TeachingSD <- rep(rating$SD_Percent, each = 2)
 
 ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + 
+scale_x_continuous(breaks = seq(-260, 110, 50)) + coord_cartesian(xlim = c(-260, 110), ylim = c(0, 100))
 
 
 ## ---- echo = FALSE------------------------------------------------------------
@@ -571,7 +572,7 @@ for (phrase in 1:length(ls_piano_2)){
 }
 
 
-## ----vel-all, echo = FALSE----------------------------------------------------
+## ----vel-all, echo = FALSE, fig.width = 7, fig.height = 4.5-------------------
 vel_all <- dt_vel[Subcomponent == "Legato" | Subcomponent == "Staccato" | Subcomponent == "Forte" | Subcomponent == "Piano", .(N = .N, Mean = mean(Velocity), SD = sd(Velocity)), by = .(MidFile, Skill, Subcomponent)]
 
 # sorted
@@ -583,7 +584,7 @@ vel_all$TeachingSD <- rep(rating$SD_Percent, each = 2)
 
 ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(50, 100, 10)) + coord_cartesian(xlim = c(50, 100), ylim = c(0, 100))
 
 
 ## ---- echo = FALSE------------------------------------------------------------
@@ -737,7 +738,7 @@ for (i in change_2){
 }
 
 
-## ----vel-diff-all, echo = FALSE-----------------------------------------------
+## ----vel-diff-all, echo = FALSE, fig.width = 7, fig.height = 4.5--------------
 vel_diff_all <- dt_vel_diff[Subcomponent == "FtoP" | Subcomponent == "PtoF" | Subcomponent == "LtoS" | Subcomponent == "StoL", .(N = .N, Mean = mean(Diff), SD = sd(Diff)), by = .(MidFile, Skill, Subcomponent)]
 
 # sorted
@@ -749,7 +750,7 @@ vel_diff_all$TeachingSD <- rep(rating$SD_Percent, each = 2)
 
 ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + ylim(0, 100)
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-35, 52, 10)) + coord_cartesian(xlim = c(-35, 52), ylim = c(0, 100))
 
 
 ## ---- echo = FALSE------------------------------------------------------------
