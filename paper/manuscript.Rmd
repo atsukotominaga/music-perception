@@ -149,7 +149,7 @@ Performance tempi (IOIs) were significantly correlated with participants' judgme
 ```{r ioi-1, include = FALSE}
 cor_ioi_1 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line", palette = "d3",
           add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(150, 242, 20)) + labs(color = "Technique") + coord_cartesian(xlim = c(150, 242), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(150, 242, 20)) + labs(color = "Technique") + coord_cartesian(xlim = c(150, 242), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_ioi_1.png"), plot = cor_ioi_1, dpi = 300, width = 6, height = 6)
@@ -296,7 +296,7 @@ Unlike Experiment 1, there was a significant relationship between performance te
 ```{r ioi-2, include = FALSE}
 cor_ioi_2 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line", palette = "d3",
           add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(240, 332, 20)) + labs(color = "Technique") + coord_cartesian(xlim = c(240, 332), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(240, 332, 20)) + labs(color = "Technique") + coord_cartesian(xlim = c(240, 332), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_ioi_2.png"), plot = cor_ioi_2, dpi = 300, width = 6, height = 6)
@@ -406,11 +406,9 @@ In the current study, we exclusively recruited musicians to explore our research
 
 \endgroup
 
-```{r results-prereg, cache = FALSE}
-source(here("experiment-1/analysis/prereg_analysis", "prereg_analysis.R"), chdir = TRUE)
-```
+# Supplementary Materials
+All data is available at .
 
-<!-- # Supplementary Materials{#supplementary} -->
+# Acknowledgement
 
-<!-- ## Accuracy for Experiment 1 -->
-<!-- We examined whether participants could accurately judge the stimuli chosen from the teaching condition in the previous experiments as teaching (yes response in the current experiment) and the stimuli chosen from the performing condition in the previous experiments as performing (no response in the current experiment). We compared how accurate participants were against the chance level (50%). The results revealed that the accuracy of participants' judgments was above the chance level (*M* = `r round(mean(ind_data_ad[Skill == "articulation"]$Percent), 1)`, *SD* = `r round(sd(ind_data_ad[Skill == "articulation"]$Percent), 2)`; *t*(`r t.test(ind_data$Percent, mu = 50, alternative = "two.sided")$parameter`) = `r t.test(ind_data$Percent, mu = 50, alternative = "two.sided")$statistic`, *p* `r if(t.test(ind_data$Percent, mu = 50, alternative = "two.sided")$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_vel_diff_ptof$p.value))}`). However, the 95 confidence intervals for the sample mean contained the sample -->
+This research was supported by the European Research Council under the European Union’s Seventh Framework Program (FP7/2007–2013)/ERC Grant agreement no. 609819, SOMICS, and by ERC Grant agreement no. 616072, JAXPERTISE. We thank Fanni Takátsy for her help with data collection.
