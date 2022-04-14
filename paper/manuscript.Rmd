@@ -68,7 +68,7 @@ lmp <- function (modelobject) {
 # Introduction
 Learning from others is one of the important elements of skill acquisition. Not only are we able to learn by observing and imitating others, but also we benefit greatly from interacting with others such as teachers and peers [@tomasello_1993]. Adults are often being pedagogical to children in order to explain and transmit cultural conventions [@csibra_2009]. Active teaching seems to play a crucial role not only to transit skills over generations but also to further develop sophisticated cultures, which cannot be achieved by one single individual or generation [@tennie_2009]. From a learner's perspective, it is important to identify informative teachers and infer teachers' expectations so that learners can acquire skills through interacting with teachers [@gweon_2020; @veissiere_2020].
 
-In pedagogical settings where teachers are supposed to convey useful information to learners, it has been found that teachers often modulate their behaviour for teaching purposes. For example, adults are likely to modulate their speech and action for infants so as to help infants acquire skills [e.g., @brand_2002; @saint-georges_2013]. Further studies have revealed that even towards adult learners, people modulated their speech and action in a similar way as they did for infants [@mcellin_2017; @uther_2007]. Moreover, @mcellin_2018 demonstrated that people could identify informative intentions such as acting with others or teaching by relying on specific kinematics cues (e.g., velocity profiles of movements). These findings suggest that experts modified their speech and action to send teaching intentions and that novices could successfully perceive the intentions.
+In pedagogical settings where teachers are supposed to convey useful information to learners, it has been found that teachers often modulate their behaviour for teaching purposes. For example, adults are likely to modulate their speech and action for infants so as to help infants acquire skills [e.g., @brand_2002; @saint-georges_2013]. Further studies have revealed that even towards adult learners, people modulate their speech and action in a similar way as they did for infants [@mcellin_2017; @uther_2007]. Moreover, @mcellin_2018 demonstrated that people could identify informative intentions such as acting with others or teaching by relying on specific kinematics cues (e.g., velocity profiles of movements). These findings suggest that experts modified their speech and action to send teaching intentions and that novices could successfully perceive the intentions.
 
 Tominaga, Knoblich & Sebanz (*submitted*) extended this line of research to expertise transmission where skills to be acquired are complex, such as when learning to perform with artistic expression. We investigated whether and how expert pianists are able to communicatively modulate their performance when intending to teach the musical expressive techniques of articulation (the smoothness of sound) and dynamics (the loudness of sound). The results demonstrated that expert pianists systematically modulated their performance by playing slower or by exaggerating relevant aspects of the performance (e.g., producing shorter staccato or producing a larger contrast between forte and piano) when intending to teach the musical expressive techniques. Therefore, it seems that even in the domain of expertise, experts exhibit pedagogical behaviours to highlight crucial performance aspects for potential learners.
 
@@ -147,9 +147,7 @@ We also performed a one sample *t*-test for each technique separately. For artic
 Performance tempi (IOIs) were significantly correlated with participants' judgments as teaching for both techniques (Articulation; *r(`r cor_ioi_art$parameter`)* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_ioi_art$estimate))`, *p* `r if(cor_ioi_art$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_ioi_art$p.value))}`, Dynamics; *r(`r cor_ioi_dyn$parameter`)* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_ioi_dyn$estimate))`, *p* `r if(cor_ioi_dyn$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.3f', cor_ioi_dyn$p.value))}`, *Figure \ref{fig:ioi-1}*). Participants tended to identify slower performances as teaching.
 
 ```{r ioi-1, include = FALSE}
-cor_ioi_1 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line", palette = "d3",
-          add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(150, 242, 20)) + labs(color = "Technique") + coord_cartesian(xlim = c(150, 242), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
+cor_ioi_1 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", shape = "Skill", add = "reg.line", palette = "d3", add.params = list(fill = "lightgray"), conf.int = TRUE, xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(150, 242, 20)) + labs(color = "Technique", shape = "Technique") + coord_cartesian(xlim = c(150, 242), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_ioi_1.png"), plot = cor_ioi_1, dpi = 300, width = 6, height = 6)
@@ -163,9 +161,9 @@ For dynamics recordings, there was no significant relationship between KOT value
 
 ```{r kot-1, include = FALSE}
 kot_all$Subcomponent <- factor(kot_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
-cor_kot_1 <- ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+cor_kot_1 <- ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", shape = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-250, 200, 100)) + coord_cartesian(xlim = c(-250, 200), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-250, 200, 100)) + coord_cartesian(xlim = c(-250, 200), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_kot_1.png"), plot = cor_kot_1, dpi = 300, width = 7, height = 5)
@@ -179,9 +177,9 @@ For articulation recordings, there was no significant relationship between KV va
 
 ```{r vel-1, include = FALSE}
 vel_all$Subcomponent <- factor(vel_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
-cor_vel_1 <- ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+cor_vel_1 <- ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", shape = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(40, 100, 10)) + coord_cartesian(xlim = c(40, 100), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(40, 100, 10)) + coord_cartesian(xlim = c(40, 100), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_vel_1.png"), plot = cor_vel_1, dpi = 300, width = 7, height = 5)
@@ -195,9 +193,9 @@ For articulation recordings, there was no significant relationship between KV di
 
 ```{r vel-diff-1, include = FALSE}
 vel_diff_all$Subcomponent <- factor(vel_diff_all$Subcomponent, levels = c("LtoS", "StoL", "FtoP", "PtoF"))
-cor_vel_diff_1 <- ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+cor_vel_diff_1 <- ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", shape = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-35, 55, 20)) + scale_x_continuous(breaks = seq(-40, 55, 20)) + coord_cartesian(xlim = c(-40, 55), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-35, 55, 20)) + scale_x_continuous(breaks = seq(-40, 55, 20)) + coord_cartesian(xlim = c(-40, 55), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_vel_diff_1.png"), plot = cor_vel_diff_1, dpi = 300, width = 7, height = 5)
@@ -294,9 +292,9 @@ We also performed a one sample *t*-test for each technique separately. For artic
 Unlike Experiment 1, there was a significant relationship between performance tempi (IOIs) and participants' judgments as teaching only for dynamics recordings (Articulation; *r(`r cor_ioi_art$parameter`)* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_ioi_art$estimate))`, *p* `r if(cor_ioi_art$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', cor_ioi_art$p.value))}`, Dynamics; *r(`r cor_ioi_dyn$parameter`)* = `r sub("^(-?)0.", "\\1.", sprintf('%.2f', cor_ioi_dyn$estimate))`, *p* `r if(cor_ioi_dyn$p.value < 0.001){"< 0.001"} else {paste("= ", sprintf('%.2f', cor_ioi_dyn$p.value))}`, *Figure \ref{fig:ioi-2}*). Participants tended to identify slower performances as teaching for dynamics recordings.
 
 ```{r ioi-2, include = FALSE}
-cor_ioi_2 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", add = "reg.line", palette = "d3",
+cor_ioi_2 <- ggscatter(ioi, x = "Mean", y = "Teaching", color = "Skill", shape = "Skill", add = "reg.line", palette = "d3",
           add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(240, 332, 20)) + labs(color = "Technique") + coord_cartesian(xlim = c(240, 332), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
+          xlab = "IOIs (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(240, 332, 20)) + labs(color = "Technique", shape = "Technique") + coord_cartesian(xlim = c(240, 332), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_ioi_2.png"), plot = cor_ioi_2, dpi = 300, width = 6, height = 6)
@@ -310,9 +308,9 @@ For dynamics recordings, there was no significant relationship between KOT value
 
 ```{r kot-2, include = FALSE}
 kot_all$Subcomponent <- factor(kot_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
-cor_kot_2 <- ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+cor_kot_2 <- ggscatter(kot_all, x = "Mean", y = "Teaching", color = "Subcomponent", shape = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE,
-          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-300, 150, 100)) + coord_cartesian(xlim = c(-300, 150), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
+          xlab = "KOT (ms)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-300, 150, 100)) + coord_cartesian(xlim = c(-300, 150), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_kot_2.png"), plot = cor_kot_2, dpi = 300, width = 7, height = 5)
@@ -326,9 +324,9 @@ For articulation recordings, there was no significant relationship between KV va
 
 ```{r vel-2, include = FALSE}
 vel_all$Subcomponent <- factor(vel_all$Subcomponent, levels = c("Legato", "Staccato", "Forte", "Piano"))
-cor_vel_2 <- ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+cor_vel_2 <- ggscatter(vel_all, x = "Mean", y = "Teaching", color = "Subcomponent", shape = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(40, 100, 10)) + coord_cartesian(xlim = c(40, 100), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
+          xlab = "Velocity (0-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(40, 100, 10)) + coord_cartesian(xlim = c(40, 100), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_vel_2.png"), plot = cor_vel_2, dpi = 300, width = 7, height = 5)
@@ -342,9 +340,9 @@ For articulation recordings, there was no significant relationship between KV di
 
 ```{r vel-diff-2, include = FALSE}
 vel_diff_all$Subcomponent <- factor(vel_diff_all$Subcomponent, levels = c("LtoS", "StoL", "FtoP", "PtoF"))
-cor_vel_diff_2 <- ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
+cor_vel_diff_2 <- ggscatter(vel_diff_all, x = "Mean", y = "Teaching", color = "Subcomponent", shape = "Subcomponent", add = "reg.line", palette = "d3", facet.by = "Skill",
           add.params = list(fill = "lightgray"), conf.int = TRUE, cor.coef = FALSE,
-          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-40, 55, 20)) + coord_cartesian(xlim = c(-40, 55), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica")
+          xlab = "Velocity Difference (-127-127)", ylab = "Judged as teaching (%)") + scale_x_continuous(breaks = seq(-40, 55, 20)) + coord_cartesian(xlim = c(-40, 55), ylim = c(0, 100)) + theme(aspect.ratio = 1) + theme_pubr(base_size = 18, base_family = "Helvetica") + scale_color_grey()
 
 # save
 ggsave(here("paper/image", "cor_vel_diff_2.png"), plot = cor_vel_diff_2, dpi = 300, width = 7, height = 5)
@@ -407,8 +405,8 @@ In the current study, we exclusively recruited musicians to explore our research
 \endgroup
 
 # Supplementary Materials
-All data is available at .
+All data is available at https://osf.io/f6nr2/.
 
 # Acknowledgement
 
-This research was supported by the European Research Council under the European Union’s Seventh Framework Program (FP7/2007–2013)/ERC Grant agreement no. 609819, SOMICS, and by ERC Grant agreement no. 616072, JAXPERTISE. We thank Fanni Takátsy for her help with data collection.
+This research was supported by the European Research Council under the European Union’s Seventh Framework Program (FP7/2007–2013)/ERC Grant agreement no. 609819, SOMICS. We thank Fanni Takátsy for her help with data collection.
