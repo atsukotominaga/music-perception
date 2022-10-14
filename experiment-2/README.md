@@ -15,8 +15,12 @@ This repo contains scripts and materials for a musical perception study with mus
 - `practice`: stimuli for practice trials
 
 # analysis
+## analysis summary
+- [Analysis](https://rpubs.com/atsukotominaga/956103)
+
 - `analysis.Rmd`: analysis script >> output: `analysis.nb.html`
 - `questionnaire.Rmd`: demographics info >> output: `questionnaire.nb.html`
+- `prereg_analysis`: preregistered analysis (see details: [OSF preregistration](https://osf.io/z3j69))
 
 # data
 raw performance data
