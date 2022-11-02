@@ -7,6 +7,7 @@
 This repo contains scripts and materials for a musical perception study with musicians.
 
 Open Science Framework: https://osf.io/f6nr2/
+
 Preregistration: https://osf.io/z3j69
 
 ## experiment-1
