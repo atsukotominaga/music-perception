@@ -1,7 +1,7 @@
 # What makes musicians infer teaching intentions?
 
 <p align="center">
-  <img height="300" src="https://media.giphy.com/media/VJxNm7zrm3K4E/giphy.gif">
+  <img height="300" src="music_perception.jpg">
 </p>
 
 Open Science Framework: [https://osf.io/f6nr2/](https://osf.io/f6nr2/)
