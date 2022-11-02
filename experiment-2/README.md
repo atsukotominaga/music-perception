@@ -1,9 +1,4 @@
-# What makes musicians infer teaching intentions? 2
-
-Open Science Framework: [https://osf.io/f6nr2/](https://osf.io/f6nr2/)  
-Preregistration: []()
-
-This repo contains scripts and materials for a musical perception study with musicians.
+# Experiment 2
 
 # experiment
 - Environment: Mac OS X 10.15.6, Max MSP 8.1.7, Python 3.8.2
