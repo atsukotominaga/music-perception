@@ -4,7 +4,7 @@
   <img height="300" src="music_perception.jpg">
 </p>
 
-This repo contains scripts and materials for a musical perception study with musicians.
+This repo contains scripts and materials for musical perception experiments with musicians.
 
 Open Science Framework: https://osf.io/f6nr2/
 
