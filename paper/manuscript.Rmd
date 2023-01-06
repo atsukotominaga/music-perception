@@ -36,10 +36,10 @@ draft             : no
 
 documentclass     : "apa6"
 classoption       : "man"
-output            : papaja::apa6_pdf
+output            : papaja::apa6_word
 ---
 
-```{r setup, include = FALSE}
+```{r set-up, include = FALSE}
 # packages
 if (!require("papaja")) {install.packages("papaja"); require("papaja")}
 if (!require("here")) {install.packages("here"); require("here")}
